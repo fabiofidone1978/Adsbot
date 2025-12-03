@@ -1,0 +1,5 @@
+python-telegram-bot==20.8
+SQLAlchemy==2.0.29
+python-dotenv==1.0.1
+# Use a compatible redis client version available on PyPI
+redis>=4.6.0,<6.0

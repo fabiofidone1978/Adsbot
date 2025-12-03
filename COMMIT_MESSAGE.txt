@@ -1,0 +1,57 @@
+feat(rate-limiter): Add API keys management and rate-limiting system
+
+Implement a complete rate-limiting and API key management system for Adsbot with support for Redis and SQLite backends, FastAPI middleware, and Flask decorators.
+
+Features:
+- API key role-based access control (admin/user) with secure .env storage
+- Redis rate limiter with fixed-window counters (configurable)
+- SQLite fallback implementation for environments without Redis
+- Two rate-limiting policies: BLOCK (429 responses) and SLOWDOWN (exponential backoff)
+- Exponential backoff algorithm: delay = min(10s, 0.5 * 1.5^(over-1))
+- FastAPI ASGI middleware for automatic rate-limit enforcement
+- Flask decorator wrapper for synchronous endpoints
+- Admin keys exempt from all rate limits
+- Test suite with unit tests for both Redis and SQLite implementations
+- GitHub Actions CI workflow for automated testing
+- Comprehensive documentation with curl examples
+
+Configuration:
+- Environment variables: ADMIN_API_KEYS, USER_API_KEYS, REDIS_URL
+- Support for .env file via python-dotenv (development)
+- Dynamic key reload without restart
+
+New files:
+- adsbot/api_keys.py: Role mapping and key management
+- adsbot/rate_limiter.py: Redis-backed rate limiter
+- adsbot/sqlite_rate_limiter.py: SQLite fallback implementation
+- adsbot/middleware_fastapi.py: FastAPI/ASGI middleware
+- adsbot/flask_decorator.py: Flask endpoint decorator
+- .env.example: Example environment configuration
+- .gitignore: Updated to exclude .env secrets
+- scripts/create_env.py: Interactive .env file generator
+- requirements-dev.txt: Development dependencies (pytest, pytest-asyncio)
+- .github/workflows/python-tests.yml: CI workflow
+- docs/RATE_LIMITING.md: Configuration and integration guide
+- docs/CURL_EXAMPLES.md: Testing examples with curl
+- examples/app_rate_limit.py: Minimal FastAPI demo application
+- CHANGES.md: Detailed changelog
+- tests/test_rate_limiter.py: Redis limiter unit tests
+- tests/test_sqlite_rate_limiter.py: SQLite limiter unit tests
+- tests/test_rate_limiter_slowdown.py: Slowdown mode tests
+
+Modified files:
+- requirements.txt: Added redis dependency, moved pytest to requirements-dev.txt
+- adsbot/api_keys.py: Added dotenv integration
+
+Testing:
+- All tests pass: 3 passed, 5 skipped (integration tests)
+- Run with: python -m pytest -q
+
+Security:
+- No secrets committed (API keys, credentials)
+- .env template provided for local setup
+- Keys loaded from environment variables or secure managers
+
+Breaking changes: None
+
+BREAKING: None (new features only)
