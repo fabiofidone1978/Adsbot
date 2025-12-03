@@ -88,6 +88,7 @@ from .analytics import (
     CampaignAnalytics,
     BudgetOptimizer,
     SmartRecommendations,
+)
 from .ai_content import (
     AIContentGenerator,
     ContentType,
@@ -95,7 +96,11 @@ from .ai_content import (
     ContentRequest,
     ContentTemplateLibrary,
 )
+from .campaign_analyzer import (
+    CampaignAnalyzer,
+    ChannelAnalysis,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -111,6 +116,8 @@ logger = logging.getLogger(__name__)
     CAMPAIGN_CHANNEL,
     CAMPAIGN_NAME,
     CAMPAIGN_BUDGET,
+    CAMPAIGN_LOAD_BALANCE,
+    CAMPAIGN_PRICE,
     CAMPAIGN_CTA,
     TEMPLATE_NAME,
     TEMPLATE_CONTENT,
@@ -119,13 +126,19 @@ logger = logging.getLogger(__name__)
     ENTER_AMOUNT,
     SELECT_PAYMENT_PROVIDER,
     CONFIRM_PAYMENT,
-) = range(18)
     # AI Content Generation states
     GENERATE_TOPIC,
     SELECT_TONE,
     SELECT_PLATFORM,
     REVIEW_CONTENT,
-) = range(22)
+    # AI Campaign Generation states
+    AIGEN_SELECT_CHANNEL,
+    AIGEN_ANALYZING,
+    AIGEN_REVIEW_CAMPAIGNS,
+    AIGEN_REVIEWING_CHANNEL,
+    AIGEN_SELECTING_PLATFORM,
+    AIGEN_SELECTING_TONE,
+) = range(30)
 
 
 # Old menu (kept for backward compatibility)
@@ -142,6 +155,10 @@ MENU_BUTTONS = InlineKeyboardMarkup(
         [
             InlineKeyboardButton("🧭 Template broadcast", callback_data="menu:template"),
             InlineKeyboardButton("📊 Statistiche", callback_data="menu:stats"),
+        ],
+        [
+            InlineKeyboardButton("🤖 Genera Contenuti AI", callback_data="ai:menu"),
+            InlineKeyboardButton("✨ Genera Campagna con AI", callback_data="aigen:start"),
         ],
     ]
 )
@@ -239,11 +256,16 @@ async def open_menu(update: Update, context: CallbackContext) -> None:
 
 
 async def stats(update: Update, context: CallbackContext) -> None:
-    """Send quick user statistics."""
+    """Show channel selection for statistics."""
 
     user_data = update.effective_user
     if not user_data:
         return
+    
+    query = update.callback_query
+    if query:
+        await query.answer()
+    
     with with_session(context) as session:
         user = ensure_user(
             session,
@@ -252,21 +274,88 @@ async def stats(update: Update, context: CallbackContext) -> None:
             first_name=user_data.first_name,
             language_code=user_data.language_code,
         )
-        summary = summarize_user(session, user)
-    text = f"📊 Statistiche rapide:\n{format_summary(summary)}"
-    try:
-        if update.callback_query:
-            await update.callback_query.answer()
-            await update.callback_query.edit_message_text(text, reply_markup=MENU_BUTTONS)
+        
+        # Prendi i canali dell'utente
+        from .models import Channel
+        channels = session.query(Channel).filter_by(user_id=user.id).all()
+    
+    if not channels:
+        text = "📊 **Statistiche**\n\nNon hai ancora aggiunto canali. Aggiungi un canale per visualizzare le sue statistiche."
+        if query:
+            await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("➕ Aggiungi Canale", callback_data="menu:add_channel")],
+                [InlineKeyboardButton("◀️ Indietro", callback_data="menu:main")],
+            ]))
         else:
-            await update.message.reply_text(text, reply_markup=MENU_BUTTONS)
-    except Exception as e:
-        if hasattr(e, 'message') and 'Message is not modified' in str(e):
-            pass
-        elif 'Message is not modified' in str(e):
-            pass
-        else:
-            raise
+            await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("➕ Aggiungi Canale", callback_data="menu:add_channel")],
+                [InlineKeyboardButton("◀️ Indietro", callback_data="menu:main")],
+            ]))
+        return
+    
+    # Crea la lista di canali
+    text = "📊 **Scegli un canale per visualizzare le statistiche:**"
+    keyboard = []
+    
+    for channel in channels:
+        channel_name = f"@{channel.handle}" if channel.handle else f"#{channel.id}"
+        button_text = f"📺 {channel_name}"
+        if channel.title:
+            button_text += f" - {channel.title[:20]}"
+        keyboard.append([InlineKeyboardButton(button_text, callback_data=f"stats:channel:{channel.id}")])
+    
+    keyboard.append([InlineKeyboardButton("◀️ Indietro", callback_data="menu:main")])
+    
+    if query:
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    else:
+        await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def show_channel_stats(update: Update, context: CallbackContext) -> None:
+    """Show statistics for a specific channel."""
+    query = update.callback_query
+    await query.answer()
+    
+    # Estrai channel_id dal callback
+    channel_id = int(query.data.split(":")[-1])
+    
+    user_data = update.effective_user
+    with with_session(context) as session:
+        from .models import Channel, Campaign
+        
+        channel = session.query(Channel).filter_by(id=channel_id).first()
+        if not channel:
+            await query.edit_message_text("❌ Canale non trovato")
+            return
+        
+        # Calcola statistiche del canale
+        total_campaigns = session.query(Campaign).filter_by(channel_id=channel_id).count()
+        
+        # Statistiche simulate (in produzione verrebbero da API vere)
+        stats_text = (
+            f"📊 **Statistiche Canale: {channel.handle}**\n\n"
+            f"📺 **Informazioni Canale:**\n"
+            f"• Nome: @{channel.handle}\n"
+            f"• Titolo: {channel.title or 'N/A'}\n"
+            f"• Argomento: {channel.topic or 'N/A'}\n\n"
+            f"📈 **Metriche:**\n"
+            f"• 👥 Follower: N/A*\n"
+            f"• 👁️ Visualizzazioni (7d): N/A*\n"
+            f"• 🖱️ Click ricevuti (7d): N/A*\n"
+            f"• 📢 Condivisioni in altri canali: N/A*\n"
+            f"• 📊 Campagne create: {total_campaigns}\n\n"
+            f"💡 *Le metriche dettagliate verranno caricate dall'API di Telegram una volta configurata"
+        )
+    
+    keyboard = [
+        [InlineKeyboardButton("🔄 Aggiorna", callback_data=f"stats:channel:{channel_id}")],
+        [InlineKeyboardButton("📋 Campagne", callback_data=f"stats:campaigns:{channel_id}")],
+        [InlineKeyboardButton("◀️ Indietro", callback_data="menu:stats")],
+    ]
+    
+    await query.edit_message_text(stats_text, reply_markup=InlineKeyboardMarkup(keyboard))
+
 
 
 async def add_channel_entry(update: Update, context: CallbackContext) -> int:
@@ -304,20 +393,184 @@ async def add_channel_save(update: Update, context: CallbackContext) -> int:
 
 
 async def goal_entry(update: Update, context: CallbackContext) -> int:
-    """Begin a growth goal conversation."""
+    """Begin a growth goal conversation - show bot selection menu."""
 
+    user_data = update.effective_user
+    if not user_data:
+        return ConversationHandler.END
+
+    with with_session(context) as session:
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
+        )
+        # Get user's administered bots
+        from .models import Channel
+        channels = session.query(Channel).filter_by(user_id=user.id).all()
+
+    if not channels:
+        if update.callback_query:
+            await update.callback_query.answer()
+            await update.callback_query.edit_message_text(
+                "❌ Non hai canali amministrati ancora.\n\n"
+                "Aggiungi un canale prima di creare obiettivi.",
+                reply_markup=MENU_BUTTONS
+            )
+        else:
+            await update.message.reply_text(
+                "❌ Non hai canali amministrati ancora.\n\n"
+                "Aggiungi un canale prima di creare obiettivi.",
+                reply_markup=MENU_BUTTONS
+            )
+        return ConversationHandler.END
+
+    # Show bot selection keyboard with search
+    text = "🎯 Seleziona il canale per cui impostare un obiettivo:\n\n"
+    keyboard = []
+    
+    for channel in channels[:10]:
+        keyboard.append([
+            InlineKeyboardButton(
+                f"📱 {channel.handle} ({channel.title or 'Canale'})",
+                callback_data=f"goal:select_channel:{channel.id}"
+            )
+        ])
+    
+    keyboard.append([InlineKeyboardButton("🔍 Cerca canale", callback_data="goal:search_channel")])
+    keyboard.append([InlineKeyboardButton("❌ Annulla", callback_data="menu:home")])
+    
     if update.callback_query:
         await update.callback_query.answer()
         await update.callback_query.edit_message_text(
-            "Per quale canale vuoi impostare un obiettivo? (@username)"
+            text,
+            reply_markup=InlineKeyboardMarkup(keyboard)
         )
+    else:
+        await update.message.reply_text(
+            text,
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
+    
+    return GOAL_CHANNEL
+
+
+async def goal_channel_selected(update: Update, context: CallbackContext) -> int:
+    """User selected a channel for goal setup - check if goals already exist."""
+    query = update.callback_query
+    await query.answer()
+
+    # Extract channel ID
+    channel_id = int(query.data.split(":")[2])
+    
+    with with_session(context) as session:
+        from .models import Channel, GrowthGoal
+        channel = session.query(Channel).filter_by(id=channel_id).first()
+        if not channel:
+            await query.edit_message_text("❌ Canale non trovato.")
+            return ConversationHandler.END
+        
+        # Controlla se ci sono già obiettivi per questo canale
+        existing_goals = session.query(GrowthGoal).filter_by(channel_id=channel_id).all()
+        
+        context.user_data["goal_channel"] = channel.handle
+        context.user_data["goal_channel_id"] = channel_id
+        
+        if existing_goals:
+            # Mostra gli obiettivi già impostati
+            goals_text = f"🎯 **Obiettivi per: @{channel.handle}**\n\n"
+            
+            for i, goal in enumerate(existing_goals, 1):
+                goals_text += (
+                    f"**Obiettivo #{i}:**\n"
+                    f"👥 Target: {goal.target_members} iscritti\n"
+                )
+                if goal.deadline:
+                    goals_text += f"📅 Scadenza: {goal.deadline.strftime('%d/%m/%Y')}\n"
+                if goal.description:
+                    goals_text += f"📝 Note: {goal.description}\n"
+                goals_text += "\n"
+            
+            keyboard = [
+                [InlineKeyboardButton("➕ Aggiungi nuovo obiettivo", callback_data=f"goal:new:{channel_id}")],
+                [InlineKeyboardButton("✏️ Modifica", callback_data=f"goal:edit:{channel_id}")],
+                [InlineKeyboardButton("◀️ Indietro", callback_data="menu:home")],
+            ]
+            
+            await query.edit_message_text(goals_text, reply_markup=InlineKeyboardMarkup(keyboard))
+            return ConversationHandler.END
+    
+    # Se non ci sono obiettivi, chiedi di crearne uno
+    await query.edit_message_text(
+        f"📊 Obiettivo per: @{context.user_data['goal_channel']}\n\n"
+        "👥 **Quanti iscritti vuoi raggiungere?**\n\n"
+        "Questo è il tuo **target di crescita**.\n"
+        "Es: se hai 1000 iscritti, puoi metterti come obiettivo 5000.\n\n"
+        "Scrivi un numero intero (es: 5000)"
+    )
+    return GOAL_TARGET
+
+
+async def goal_search_channel(update: Update, context: CallbackContext) -> int:
+    """Start channel search."""
+    query = update.callback_query
+    if query:
+        await query.answer()
+        await query.edit_message_text("🔍 Scrivi il nome o il @username del canale:")
     return GOAL_CHANNEL
 
 
 async def goal_channel(update: Update, context: CallbackContext) -> int:
-    context.user_data["goal_channel"] = update.message.text.strip()
-    await update.message.reply_text("Quanti membri vuoi raggiungere? (numero intero)")
-    return GOAL_TARGET
+    """Handle channel search or selection."""
+    search_term = update.message.text.strip().lower()
+    
+    user_data = update.effective_user
+    if not user_data:
+        return ConversationHandler.END
+    
+    with with_session(context) as session:
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
+        )
+        
+        from .models import Channel
+        # Search for matching channels
+        all_channels = session.query(Channel).filter_by(user_id=user.id).all()
+        matching = [ch for ch in all_channels if search_term in ch.handle.lower()]
+    
+    if not matching:
+        await update.message.reply_text(
+            f"❌ Nessun canale trovato per '{search_term}'.\n\n"
+            "Prova di nuovo:"
+        )
+        return GOAL_CHANNEL
+    
+    # Show search results
+    text = f"🔍 Risultati per '{search_term}':\n\n"
+    keyboard = []
+    
+    for channel in matching[:10]:
+        keyboard.append([
+            InlineKeyboardButton(
+                f"📱 {channel.handle} ({channel.title or 'Canale'})",
+                callback_data=f"goal:select_channel:{channel.id}"
+            )
+        ])
+    
+    keyboard.append([InlineKeyboardButton("🔙 Indietro", callback_data="menu:home")])
+    
+    await update.message.reply_text(
+        text,
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+    
+    return GOAL_CHANNEL
 
 
 async def goal_target(update: Update, context: CallbackContext) -> int:
@@ -329,9 +582,52 @@ async def goal_target(update: Update, context: CallbackContext) -> int:
 
     context.user_data["goal_target"] = target
     await update.message.reply_text(
-        "Qual è la deadline? (YYYY-MM-DD) oppure lascia vuoto per nessuna"
+        "Qual è la deadline? (YYYY-MM-DD) oppure lascia vuoto per nessuna",
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("⏭️ Nessuna deadline", callback_data="goal:skip_deadline")],
+        ])
     )
     return GOAL_DEADLINE
+
+
+async def goal_skip_deadline(update: Update, context: CallbackContext) -> int:
+    """Salta la deadline e salva l'obiettivo con deadline=None"""
+    query = update.callback_query
+    await query.answer()
+    
+    # Prendi i dati salvati
+    user_id = context.user_data.get("user_id")
+    channel_id = context.user_data.get("channel_id")
+    target = context.user_data.get("goal_target")
+    
+    if not all([user_id, channel_id, target]):
+        await query.edit_message_text("Errore: dati mancanti. Riprova con /goal")
+        return ConversationHandler.END
+    
+    # Salva l'obiettivo senza deadline
+    try:
+        goal = GrowthGoal(
+            user_id=user_id,
+            channel_id=channel_id,
+            target_subscribers=target,
+            deadline=None,
+            status="active",
+            current_subscribers=0,
+            created_at=datetime.now()
+        )
+        session.add(goal)
+        session.commit()
+        
+        await query.edit_message_text(
+            f"✅ Obiettivo di crescita creato con successo!\n"
+            f"Target: {target:,} iscritti\n"
+            f"Senza deadline"
+        )
+    except Exception as e:
+        session.rollback()
+        await query.edit_message_text(f"Errore nel salvataggio: {str(e)}")
+    
+    return ConversationHandler.END
 
 
 async def goal_deadline(update: Update, context: CallbackContext) -> int:
@@ -366,22 +662,148 @@ async def goal_deadline(update: Update, context: CallbackContext) -> int:
 
 
 async def offer_entry(update: Update, context: CallbackContext) -> int:
-    """Begin an offer conversation."""
+    """Begin an offer conversation - show bot selection menu."""
 
+    user_data = update.effective_user
+    if not user_data:
+        return ConversationHandler.END
+
+    with with_session(context) as session:
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
+        )
+        from .models import Channel
+        channels = session.query(Channel).filter_by(user_id=user.id).all()
+
+    if not channels:
+        if update.callback_query:
+            await update.callback_query.answer()
+            await update.callback_query.edit_message_text(
+                "❌ Non hai canali amministrati ancora.\n\n"
+                "Aggiungi un canale prima di creare offerte.",
+                reply_markup=MENU_BUTTONS
+            )
+        else:
+            await update.message.reply_text(
+                "❌ Non hai canali amministrati ancora.\n\n"
+                "Aggiungi un canale prima di creare offerte.",
+                reply_markup=MENU_BUTTONS
+            )
+        return ConversationHandler.END
+
+    text = "💸 Seleziona il canale dove creare l'offerta:\n\n"
+    keyboard = []
+    
+    for channel in channels[:10]:
+        keyboard.append([
+            InlineKeyboardButton(
+                f"📱 {channel.handle} ({channel.title or 'Canale'})",
+                callback_data=f"offer:select_channel:{channel.id}"
+            )
+        ])
+    
+    keyboard.append([InlineKeyboardButton("🔍 Cerca canale", callback_data="offer:search_channel")])
+    keyboard.append([InlineKeyboardButton("❌ Annulla", callback_data="menu:home")])
+    
     if update.callback_query:
         await update.callback_query.answer()
         await update.callback_query.edit_message_text(
-            "Per quale canale vuoi creare un'offerta? (@username)"
+            text,
+            reply_markup=InlineKeyboardMarkup(keyboard)
         )
+    else:
+        await update.message.reply_text(
+            text,
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
+    
+    return OFFER_CHANNEL
+
+
+async def offer_channel_selected(update: Update, context: CallbackContext) -> int:
+    """User selected a channel for offer setup."""
+    query = update.callback_query
+    await query.answer()
+
+    channel_id = int(query.data.split(":")[2])
+    
+    with with_session(context) as session:
+        from .models import Channel
+        channel = session.query(Channel).filter_by(id=channel_id).first()
+        if not channel:
+            await query.edit_message_text("❌ Canale non trovato.")
+            return ConversationHandler.END
+        
+        context.user_data["offer_channel"] = channel.handle
+        context.user_data["offer_channel_id"] = channel_id
+    
+    await query.edit_message_text(
+        f"💰 Offerta per: {context.user_data['offer_channel']}\n\n"
+        "Che tipo di offerta? (shoutout, post, pinned, takeover)"
+    )
+    return OFFER_TYPE
+
+
+async def offer_search_channel(update: Update, context: CallbackContext) -> int:
+    """Start channel search for offers."""
+    query = update.callback_query
+    if query:
+        await query.answer()
+        await query.edit_message_text("🔍 Scrivi il nome o il @username del canale:")
     return OFFER_CHANNEL
 
 
 async def offer_channel(update: Update, context: CallbackContext) -> int:
-    context.user_data["offer_channel"] = update.message.text.strip()
+    """Handle channel search for offers."""
+    search_term = update.message.text.strip().lower()
+    
+    user_data = update.effective_user
+    if not user_data:
+        return ConversationHandler.END
+    
+    with with_session(context) as session:
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
+        )
+        
+        from .models import Channel
+        all_channels = session.query(Channel).filter_by(user_id=user.id).all()
+        matching = [ch for ch in all_channels if search_term in ch.handle.lower()]
+    
+    if not matching:
+        await update.message.reply_text(
+            f"❌ Nessun canale trovato per '{search_term}'.\n\n"
+            "Prova di nuovo:"
+        )
+        return OFFER_CHANNEL
+    
+    text = f"🔍 Risultati per '{search_term}':\n\n"
+    keyboard = []
+    
+    for channel in matching[:10]:
+        keyboard.append([
+            InlineKeyboardButton(
+                f"📱 {channel.handle} ({channel.title or 'Canale'})",
+                callback_data=f"offer:select_channel:{channel.id}"
+            )
+        ])
+    
+    keyboard.append([InlineKeyboardButton("🔙 Indietro", callback_data="menu:home")])
+    
     await update.message.reply_text(
-        "Che tipo di offerta? (shoutout, post, pinned, takeover)"
+        text,
+        reply_markup=InlineKeyboardMarkup(keyboard)
     )
-    return OFFER_TYPE
+    
+    return OFFER_CHANNEL
 
 
 async def offer_type(update: Update, context: CallbackContext) -> int:
@@ -389,9 +811,15 @@ async def offer_type(update: Update, context: CallbackContext) -> int:
     try:
         offer_type_enum = OfferType(offer_type_value)
     except ValueError:
-        await update.message.reply_text(
-            "Tipo non valido. Usa: shoutout, post, pinned, takeover"
+        guide = (
+            "❓ **Tipi di offerta disponibili:**\n\n"
+            "🔊 **Shoutout** - Menzione vocale del tuo prodotto\n"
+            "📸 **Post** - Un post dedicato sul canale\n"
+            "📌 **Pinned** - Post fisso in alto per più giorni\n"
+            "🎯 **Takeover** - Controllo totale del canale per X ore\n\n"
+            "Scrivi il tipo che preferisci: shoutout, post, pinned o takeover"
         )
+        await update.message.reply_text(guide)
         return OFFER_TYPE
 
     context.user_data["offer_type"] = offer_type_enum
@@ -408,9 +836,42 @@ async def offer_price(update: Update, context: CallbackContext) -> int:
 
     context.user_data["offer_price"] = price
     await update.message.reply_text(
-        "Note opzionali? Puoi descrivere il formato o lasciare vuoto"
+        "Note opzionali? Puoi descrivere il formato o lasciare vuoto",
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("⏭️ Salta note", callback_data="offer:skip_notes")],
+        ])
     )
     return OFFER_NOTES
+
+
+async def offer_skip_notes(update: Update, context: CallbackContext) -> int:
+    """Salta le note opzionali dell'offerta."""
+    query = update.callback_query
+    await query.answer()
+    
+    user_data = update.effective_user
+    if not user_data:
+        return ConversationHandler.END
+
+    with with_session(context) as session:
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
+        )
+        channel = add_channel(session, user, context.user_data["offer_channel"])
+        add_offer(
+            session,
+            channel,
+            context.user_data["offer_type"],
+            context.user_data["offer_price"],
+            None,  # nessuna nota
+        )
+
+    await query.edit_message_text("✅ Offerta registrata!", reply_markup=MENU_BUTTONS)
+    return ConversationHandler.END
 
 
 async def offer_notes(update: Update, context: CallbackContext) -> int:
@@ -440,21 +901,353 @@ async def offer_notes(update: Update, context: CallbackContext) -> int:
     return ConversationHandler.END
 
 
-async def campaign_entry(update: Update, context: CallbackContext) -> int:
-    """Begin a campaign conversation."""
+async def campaign_disclaimer(update: Update, context: CallbackContext) -> int:
+    """Show disclaimer about campaign creation before proceeding."""
+    query = update.callback_query
+    if query:
+        await query.answer()
+    
+    text = (
+        "📣 **Creazione Campagna Manuale**\n\n"
+        "Questa funzione è per te se:\n"
+        "✅ Hai già idee chiare sulla campagna\n"
+        "✅ Vuoi supporto nella creazione\n\n"
+        "Se invece:\n"
+        "❌ Non hai idee su cosa fare\n"
+        "❌ Vuoi che l'AI generi le campagne\n\n"
+        "👉 Usa '✨ Genera Campagna con AI' (gratis con upgrade)\n\n"
+        "Cosa vuoi fare?"
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("➡️ Prosegui con creazione manuale", callback_data="campaign:proceed")],
+        [InlineKeyboardButton("✨ Usa AI Campaign Generator", callback_data="aigen:start")],
+        [InlineKeyboardButton("◀️ Indietro", callback_data="menu:home")],
+    ]
+    
+    if query:
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    else:
+        await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    
+    return CAMPAIGN_CHANNEL
 
+
+async def upgrade_plan_selected(update: Update, context: CallbackContext) -> None:
+    """Handle plan selection and show payment screen."""
+    query = update.callback_query
+    await query.answer()
+    
+    # Estrai il piano dal callback
+    plan = query.data.split(":")[-1]  # "premium" o "pro"
+    
+    if plan == "premium":
+        plan_name = "Premium"
+        price = 9.99
+        description = (
+            "📦 **Piano Premium**\n\n"
+            "✅ Crea campagne illimitate\n"
+            "✅ Supporto prioritario\n"
+            "✅ Analytics avanzate\n\n"
+            "Prezzo: €9.99/mese"
+        )
+    else:  # pro
+        plan_name = "Pro"
+        price = 29.99
+        description = (
+            "👑 **Piano Pro**\n\n"
+            "✅ Tutto di Premium +\n"
+            "✅ Supporto 24/7\n"
+            "✅ Funzioni AI avanzate\n\n"
+            "Prezzo: €29.99/mese"
+        )
+    
+    context.user_data["upgrade_plan"] = plan
+    context.user_data["upgrade_price"] = price
+    context.user_data["upgrade_plan_name"] = plan_name
+    
+    # Mostra il form di pagamento
+    payment_text = (
+        f"{description}\n\n"
+        "💳 **Procedi al pagamento:**\n\n"
+        "Per testare, puoi usare €0.00 per testare il flusso PayPal"
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("💳 Paga con PayPal", callback_data=f"upgrade:paypal:{plan}")],
+        [InlineKeyboardButton("🧪 Test (€0.00)", callback_data=f"upgrade:test:{plan}")],
+        [InlineKeyboardButton("◀️ Indietro", callback_data="campaign:payment")],
+    ]
+    
+    await query.edit_message_text(payment_text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def upgrade_paypal(update: Update, context: CallbackContext) -> None:
+    """Handle PayPal payment."""
+    query = update.callback_query
+    await query.answer()
+    
+    plan = query.data.split(":")[-1]
+    plan_name = context.user_data.get("upgrade_plan_name", "Premium")
+    price = context.user_data.get("upgrade_price", 9.99)
+    
+    text = (
+        f"💳 **Pagamento PayPal**\n\n"
+        f"Piano: {plan_name}\n"
+        f"Importo: €{price:.2f}\n\n"
+        f"Reindirizzamento a PayPal...\n\n"
+        f"(In produzione, questo collegherebbe a PayPal)\n"
+        f"Transazione ID: {update.effective_user.id}_{int(__import__('time').time())}"
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("✅ Confermato", callback_data=f"upgrade:confirmed:{plan}")],
+        [InlineKeyboardButton("❌ Annulla", callback_data="menu:home")],
+    ]
+    
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def upgrade_test(update: Update, context: CallbackContext) -> None:
+    """Handle test payment (€0.00)."""
+    query = update.callback_query
+    await query.answer()
+    
+    plan = query.data.split(":")[-1]
+    plan_name = context.user_data.get("upgrade_plan_name", "Premium")
+    
+    text = (
+        f"🧪 **Test Pagamento**\n\n"
+        f"Piano: {plan_name}\n"
+        f"Importo: €0.00\n\n"
+        f"✅ Pagamento di test completato!\n\n"
+        f"L'upgrade sarà attivo entro pochi secondi..."
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("✅ Confermato", callback_data=f"upgrade:confirmed:{plan}")],
+        [InlineKeyboardButton("❌ Annulla", callback_data="menu:home")],
+    ]
+    
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def upgrade_confirmed(update: Update, context: CallbackContext) -> None:
+    """Handle confirmed upgrade."""
+    query = update.callback_query
+    await query.answer()
+    
+    plan = query.data.split(":")[-1]
+    user_data = update.effective_user
+    
+    # Aggiorna il database con il piano
+    with with_session(context) as session:
+        from .models import User
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
+        )
+        user.subscription_type = plan
+        session.commit()
+    
+    plan_name = context.user_data.get("upgrade_plan_name", "Premium")
+    
+    text = (
+        f"🎉 **Upgrade Completato!**\n\n"
+        f"Benvenuto al Piano {plan_name}!\n\n"
+        f"✅ Accesso illimitato alle funzioni premium\n"
+        f"✅ Supporto prioritario attivo\n\n"
+        f"Ora puoi creare campagne personalizzate.\n"
+        f"Ritorna al menu principale per iniziare!"
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("🏠 Menu Principale", callback_data="menu:home")],
+    ]
+    
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def campaign_payment_request(update: Update, context: CallbackContext) -> int:
+    """Show payment/upgrade request before creating campaign."""
+    query = update.callback_query
+    if query:
+        await query.answer()
+    
+    text = (
+        "💳 **Upgrade Richiesto**\n\n"
+        "La creazione di campagne personalizzate richiede un upgrade premium.\n\n"
+        "**Piano Premium** - €9.99/mese\n"
+        "✅ Crea campagne illimitate\n"
+        "✅ Supporto prioritario\n"
+        "✅ Analytics avanzate\n\n"
+        "**Piano Pro** - €29.99/mese\n"
+        "✅ Tutto di Premium +\n"
+        "✅ Supporto 24/7\n"
+        "✅ Funzioni AI avanzate\n\n"
+        "Scegli un piano per procedere:"
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("💳 Upgrade a Premium", callback_data="upgrade:premium")],
+        [InlineKeyboardButton("👑 Scopri Piano Pro", callback_data="upgrade:pro")],
+        [InlineKeyboardButton("◀️ Indietro", callback_data="menu:campaign")],
+    ]
+    
+    if query:
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    else:
+        await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    
+    return ConversationHandler.END
+
+
+async def campaign_entry(update: Update, context: CallbackContext) -> int:
+    """Begin a campaign conversation - show bot selection menu."""
+
+    user_data = update.effective_user
+    if not user_data:
+        return ConversationHandler.END
+
+    with with_session(context) as session:
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
+        )
+        from .models import Channel
+        channels = session.query(Channel).filter_by(user_id=user.id).all()
+
+    if not channels:
+        if update.callback_query:
+            await update.callback_query.answer()
+            await update.callback_query.edit_message_text(
+                "❌ Non hai canali amministrati ancora.\n\n"
+                "Aggiungi un canale prima di creare campagne.",
+                reply_markup=MENU_BUTTONS
+            )
+        else:
+            await update.message.reply_text(
+                "❌ Non hai canali amministrati ancora.\n\n"
+                "Aggiungi un canale prima di creare campagne.",
+                reply_markup=MENU_BUTTONS
+            )
+        return ConversationHandler.END
+
+    text = "📣 Seleziona il canale dove lanciare la campagna:\n\n"
+    keyboard = []
+    
+    for channel in channels[:10]:
+        keyboard.append([
+            InlineKeyboardButton(
+                f"📱 {channel.handle} ({channel.title or 'Canale'})",
+                callback_data=f"campaign:select_channel:{channel.id}"
+            )
+        ])
+    
+    keyboard.append([InlineKeyboardButton("🔍 Cerca canale", callback_data="campaign:search_channel")])
+    keyboard.append([InlineKeyboardButton("❌ Annulla", callback_data="menu:home")])
+    
     if update.callback_query:
         await update.callback_query.answer()
         await update.callback_query.edit_message_text(
-            "Su quale canale vuoi lanciare la campagna? (@username)"
+            text,
+            reply_markup=InlineKeyboardMarkup(keyboard)
         )
+    else:
+        await update.message.reply_text(
+            text,
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
+    
+    return CAMPAIGN_CHANNEL
+
+
+async def campaign_channel_selected(update: Update, context: CallbackContext) -> int:
+    """User selected a channel for campaign."""
+    query = update.callback_query
+    await query.answer()
+
+    channel_id = int(query.data.split(":")[2])
+    
+    with with_session(context) as session:
+        from .models import Channel
+        channel = session.query(Channel).filter_by(id=channel_id).first()
+        if not channel:
+            await query.edit_message_text("❌ Canale non trovato.")
+            return ConversationHandler.END
+        
+        context.user_data["campaign_channel"] = channel.handle
+        context.user_data["campaign_channel_id"] = channel_id
+    
+    await query.edit_message_text(
+        f"📣 Campagna su: {context.user_data['campaign_channel']}\n\n"
+        "Nome della campagna?"
+    )
+    return CAMPAIGN_NAME
+
+
+async def campaign_search_channel(update: Update, context: CallbackContext) -> int:
+    """Start channel search for campaigns."""
+    query = update.callback_query
+    if query:
+        await query.answer()
+        await query.edit_message_text("🔍 Scrivi il nome o il @username del canale:")
     return CAMPAIGN_CHANNEL
 
 
 async def campaign_channel(update: Update, context: CallbackContext) -> int:
-    context.user_data["campaign_channel"] = update.message.text.strip()
-    await update.message.reply_text("Nome della campagna?")
-    return CAMPAIGN_NAME
+    """Handle channel search for campaigns."""
+    search_term = update.message.text.strip().lower()
+    
+    user_data = update.effective_user
+    if not user_data:
+        return ConversationHandler.END
+    
+    with with_session(context) as session:
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
+        )
+        
+        from .models import Channel
+        all_channels = session.query(Channel).filter_by(user_id=user.id).all()
+        matching = [ch for ch in all_channels if search_term in ch.handle.lower()]
+    
+    if not matching:
+        await update.message.reply_text(
+            f"❌ Nessun canale trovato per '{search_term}'.\n\n"
+            "Prova di nuovo:"
+        )
+        return CAMPAIGN_CHANNEL
+    
+    text = f"🔍 Risultati per '{search_term}':\n\n"
+    keyboard = []
+    
+    for channel in matching[:10]:
+        keyboard.append([
+            InlineKeyboardButton(
+                f"📱 {channel.handle} ({channel.title or 'Canale'})",
+                callback_data=f"campaign:select_channel:{channel.id}"
+            )
+        ])
+    
+    keyboard.append([InlineKeyboardButton("🔙 Indietro", callback_data="menu:home")])
+    
+    await update.message.reply_text(
+        text,
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+    
+    return CAMPAIGN_CHANNEL
 
 
 async def campaign_name(update: Update, context: CallbackContext) -> int:
@@ -475,8 +1268,149 @@ async def campaign_budget(update: Update, context: CallbackContext) -> int:
             await update.message.reply_text("Inserisci un numero valido o lascia vuoto")
             return CAMPAIGN_BUDGET
     context.user_data["campaign_budget"] = budget
-    await update.message.reply_text("Call to action o note della campagna?")
+    
+    # Controlla il saldo dell'utente
+    user_data = update.effective_user
+    if not user_data:
+        return ConversationHandler.END
+    
+    with with_session(context) as session:
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
+        )
+        balance = get_user_balance(session, user.id)
+    
+    if balance < 50:  # Minimo richiesto
+        await update.message.reply_text(
+            f"💰 **Saldo insufficiente**\n\n"
+            f"Saldo attuale: €{balance:.2f}\n"
+            f"Minimo richiesto per campagne: €50.00\n\n"
+            f"Desideri caricare crediti?"
+        )
+        return CAMPAIGN_LOAD_BALANCE
+    
+    # Se ha crediti sufficienti, chiedi il prezzo per inserzione (opzionale)
+    await update.message.reply_text(
+        f"💵 **Prezzo per inserzione** (opzionale)\n\n"
+        f"Quanto vuoi spendere per ogni post? (es. 25.50)\n"
+        f"Saldo disponibile: €{balance:.2f}",
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("⏭️ Salta prezzo", callback_data="campaign:skip_price")],
+        ])
+    )
+    return CAMPAIGN_PRICE
+
+
+async def campaign_load_balance(update: Update, context: CallbackContext) -> int:
+    """Permette all'utente di caricare crediti."""
+    keyboard = [
+        [InlineKeyboardButton("💶 Carica €50", callback_data="campaign:load:50")],
+        [InlineKeyboardButton("💶 Carica €100", callback_data="campaign:load:100")],
+        [InlineKeyboardButton("💶 Carica €250", callback_data="campaign:load:250")],
+        [InlineKeyboardButton("✏️ Inserisci importo", callback_data="campaign:load:custom")],
+        [InlineKeyboardButton("⏭️ Continua ugualmente", callback_data="campaign:skip_load")],
+    ]
+    await update.message.reply_text(
+        "Scegli un importo da caricare oppure inserisci un importo personalizzato:",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+    return CAMPAIGN_LOAD_BALANCE
+
+
+async def campaign_skip_price(update: Update, context: CallbackContext) -> int:
+    """Salta il prezzo per inserzione e procede al CTA."""
+    query = update.callback_query
+    await query.answer()
+    
+    context.user_data["campaign_price"] = None
+    
+    # Procedi al CTA
+    await query.edit_message_text(
+        "📍 **Call to Action** (CTA) o note della campagna? (opzionale)\n\n"
+        "❓ **Che cos'è il CTA?**\n"
+        "È il messaggio che invita l'utente ad agire:\n\n"
+        "✅ Esempi buoni:\n"
+        "• 'Clicca il link in bio'\n"
+        "• 'Scarica subito l'app'\n"
+        "• 'Visita il nostro sito'\n"
+        "• 'Iscriviti al canale'\n\n"
+        "Scrivi il tuo CTA o lascia vuoto se non serve",
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("⏭️ Salta CTA", callback_data="campaign:skip_cta")],
+        ])
+    )
     return CAMPAIGN_CTA
+
+
+async def campaign_price(update: Update, context: CallbackContext) -> int:
+    """Chiede il prezzo per singolo post della campagna."""
+    price_text = update.message.text.strip()
+    try:
+        price = float(price_text)
+        if price <= 0:
+            await update.message.reply_text(
+                "Il prezzo deve essere positivo. Riprova:"
+            )
+            return CAMPAIGN_PRICE
+    except ValueError:
+        await update.message.reply_text(
+            "Inserisci un numero valido (es. 25.50)"
+        )
+        return CAMPAIGN_PRICE
+    
+    context.user_data["campaign_price"] = price
+    
+    # Procedi al CTA (opzionale)
+    await update.message.reply_text(
+        f"📍 **Prezzo per inserzione**: €{price:.2f}\n\n"
+        "📍 **Call to Action** (CTA) o note della campagna? (opzionale)\n\n"
+        "❓ **Che cos'è il CTA?**\n"
+        "È il messaggio che invita l'utente ad agire:\n\n"
+        "✅ Esempi buoni:\n"
+        "• 'Clicca il link in bio'\n"
+        "• 'Scarica subito l'app'\n"
+        "• 'Visita il nostro sito'\n"
+        "• 'Iscriviti al canale'\n\n"
+        "Scrivi il tuo CTA o lascia vuoto se non serve",
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("⏭️ Salta CTA", callback_data="campaign:skip_cta")],
+        ])
+    )
+    return CAMPAIGN_CTA
+
+
+async def campaign_skip_cta(update: Update, context: CallbackContext) -> int:
+    """Salta il CTA opzionale e salva la campagna."""
+    query = update.callback_query
+    await query.answer()
+    
+    user_data = update.effective_user
+    if not user_data:
+        return ConversationHandler.END
+
+    with with_session(context) as session:
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
+        )
+        channel = add_channel(session, user, context.user_data["campaign_channel"])
+        add_campaign(
+            session,
+            channel,
+            name=context.user_data["campaign_name"],
+            budget=context.user_data["campaign_budget"],
+            call_to_action=None,  # nessun CTA
+        )
+
+    await query.edit_message_text("📣 Campagna registrata!", reply_markup=MENU_BUTTONS)
+    return ConversationHandler.END
 
 
 async def campaign_cta(update: Update, context: CallbackContext) -> int:
@@ -617,16 +1551,9 @@ async def insideads_buy_menu(update: Update, context: CallbackContext) -> None:
     keyboard = [
         [InlineKeyboardButton("➕ Crea campagna", callback_data="insideads:buy:create")],
         [InlineKeyboardButton("📋 Le mie campagne", callback_data="insideads:buy:list")],
+        [InlineKeyboardButton("🤖 Genera Contenuti AI", callback_data="ai:menu")],
         [InlineKeyboardButton("📊 Gestione Campagne Avanzate", callback_data="campaign:menu")],
-        [InlineKeyboardButton("🤖 AI Optimization", callback_data="campaign:ai_optimize")],
-            keyboard = [
-                [InlineKeyboardButton("➕ Crea campagna", callback_data="insideads:buy:create")],
-                [InlineKeyboardButton("📋 Le mie campagne", callback_data="insideads:buy:list")],
-                [InlineKeyboardButton("🤖 Genera Contenuti AI", callback_data="ai:menu")],
-                [InlineKeyboardButton("📊 Gestione Campagne Avanzate", callback_data="campaign:menu")],
-                [InlineKeyboardButton("🧠 AI Optimization", callback_data="campaign:ai_optimize")],
-                [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:main")],
-            ]
+        [InlineKeyboardButton("🧠 AI Optimization", callback_data="campaign:ai_optimize")],
         [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:main")],
     ]
     
@@ -1175,6 +2102,7 @@ async def campaign_management_menu(update: Update, context: CallbackContext) -> 
             "Opzioni disponibili:",
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("📊 Crea Campagna Multi-Variante", callback_data="campaign:create_multi")],
+                [InlineKeyboardButton("✨ Genera Campagna con AI", callback_data="aigen:start")],
                 [InlineKeyboardButton("📈 Visualizza Previsioni", callback_data="campaign:forecast")],
                 [InlineKeyboardButton("🤖 AI Optimization", callback_data="campaign:ai_optimize")],
                 [InlineKeyboardButton("💡 Suggerimenti Campagna", callback_data="campaign:suggestions")],
@@ -1203,7 +2131,7 @@ async def campaign_create_multi(update: Update, context: CallbackContext) -> Non
         )
         
         # Get user channels for targeting options
-        channels = session.query(Channel).filter_by(owner_id=user.id).all()
+        channels = session.query(Channel).filter_by(user_id=user.id).all()
     
     if not channels:
         await query.edit_message_text(
@@ -1436,154 +2364,728 @@ async def campaign_suggestions(update: Update, context: CallbackContext) -> None
         ])
     )
 
-    # AI Content Generation Handlers
-    async def generate_post_menu(update: Update, context: CallbackContext) -> int:
-        """Show AI content generation menu."""
-        query = update.callback_query
-        if query:
-            await query.answer()
+
+# AI Content Generation Handlers
+async def generate_post_menu(update: Update, context: CallbackContext) -> int:
+    """Show AI content generation menu - verify channel and subscription first."""
+    query = update.callback_query
+    if query:
+        await query.answer()
+
+    user_data = update.effective_user
+    if not user_data:
+        return ConversationHandler.END
     
-        text = (
-            "🤖 Generatore di Contenuti AI\n\n"
-            "Genera post e annunci con AI:\n"
-            "• Ad copy accattivante\n"
-            "• Headline professionali\n"
-            "• Social media posts\n"
-            "• Campagne complete\n"
-            "• A/B test variations"
+    # Verifica subscription e canale
+    with with_session(context) as session:
+        from .models import Channel, User
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
         )
+        
+        # Check subscription
+        subscription = user.subscription_type or "gratis"
+        if subscription == "gratis":
+            error_text = (
+                "🔒 Generatore di Contenuti AI è una feature premium\n\n"
+                "✨ Per sbloccare questa feature, passa a un piano premium:\n"
+                "💳 Piano Premium: €9.99/mese\n"
+                "👑 Piano Pro: €29.99/mese"
+            )
+            
+            keyboard = [
+                [InlineKeyboardButton("💳 Upgrade a Premium", callback_data="upgrade:premium")],
+                [InlineKeyboardButton("👑 Scopri Piano Pro", callback_data="upgrade:pro")],
+                [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:main")],
+            ]
+            
+            if query:
+                await query.edit_message_text(error_text, reply_markup=InlineKeyboardMarkup(keyboard))
+            else:
+                await update.message.reply_text(error_text, reply_markup=InlineKeyboardMarkup(keyboard))
+            
+            return ConversationHandler.END
+        
+        channels = session.query(Channel).filter_by(user_id=user.id).all()
+        
+        if not channels:
+            # Nessun canale - mostra errore
+            error_text = (
+                "❌ Non hai canali registrati\n\n"
+                "Per usare il Generatore di Contenuti AI, devi prima configurare almeno un canale.\n\n"
+                "📌 Cosa fare:\n"
+                "1. Vai su 'Impostazioni'\n"
+                "2. Aggiungi il tuo bot/canale\n"
+                "3. Torna qui e riprova"
+            )
+            
+            keyboard = [[InlineKeyboardButton("◀️ Indietro", callback_data="insideads:main")]]
+            
+            if query:
+                await query.edit_message_text(error_text, reply_markup=InlineKeyboardMarkup(keyboard))
+            else:
+                await update.message.reply_text(error_text, reply_markup=InlineKeyboardMarkup(keyboard))
+            
+            return ConversationHandler.END
+        
+        # Salva il canale principale (il primo) in user_data per successivo utilizzo
+        context.user_data["ai_channel_id"] = channels[0].id
+        context.user_data["ai_channel"] = channels[0]
+        context.user_data["user_subscription"] = subscription
+
+    text = (
+        "🤖 Generatore di Contenuti AI\n\n"
+        "Genera post e annunci con AI:\n"
+        "• Ad copy accattivante\n"
+        "• Headline professionali\n"
+        "• Social media posts\n"
+        "• Campagne complete\n"
+        "• A/B test variations"
+    )
+
+    keyboard = [
+        [InlineKeyboardButton("✍️ Genera Post", callback_data="ai:generate_post")],
+        [InlineKeyboardButton("📰 Crea Headline", callback_data="ai:generate_headline")],
+        [InlineKeyboardButton("🎯 Ad Copy", callback_data="ai:generate_ad")],
+        [InlineKeyboardButton("🎨 Campagna Completa", callback_data="ai:generate_campaign")],
+        [InlineKeyboardButton("🧪 Test A/B", callback_data="ai:ab_test")],
+        [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:main")],
+    ]
+
+    if query:
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    else:
+        await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+    return SELECT_TONE
+
+
+async def ai_generate_post_start(update: Update, context: CallbackContext) -> int:
+    """Start post generation - skip topic input, auto-detect from channel."""
+    query = update.callback_query
+    if query:
+        await query.answer()
+
+    context.user_data["generation_type"] = "post"
     
-        keyboard = [
-            [InlineKeyboardButton("✍️ Genera Post", callback_data="ai:generate_post")],
-            [InlineKeyboardButton("📰 Crea Headline", callback_data="ai:generate_headline")],
-            [InlineKeyboardButton("🎯 Ad Copy", callback_data="ai:generate_ad")],
-            [InlineKeyboardButton("🎨 Campagna Completa", callback_data="ai:generate_campaign")],
-            [InlineKeyboardButton("🧪 Test A/B", callback_data="ai:ab_test")],
-            [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:main")],
-        ]
+    # Estrai topic dal canale configurato
+    channel = context.user_data.get("ai_channel")
+    if channel and channel.topic:
+        context.user_data["ai_topic"] = channel.topic
+    else:
+        # Fallback: usa il nome del canale o un generico
+        channel_name = channel.title if channel else "il tuo canale"
+        context.user_data["ai_topic"] = f"Contenuto per {channel_name}"
+
+    text = "🎯 Seleziona il tono del messaggio:\n\n• Professional - Formale e serio\n• Friendly - Cordiale e accogliente\n• Urgent - Fretta e scadenza\n• Playful - Divertente e leggero"
+
+    keyboard = [
+        [InlineKeyboardButton("💼 Professional", callback_data="ai:tone_professional")],
+        [InlineKeyboardButton("😊 Friendly", callback_data="ai:tone_friendly")],
+        [InlineKeyboardButton("⚡ Urgent", callback_data="ai:tone_urgent")],
+        [InlineKeyboardButton("😄 Playful", callback_data="ai:tone_playful")],
+    ]
+
+    if query:
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    else:
+        await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+    return SELECT_TONE
+
+
+
+
+async def ai_tone_selected(update: Update, context: CallbackContext) -> int:
+    """Process tone selection and show platform choice."""
+    query = update.callback_query
+    await query.answer()
+
+    # Extract tone from callback
+    tone_map = {
+        "ai:tone_professional": ToneType.PROFESSIONAL,
+        "ai:tone_friendly": ToneType.FRIENDLY,
+        "ai:tone_urgent": ToneType.URGENT,
+        "ai:tone_playful": ToneType.PLAYFUL,
+    }
+
+    context.user_data["ai_tone"] = tone_map.get(query.data, ToneType.FRIENDLY)
+
+    text = "📱 Dove pubblicherai questo contenuto?\n\n• Instagram - Con hashtags\n• Facebook - Con emoji\n• Telegram - Conciso\n• Twitter - Max 280 caratteri"
+
+    keyboard = [
+        [InlineKeyboardButton("📷 Instagram", callback_data="ai:platform_instagram")],
+        [InlineKeyboardButton("👍 Facebook", callback_data="ai:platform_facebook")],
+        [InlineKeyboardButton("✈️ Telegram", callback_data="ai:platform_telegram")],
+        [InlineKeyboardButton("🐦 Twitter", callback_data="ai:platform_twitter")],
+    ]
+
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    return SELECT_PLATFORM
+
+
+async def ai_generate_content(update: Update, context: CallbackContext) -> int:
+    """Generate and display AI content."""
+    query = update.callback_query
+    await query.answer()
+
+    # Extract platform
+    platform_map = {
+        "ai:platform_instagram": "instagram",
+        "ai:platform_facebook": "facebook",
+        "ai:platform_telegram": "telegram",
+        "ai:platform_twitter": "twitter",
+    }
+
+    platform = platform_map.get(query.data, "instagram")
+    topic = context.user_data.get("ai_topic", "il tuo prodotto")
+    tone = context.user_data.get("ai_tone", ToneType.FRIENDLY)
+
+    # Generate content
+    generator = AIContentGenerator()
+    content = generator.generate_ad_copy(topic, tone=tone)
+    optimized = generator.optimize_for_platform(content.text, platform)
+
+    # Prepare response
+    text = f"""
+🤖 Contenuto Generato per {platform.upper()}
+
+📝 Tono: {tone.value}
+📌 Argomento: {topic}
+
+─────────────────────
+{optimized}
+─────────────────────
+
+Variazioni:
+"""
+
+    # Add variations
+    if content.variations:
+        for i, var in enumerate(content.variations, 1):
+            text += f"\n{i}. {var}\n"
+
+    keyboard = [
+        [InlineKeyboardButton("📋 Copia", callback_data="ai:copy_content")],
+        [InlineKeyboardButton("🔄 Rigenera", callback_data="ai:generate_post")],
+        [InlineKeyboardButton("🤖 Menu AI", callback_data="ai:menu")],
+        [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:main")],
+    ]
+
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    return ConversationHandler.END
+
+
+# ============================================================================
+# AI CAMPAIGN GENERATION HANDLERS
+# ============================================================================
+
+async def aigen_start(update: Update, context: CallbackContext) -> int:
+    """Inizia il flusso di generazione campagne con AI."""
+    query = update.callback_query
+    if query:
+        await query.answer()
     
+    user_data = update.effective_user
+    if not user_data:
+        return ConversationHandler.END
+    
+    # Check subscription
+    with with_session(context) as session:
+        from .models import User
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
+        )
+        
+        # Verifica il tipo di subscription
+        subscription = user.subscription_type or "gratis"
+        
+        if subscription == "gratis":
+            # Messaggio per utenti gratis
+            text = (
+                "🔒 Genera Campagna con AI è una feature premium\n\n"
+                "Questo strumento analizza il tuo canale/bot e genera campagne personalizzate "
+                "usando intelligenza artificiale.\n\n"
+                "✨ Per sbloccare questa feature, passa a un piano premium:\n"
+                "💳 Piano Premium: €9.99/mese\n"
+                "👑 Piano Pro: €29.99/mese\n\n"
+                "Contatta @AdsbotSupport per saperne di più sui piani disponibili."
+            )
+            
+            keyboard = [
+                [InlineKeyboardButton("💳 Upgrade a Premium", callback_data="upgrade:premium")],
+                [InlineKeyboardButton("👑 Scopri Piano Pro", callback_data="upgrade:pro")],
+                [InlineKeyboardButton("◀️ Indietro", callback_data="menu:main")],
+            ]
+            
+            if query:
+                await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+            else:
+                await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+            
+            return ConversationHandler.END
+        
+        # Utente premium o pro - salva il tipo di subscription
+        context.user_data["user_subscription"] = subscription
+    
+    # Procedi con selezione canale
+    text = "🎯 Seleziona il canale per il quale generare campagne personalizzate:\n\n"
+    
+    with with_session(context) as session:
+        from .models import Channel
+        channels = session.query(Channel).filter_by(user_id=user.id).all()
+        
+        if not channels:
+            text = "❌ Non hai canali registrati. Aggiungine uno prima di continuare."
+            if query:
+                await query.edit_message_text(text)
+            else:
+                await update.message.reply_text(text)
+            return ConversationHandler.END
+        
+        # Crea bottoni per ogni canale
+        keyboard = []
+        for channel in channels:
+            button_text = f"@{channel.handle}"
+            if channel.title:
+                button_text += f" ({channel.title})"
+            keyboard.append([
+                InlineKeyboardButton(button_text, callback_data=f"aigen:channel:{channel.id}")
+            ])
+        
+        keyboard.append([
+            InlineKeyboardButton("❌ Annulla", callback_data="menu:main")
+        ])
+        
         if query:
             await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
         else:
             await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
     
-        return GENERATE_TOPIC
+    return AIGEN_SELECT_CHANNEL
 
 
-    async def ai_generate_post_start(update: Update, context: CallbackContext) -> int:
-        """Start post generation."""
-        query = update.callback_query
-        if query:
-            await query.answer()
+async def aigen_channel_selected(update: Update, context: CallbackContext) -> int:
+    """Canale selezionato - scegli piattaforma e tono."""
+    query = update.callback_query
+    await query.answer()
     
-        context.user_data["generation_type"] = "post"
+    # Estrai channel_id dal callback
+    channel_id = int(query.data.split(":")[-1])
+    context.user_data["aigen_channel_id"] = channel_id
     
-        text = "📝 Quale argomento vuoi usare per il post?\n\nEsempio: 'Nuovo corso di marketing online'"
+    # Salva il canale nel context per successivo utilizzo
+    with with_session(context) as session:
+        from .models import Channel
+        channel = session.query(Channel).filter_by(id=channel_id).first()
+        if channel:
+            context.user_data["aigen_channel_handle"] = channel.handle
+            context.user_data["aigen_channel_title"] = channel.title
+            context.user_data["aigen_channel_topic"] = channel.topic
     
-        if query:
-            await query.edit_message_text(text)
-        else:
-            await update.message.reply_text(text)
+    # Scegli piattaforma (valido per PREMIUM e PRO)
+    text = (
+        "📱 **Scegli la piattaforma** su cui vuoi pubblicare:\n\n"
+        "• Telegram - Conciso e diretto\n"
+        "• Instagram - Con hashtag e emoji\n"
+        "• Facebook - Descrittivo e social\n"
+        "• Twitter/X - Max 280 caratteri"
+    )
     
-        return GENERATE_TOPIC
+    keyboard = [
+        [InlineKeyboardButton("📱 Telegram", callback_data="aigen:platform:telegram")],
+        [InlineKeyboardButton("📷 Instagram", callback_data="aigen:platform:instagram")],
+        [InlineKeyboardButton("👍 Facebook", callback_data="aigen:platform:facebook")],
+        [InlineKeyboardButton("🐦 Twitter/X", callback_data="aigen:platform:twitter")],
+    ]
+    
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    return AIGEN_SELECTING_PLATFORM
 
 
-    async def ai_generate_topic_input(update: Update, context: CallbackContext) -> int:
-        """Receive topic and show tone selection."""
-        topic = update.message.text
-        context.user_data["ai_topic"] = topic
+async def aigen_platform_selected(update: Update, context: CallbackContext) -> int:
+    """Piattaforma selezionata - chiedi tono."""
+    query = update.callback_query
+    await query.answer()
     
-        text = "🎯 Seleziona il tono del messaggio:\n\n• Professional - Formale e serio\n• Friendly - Cordiale e accogliente\n• Urgent - Fretta e scadenza\n• Playful - Divertente e leggero"
+    # Estrai piattaforma dal callback
+    platform = query.data.split(":")[-1]
+    context.user_data["aigen_platform"] = platform
     
-        keyboard = [
-            [InlineKeyboardButton("💼 Professional", callback_data="ai:tone_professional")],
-            [InlineKeyboardButton("😊 Friendly", callback_data="ai:tone_friendly")],
-            [InlineKeyboardButton("⚡ Urgent", callback_data="ai:tone_urgent")],
-            [InlineKeyboardButton("😄 Playful", callback_data="ai:tone_playful")],
-        ]
+    text = (
+        "🎯 **Scegli il tono della campagna:**\n\n"
+        "• 💼 Professional - Formale e serio\n"
+        "• 😊 Friendly - Cordiale e accogliente\n"
+        "• ⚡ Aggressive - Urgente e stimolante\n"
+        "• 😄 Playful - Divertente e leggero"
+    )
     
-        await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
-        return SELECT_TONE
+    keyboard = [
+        [InlineKeyboardButton("💼 Professional", callback_data="aigen:tone:professional")],
+        [InlineKeyboardButton("😊 Friendly", callback_data="aigen:tone:friendly")],
+        [InlineKeyboardButton("⚡ Aggressive", callback_data="aigen:tone:aggressive")],
+        [InlineKeyboardButton("😄 Playful", callback_data="aigen:tone:playful")],
+    ]
+    
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    return AIGEN_SELECTING_TONE
 
 
-    async def ai_tone_selected(update: Update, context: CallbackContext) -> int:
-        """Process tone selection and show platform choice."""
-        query = update.callback_query
-        await query.answer()
+async def aigen_tone_selected(update: Update, context: CallbackContext) -> int:
+    """Tono selezionato - genera campagna con ChatGPT."""
+    query = update.callback_query
+    await query.answer()
     
-        # Extract tone from callback
-        tone_map = {
-            "ai:tone_professional": ToneType.PROFESSIONAL,
-            "ai:tone_friendly": ToneType.FRIENDLY,
-            "ai:tone_urgent": ToneType.URGENT,
-            "ai:tone_playful": ToneType.PLAYFUL,
-        }
+    # Estrai tono dal callback
+    tone = query.data.split(":")[-1]
+    context.user_data["aigen_tone"] = tone
     
-        context.user_data["ai_tone"] = tone_map.get(query.data, ToneType.FRIENDLY)
+    # Mostra messaggio di generazione
+    text = "🔍 Analizzando il tuo canale...\n\n⏳ Sto provvedendo a creare la tua campagna personalizzata..."
+    await query.edit_message_text(text)
     
-        text = "📱 Dove pubblicherai questo contenuto?\n\n• Instagram - Con hashtags\n• Facebook - Con emoji\n• Telegram - Conciso\n• Twitter - Max 280 caratteri"
+    try:
+        from .config import Config
+        from .chatgpt_integration import ChatGPTCampaignGenerator
+        
+        config = Config.load()
+        gpt_generator = ChatGPTCampaignGenerator(config.openai_api_key)
+        
+        channel_id = context.user_data.get("aigen_channel_id")
+        platform = context.user_data.get("aigen_platform", "telegram")
+        tone = context.user_data.get("aigen_tone", "professional")
+        
+        with with_session(context) as session:
+            from .models import Channel
+            
+            channel = session.query(Channel).filter_by(id=channel_id).first()
+            if not channel:
+                await query.edit_message_text("❌ Canale non trovato")
+                return ConversationHandler.END
+            
+            # Genera campagna con ChatGPT specifico per piattaforma e tono
+            campaign_content = gpt_generator.generate_campaign_for_platform(
+                channel=channel,
+                platform=platform,
+                tone=tone
+            )
+            
+            if campaign_content:
+                # Salva il contenuto generato nel context
+                context.user_data["aigen_gpt_campaign"] = campaign_content
+                
+                # Mostra il risultato con testo copiabile
+                result_text = (
+                    f"✨ **Campagna per {platform.upper()}**\n\n"
+                    f"**Tono:** {tone}\n\n"
+                    f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+                    f"{campaign_content.title}\n\n"
+                    f"{campaign_content.description}\n\n"
+                    f"→ {campaign_content.cta_text}\n\n"
+                    f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+                    f"👥 **Target:** {campaign_content.target_audience}\n"
+                    f"🏷️ **Keywords:** {', '.join(campaign_content.keywords)}"
+                )
+                
+                keyboard = [
+                    [InlineKeyboardButton("📋 Copia Campagna", callback_data="aigen:copy_campaign")],
+                ]
+                
+                # Aggiungi il bottone "Crea Campagna" solo per Telegram
+                if platform == "telegram":
+                    keyboard.append([InlineKeyboardButton("✅ Crea Campagna", callback_data="aigen:create_from_gpt")])
+                
+                keyboard.append([InlineKeyboardButton("❌ Annulla", callback_data="menu:main")])
+                
+                await query.edit_message_text(result_text, reply_markup=InlineKeyboardMarkup(keyboard))
+                return ConversationHandler.END
+            else:
+                await query.edit_message_text("❌ Errore nella generazione della campagna")
+                return ConversationHandler.END
     
-        keyboard = [
-            [InlineKeyboardButton("📷 Instagram", callback_data="ai:platform_instagram")],
-            [InlineKeyboardButton("👍 Facebook", callback_data="ai:platform_facebook")],
-            [InlineKeyboardButton("✈️ Telegram", callback_data="ai:platform_telegram")],
-            [InlineKeyboardButton("🐦 Twitter", callback_data="ai:platform_twitter")],
-        ]
-    
-        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
-        return SELECT_PLATFORM
-
-
-    async def ai_generate_content(update: Update, context: CallbackContext) -> int:
-        """Generate and display AI content."""
-        query = update.callback_query
-        await query.answer()
-    
-        # Extract platform
-        platform_map = {
-            "ai:platform_instagram": "instagram",
-            "ai:platform_facebook": "facebook",
-            "ai:platform_telegram": "telegram",
-            "ai:platform_twitter": "twitter",
-        }
-    
-        platform = platform_map.get(query.data, "instagram")
-        topic = context.user_data.get("ai_topic", "il tuo prodotto")
-        tone = context.user_data.get("ai_tone", ToneType.FRIENDLY)
-    
-        # Generate content
-        generator = AIContentGenerator()
-        content = generator.generate_ad_copy(topic, tone=tone)
-        optimized = generator.optimize_for_platform(content.text, platform)
-    
-        # Prepare response
-        text = f"""
-    🤖 Contenuto Generato per {platform.upper()}
-
-    📝 Tono: {tone.value}
-    📌 Argomento: {topic}
-
-    ─────────────────────
-    {optimized}
-    ─────────────────────
-
-    Variazioni:
-    """
-    
-        # Add variations
-        if content.variations:
-            for i, var in enumerate(content.variations, 1):
-                text += f"\n{i}. {var}\n"
-    
-        keyboard = [
-            [InlineKeyboardButton("📋 Copia", callback_data="ai:copy_content")],
-            [InlineKeyboardButton("🔄 Rigenera", callback_data="ai:generate_post")],
-            [InlineKeyboardButton("🤖 Menu AI", callback_data="ai:menu")],
-            [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:main")],
-        ]
-    
-        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    except Exception as e:
+        logger.error(f"Error generating campaign: {e}")
+        await query.edit_message_text(f"❌ Errore: {str(e)[:100]}")
         return ConversationHandler.END
+
+
+async def aigen_copy_campaign(update: Update, context: CallbackContext) -> None:
+    """Copia la campagna negli appunti."""
+    query = update.callback_query
+    await query.answer()
+    
+    campaign_content = context.user_data.get("aigen_gpt_campaign")
+    platform = context.user_data.get("aigen_platform", "telegram")
+    
+    if not campaign_content:
+        await query.answer("❌ Campagna non trovata", show_alert=True)
+        return
+    
+    # Crea il testo copiabile
+    copyable_text = (
+        f"{campaign_content.title}\n\n"
+        f"{campaign_content.description}\n\n"
+        f"→ {campaign_content.cta_text}"
+    )
+    
+    # Mostra messaggio con testo copiabile
+    copy_text = (
+        f"✅ **Campagna pronta per {platform.upper()}**\n\n"
+        f"📋 **Copia il testo sottostante:**\n\n"
+        f"```\n{copyable_text}\n```\n\n"
+        f"Usa questo testo direttamente su {platform.upper()}!"
+    )
+    
+    keyboard = []
+    
+    # Aggiungi bottone "Crea Campagna" solo per Telegram
+    if platform == "telegram":
+        keyboard.append([InlineKeyboardButton("✅ Crea Campagna nel Bot", callback_data="aigen:create_from_gpt")])
+    else:
+        # Per altre piattaforme, mostra info sulla pubblicazione
+        copy_text += (
+            f"\n\n💡 **Vuoi pubblicare automaticamente?**\n"
+            f"Possiamo provvedere noi alla pubblicazione tramite un'app dedicata.\n"
+            f"Contattaci per i dettagli!"
+        )
+    
+    keyboard.append([InlineKeyboardButton("◀️ Indietro", callback_data="menu:main")])
+    
+    await query.edit_message_text(copy_text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def aigen_create_from_gpt(update: Update, context: CallbackContext) -> int:
+    """Crea campagna da ChatGPT."""
+    query = update.callback_query
+    await query.answer()
+    
+    user_data = update.effective_user
+    campaign_content = context.user_data.get("aigen_gpt_campaign")
+    
+    if not campaign_content:
+        await query.edit_message_text("❌ Errore: campagna non trovata")
+        return ConversationHandler.END
+    
+    try:
+        with with_session(context) as session:
+            from .models import Campaign, User, Channel
+            
+            user = ensure_user(
+                session,
+                telegram_id=user_data.id,
+                username=user_data.username,
+                first_name=user_data.first_name,
+                language_code=user_data.language_code,
+            )
+            
+            channel_id = context.user_data.get("aigen_channel_id")
+            channel = session.query(Channel).filter_by(id=channel_id).first() if channel_id else None
+            
+            # Crea la campagna nel database
+            campaign = Campaign(
+                user_id=user.id,
+                name=campaign_content.title,
+                description=campaign_content.description,
+                cta_text=campaign_content.cta_text,
+                budget=campaign_content.suggested_budget,
+                offer_type="auto_generated",
+                status="draft",
+            )
+            
+            if channel:
+                campaign.channel_id = channel.id
+            
+            session.add(campaign)
+            session.commit()
+            
+            success_text = (
+                f"🎉 **Campagna Creata!**\n\n"
+                f"**Titolo:** {campaign_content.title}\n\n"
+                f"**Budget:** €{campaign_content.suggested_budget:.2f}\n\n"
+                f"La campagna è stata salvata in bozza.\n"
+                f"Puoi visualizzarla e modificarla nel tuo pannello campagne."
+            )
+            
+            keyboard = [
+                [InlineKeyboardButton("🏠 Menu Principale", callback_data="menu:home")],
+                [InlineKeyboardButton("📊 Le Mie Campagne", callback_data="campaign:list")],
+            ]
+            
+            await query.edit_message_text(success_text, reply_markup=InlineKeyboardMarkup(keyboard))
+            return ConversationHandler.END
+    
+    except Exception as e:
+        logger.error(f"Error creating campaign from GPT: {e}")
+        await query.edit_message_text(f"❌ Errore nella creazione: {str(e)[:100]}")
+        return ConversationHandler.END
+
+
+async def aigen_show_campaign_suggestion(
+    update: Update,
+    context: CallbackContext,
+) -> int:
+    """Mostra un suggerimento di campagna."""
+    query = update.callback_query
+    if query:
+        await query.answer()
+    
+    suggestions = context.user_data.get("aigen_suggestions", [])
+    index = context.user_data.get("aigen_suggestion_index", 0)
+    
+    if index >= len(suggestions):
+        # Fine dei suggerimenti
+        text = "✅ Ho generato tutti i suggerimenti di campagne personalizzate!\n\n"
+        text += "Puoi tornare indietro e selezionare un'altra campagna, oppure iniziare a crearle."
+        
+        keyboard = [
+            [InlineKeyboardButton("📊 Rivedi Campagne", callback_data="aigen:review_all")],
+            [InlineKeyboardButton("◀️ Torna al menu", callback_data="menu:main")],
+        ]
+        
+        if query:
+            await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+        else:
+            await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+        
+        return ConversationHandler.END
+    
+    suggestion = suggestions[index]
+    analysis = context.user_data.get("aigen_analysis")
+    
+    # Formatta il messaggio con il suggerimento
+    text = f"""
+{suggestion.title}
+
+📌 Descrizione:
+{suggestion.description}
+
+💰 Budget Consigliato: €{suggestion.recommended_budget:.2f}
+📈 Reach Stimato: ~{suggestion.estimated_reach:,.0f} impressioni
+💬 Engagement Stimato: ~{suggestion.estimated_engagement:,.0f} interazioni
+📊 ROI Atteso: {suggestion.expected_roi:.1f}x
+
+🎯 Focus Contenuto: {suggestion.content_focus}
+⏱ Durata: {suggestion.timing.get('duration', 'N/A')}
+📱 Frequenza: {suggestion.timing.get('frequency', 'N/A')}
+
+💡 Motivo di questo suggerimento:
+{suggestion.reasoning}
+
+📌 Targeting:
+• Interessi: {', '.join(suggestion.targeting.get('interests', [])[:3])}
+• Comportamento: {suggestion.targeting.get('behavior', 'N/A')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Campagna {index + 1} di {len(suggestions)}
+"""
+    
+    keyboard = [
+        [InlineKeyboardButton("✅ Crea questa campagna", callback_data=f"aigen:create:{index}")],
+        [InlineKeyboardButton("➡️ Prossima campagna", callback_data="aigen:next_suggestion")],
+        [InlineKeyboardButton("⬅️ Precedente", callback_data="aigen:prev_suggestion") if index > 0 else None],
+        [InlineKeyboardButton("◀️ Annulla", callback_data="menu:main")],
+    ]
+    
+    # Rimuovi bottoni None
+    keyboard = [[btn for btn in row if btn] for row in keyboard if any(row)]
+    
+    if query:
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    else:
+        await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    
+    return AIGEN_REVIEW_CAMPAIGNS
+
+
+async def aigen_next_suggestion(update: Update, context: CallbackContext) -> int:
+    """Passa al prossimo suggerimento."""
+    index = context.user_data.get("aigen_suggestion_index", 0)
+    context.user_data["aigen_suggestion_index"] = index + 1
+    
+    return await aigen_show_campaign_suggestion(update, context)
+
+
+async def aigen_prev_suggestion(update: Update, context: CallbackContext) -> int:
+    """Torna al precedente suggerimento."""
+    index = context.user_data.get("aigen_suggestion_index", 0)
+    context.user_data["aigen_suggestion_index"] = max(0, index - 1)
+    
+    return await aigen_show_campaign_suggestion(update, context)
+
+
+async def aigen_create_campaign(update: Update, context: CallbackContext) -> int:
+    """Crea la campagna selezionata."""
+    query = update.callback_query
+    await query.answer()
+    
+    # Estrai l'indice dal callback
+    suggestion_index = int(query.data.split(":")[-1])
+    suggestions = context.user_data.get("aigen_suggestions", [])
+    
+    if suggestion_index >= len(suggestions):
+        await query.edit_message_text("❌ Campagna non trovata.")
+        return ConversationHandler.END
+    
+    suggestion = suggestions[suggestion_index]
+    channel_id = context.user_data.get("aigen_channel_id")
+    channel_handle = context.user_data.get("aigen_channel_handle")
+    
+    try:
+        with with_session(context) as session:
+            from .models import Campaign
+            
+            # Crea la campagna nel database
+            campaign = Campaign(
+                channel_id=channel_id,
+                name=suggestion.title,
+                budget=suggestion.recommended_budget,
+                call_to_action=suggestion.content_focus,
+            )
+            
+            session.add(campaign)
+            session.commit()
+            
+            # Mostra messaggio di successo con opzioni next steps
+            text = f"""
+✅ Campagna Creata!
+
+📌 {suggestion.title}
+📊 Budget: €{suggestion.recommended_budget:.2f}
+🎯 Canale: @{channel_handle}
+
+La campagna è stata salvata nel tuo account.
+
+Prossimi passi:
+1️⃣ Genera contenuti AI personalizzati
+2️⃣ Rivedi e personalizza i testi
+3️⃣ Imposta il budget e le date
+4️⃣ Avvia la campagna
+
+Cosa vuoi fare ora?
+"""
+            
+            keyboard = [
+                [InlineKeyboardButton("🤖 Genera Contenuti", callback_data=f"aigen:generate_content:{campaign.id}")],
+                [InlineKeyboardButton("🎨 Personalizza", callback_data=f"aigen:edit:{campaign.id}")],
+                [InlineKeyboardButton("➡️ Prossima campagna", callback_data="aigen:next_suggestion")],
+                [InlineKeyboardButton("◀️ Torna al menu", callback_data="menu:main")],
+            ]
+            
+            await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    
+    except Exception as e:
+        logger.error(f"Error creating campaign: {e}")
+        await query.edit_message_text(f"❌ Errore nella creazione: {str(e)[:100]}")
+    
+    return ConversationHandler.END
 
 
 def build_application(config: Config) -> Application:
@@ -1618,9 +3120,18 @@ def build_application(config: Config) -> Application:
                 CallbackQueryHandler(goal_entry, pattern=r"^menu:goals$"),
             ],
             states={
-                GOAL_CHANNEL: [MessageHandler(filters.TEXT & ~filters.COMMAND, goal_channel)],
+                GOAL_CHANNEL: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, goal_channel),
+                    CallbackQueryHandler(goal_search_channel, pattern=r"^goal:search_channel$"),
+                    CallbackQueryHandler(goal_channel_selected, pattern=r"^goal:select_channel:\d+$"),
+                    CallbackQueryHandler(goal_channel_selected, pattern=r"^goal:new:\d+$"),
+                    CallbackQueryHandler(goal_channel_selected, pattern=r"^goal:edit:\d+$"),
+                ],
                 GOAL_TARGET: [MessageHandler(filters.TEXT & ~filters.COMMAND, goal_target)],
-                GOAL_DEADLINE: [MessageHandler(filters.TEXT & ~filters.COMMAND, goal_deadline)],
+                GOAL_DEADLINE: [
+                    CallbackQueryHandler(goal_skip_deadline, pattern=r"^goal:skip_deadline$"),
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, goal_deadline)
+                ],
             },
             fallbacks=[CommandHandler("cancel", cancel)],
         )
@@ -1633,10 +3144,17 @@ def build_application(config: Config) -> Application:
                 CallbackQueryHandler(offer_entry, pattern=r"^menu:offers$"),
             ],
             states={
-                OFFER_CHANNEL: [MessageHandler(filters.TEXT & ~filters.COMMAND, offer_channel)],
+                OFFER_CHANNEL: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, offer_channel),
+                    CallbackQueryHandler(offer_search_channel, pattern=r"^offer:search_channel$"),
+                    CallbackQueryHandler(offer_channel_selected, pattern=r"^offer:select_channel:\d+$"),
+                ],
                 OFFER_TYPE: [MessageHandler(filters.TEXT & ~filters.COMMAND, offer_type)],
                 OFFER_PRICE: [MessageHandler(filters.TEXT & ~filters.COMMAND, offer_price)],
-                OFFER_NOTES: [MessageHandler(filters.TEXT & ~filters.COMMAND, offer_notes)],
+                OFFER_NOTES: [
+                    CallbackQueryHandler(offer_skip_notes, pattern=r"^offer:skip_notes$"),
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, offer_notes)
+                ],
             },
             fallbacks=[CommandHandler("cancel", cancel)],
         )
@@ -1645,14 +3163,30 @@ def build_application(config: Config) -> Application:
     application.add_handler(
         ConversationHandler(
             entry_points=[
-                CommandHandler("campaign", campaign_entry),
-                CallbackQueryHandler(campaign_entry, pattern=r"^menu:campaign$"),
+                CommandHandler("campaign", campaign_disclaimer),
+                CallbackQueryHandler(campaign_disclaimer, pattern=r"^menu:campaign$"),
             ],
             states={
-                CAMPAIGN_CHANNEL: [MessageHandler(filters.TEXT & ~filters.COMMAND, campaign_channel)],
+                CAMPAIGN_CHANNEL: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, campaign_channel),
+                    CallbackQueryHandler(campaign_payment_request, pattern=r"^campaign:proceed$"),
+                    CallbackQueryHandler(campaign_search_channel, pattern=r"^campaign:search_channel$"),
+                    CallbackQueryHandler(campaign_channel_selected, pattern=r"^campaign:select_channel:\d+$"),
+                ],
                 CAMPAIGN_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, campaign_name)],
                 CAMPAIGN_BUDGET: [MessageHandler(filters.TEXT & ~filters.COMMAND, campaign_budget)],
-                CAMPAIGN_CTA: [MessageHandler(filters.TEXT & ~filters.COMMAND, campaign_cta)],
+                CAMPAIGN_LOAD_BALANCE: [
+                    CallbackQueryHandler(campaign_load_balance, pattern=r"^campaign:load:"),
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, campaign_load_balance),
+                ],
+                CAMPAIGN_PRICE: [
+                    CallbackQueryHandler(campaign_skip_price, pattern=r"^campaign:skip_price$"),
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, campaign_price)
+                ],
+                CAMPAIGN_CTA: [
+                    CallbackQueryHandler(campaign_skip_cta, pattern=r"^campaign:skip_cta$"),
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, campaign_cta)
+                ],
             },
             fallbacks=[CommandHandler("cancel", cancel)],
         )
@@ -1673,6 +3207,7 @@ def build_application(config: Config) -> Application:
     )
 
     application.add_handler(CallbackQueryHandler(stats, pattern=r"^menu:stats$"))
+    application.add_handler(CallbackQueryHandler(show_channel_stats, pattern=r"^stats:channel:\d+$"))
     application.add_handler(CallbackQueryHandler(open_menu, pattern=r"^menu:home$"))
 
     # Inside Ads handlers
@@ -1727,7 +3262,36 @@ def build_application(config: Config) -> Application:
         )
     )
 
-    return application
+    # AI Campaign Generation Handler
+    application.add_handler(
+        ConversationHandler(
+            entry_points=[
+                CallbackQueryHandler(aigen_start, pattern=r"^aigen:start$"),
+            ],
+            states={
+                AIGEN_SELECT_CHANNEL: [
+                    CallbackQueryHandler(aigen_channel_selected, pattern=r"^aigen:channel:\d+$"),
+                ],
+                AIGEN_SELECTING_PLATFORM: [
+                    CallbackQueryHandler(aigen_platform_selected, pattern=r"^aigen:platform:(telegram|instagram|facebook|twitter)$"),
+                ],
+                AIGEN_SELECTING_TONE: [
+                    CallbackQueryHandler(aigen_tone_selected, pattern=r"^aigen:tone:(professional|friendly|aggressive|playful)$"),
+                ],
+                AIGEN_REVIEW_CAMPAIGNS: [
+                    CallbackQueryHandler(aigen_next_suggestion, pattern=r"^aigen:next_suggestion$"),
+                    CallbackQueryHandler(aigen_prev_suggestion, pattern=r"^aigen:prev_suggestion$"),
+                    CallbackQueryHandler(aigen_create_campaign, pattern=r"^aigen:create:\d+$"),
+                    CallbackQueryHandler(aigen_copy_campaign, pattern=r"^aigen:copy_campaign$"),
+                    CallbackQueryHandler(aigen_create_from_gpt, pattern=r"^aigen:create_from_gpt$"),
+                ],
+            },
+            fallbacks=[
+                CallbackQueryHandler(open_menu, pattern=r"^menu:main$"),
+                CommandHandler("cancel", cancel),
+            ],
+        )
+    )
 
     # AI Content Generation Handler
     application.add_handler(
@@ -1737,9 +3301,6 @@ def build_application(config: Config) -> Application:
                 CallbackQueryHandler(ai_generate_post_start, pattern=r"^ai:generate_post$"),
             ],
             states={
-                GENERATE_TOPIC: [
-                    MessageHandler(filters.TEXT & ~filters.COMMAND, ai_generate_topic_input),
-                ],
                 SELECT_TONE: [
                     CallbackQueryHandler(ai_tone_selected, pattern=r"^ai:tone_(professional|friendly|urgent|playful)$"),
                 ],
@@ -1757,6 +3318,14 @@ def build_application(config: Config) -> Application:
     # AI Content Callbacks
     application.add_handler(CallbackQueryHandler(generate_post_menu, pattern=r"^ai:menu$"))
     application.add_handler(CallbackQueryHandler(ai_generate_post_start, pattern=r"^ai:generate_(post|headline|ad|campaign)$"))
+    
+    # Upgrade/Payment Callbacks
+    application.add_handler(CallbackQueryHandler(upgrade_plan_selected, pattern=r"^upgrade:(premium|pro)$"))
+    application.add_handler(CallbackQueryHandler(upgrade_paypal, pattern=r"^upgrade:paypal:(premium|pro)$"))
+    application.add_handler(CallbackQueryHandler(upgrade_test, pattern=r"^upgrade:test:(premium|pro)$"))
+    application.add_handler(CallbackQueryHandler(upgrade_confirmed, pattern=r"^upgrade:confirmed:(premium|pro)$"))
+
+    return application
 
 
 def run() -> None:
@@ -1769,4 +3338,3 @@ def run() -> None:
 
 if __name__ == "__main__":
     run()
- 

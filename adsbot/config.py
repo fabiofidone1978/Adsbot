@@ -6,6 +6,14 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # If python-dotenv is not installed, continue without it
+    pass
+
 
 @dataclass
 class Config:
@@ -13,6 +21,7 @@ class Config:
 
     bot_token: str
     database_url: str = "sqlite:///adsbot.db"
+    openai_api_key: str = ""
 
     @classmethod
     def load(cls) -> "Config":
@@ -23,7 +32,8 @@ class Config:
             raise RuntimeError("Missing BOT_TOKEN environment variable")
 
         db_url = os.getenv("DATABASE_URL", cls.database_url_from_path())
-        return cls(bot_token=token, database_url=db_url)
+        openai_key = os.getenv("OPENAI_API_KEY", "")
+        return cls(bot_token=token, database_url=db_url, openai_api_key=openai_key)
 
     @staticmethod
     def database_url_from_path() -> str:

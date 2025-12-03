@@ -27,6 +27,7 @@ class User(Base):
     username: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     first_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     language_code: Mapped[Optional[str]] = mapped_column(String(12), nullable=True)
+    subscription_type: Mapped[str] = mapped_column(String(50), default="gratis")  # "gratis" o "premium"
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     channels: Mapped[list["Channel"]] = relationship("Channel", back_populates="owner")

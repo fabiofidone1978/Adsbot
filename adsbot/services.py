@@ -107,3 +107,16 @@ def summarize_user(session: Session, user: User) -> dict[str, int]:
         "offers": offer_count,
         "templates": template_count,
     }
+
+
+def is_premium_user(session: Session, user: User) -> bool:
+    """Check if user has premium subscription."""
+    return user.subscription_type != "gratis"
+
+
+def upgrade_user_to_premium(session: Session, user: User, plan_type: str = "premium") -> User:
+    """Upgrade user to premium plan."""
+    user.subscription_type = plan_type
+    session.add(user)
+    session.flush()
+    return user
