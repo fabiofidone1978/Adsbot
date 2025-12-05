@@ -11,9 +11,25 @@ from .config import Config
 
 Base = declarative_base()
 
+# Import all models to register them with Base metadata
+# (This must happen after Base is created but before create_all is called)
+def _register_models():
+    """Register all models with SQLAlchemy Base."""
+    # Avoid circular imports by importing here
+    from . import models  # noqa: F401
+    return models
+
+_models_registered = False
+
 
 def create_session_factory(config: Config) -> sessionmaker:
     """Create a SQLAlchemy session factory."""
+    global _models_registered
+    
+    # Register models if not already done
+    if not _models_registered:
+        _register_models()
+        _models_registered = True
 
     engine = create_engine(config.database_url, future=True)
     Base.metadata.create_all(engine)
