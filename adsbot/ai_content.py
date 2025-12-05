@@ -70,10 +70,15 @@ class AIContentGenerator:
     Generates marketing materials, posts, headlines, and ad copy.
     """
     
-    def __init__(self):
-        """Initialize AI content generator"""
+    def __init__(self, enabled: bool = True):
+        """Initialize AI content generator
+        
+        Args:
+            enabled: Whether to enable AI generation (if False, uses templates only)
+        """
         self.model = "gpt-like-model"
         self.language = "it"
+        self.enabled = enabled
         self.templates = self._load_templates()
     
     def _load_templates(self) -> Dict:
@@ -151,6 +156,18 @@ class AIContentGenerator:
             variations=variations,
             confidence_score=0.92,
         )
+    
+    def generate_content(self, request: ContentRequest) -> GeneratedContent:
+        """
+        Generic content generation method.
+        
+        Args:
+            request: ContentRequest with content parameters
+            
+        Returns:
+            GeneratedContent with generated content
+        """
+        return self.generate_post(request)
     
     def generate_ad_copy(
         self,

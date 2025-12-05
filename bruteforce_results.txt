@@ -1,0 +1,3046 @@
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: another row available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+=== ADSBOT BRUTAL INTERNAL TESTS – 100 RUNS ===
+
+=== ITERAZIONE 1/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 2/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 3/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 4/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 5/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 6/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 7/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 8/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 9/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 10/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 11/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 12/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 13/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 14/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 15/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 16/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 17/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 18/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 19/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 20/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 21/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 22/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 23/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 24/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 25/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 26/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 27/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 28/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 29/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 30/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 31/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 32/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 33/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 34/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 35/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 36/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 37/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 38/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 39/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 40/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 41/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 42/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: column index out of range
+
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 43/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 44/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 45/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 46/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 47/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 48/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 49/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 50/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 51/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 52/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 53/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 54/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 55/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 56/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: not an error
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: no more rows available
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+Rate limiter unexpected error: bad parameter or other API misuse
+
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 57/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 58/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 59/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 60/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 61/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+      OK   - Rate limiter ha bloccato correttamente in condizioni di stress.
+  [3] Test AIContentGenerator (costruzione prompt + fallback)...
+      OK   - AIContentGenerator gestisce serie di richieste senza crash.
+  [4] Test ChatGPTCampaignGenerator (mockato)...
+      OK   - ChatGPTCampaignGenerator costruisce CampaignContent coerente.
+  [5] Test TelegramMetricsCollector (mock bot)...
+      OK   - TelegramMetricsCollector gestisce correttamente il bot mockato.
+  [6] Smoke test Verification / Security (senza DB reale)...
+      OK   - AccountSecurity.check_ip_reputation produce output coerente su IP edge.
+  [7] Hypothesis non disponibile (pip install hypothesis per fuzzing extra).
+
+=== ITERAZIONE 62/100 ===
+  [1] Verifica import moduli core...
+      OK   - adsbot.config
+      OK   - adsbot.db
+      OK   - adsbot.ai_content
+      OK   - adsbot.chatgpt_integration
+      OK   - adsbot.sqlite_rate_limiter
+      OK   - adsbot.services
+      OK   - adsbot.inside_ads_services
+      OK   - adsbot.notifications
+      OK   - adsbot.payments
+      OK   - adsbot.telegram_metrics
+      OK   - adsbot.verification
+  [2] Stress test SQLiteRateLimiter...
+Traceback (most recent call last):
+  File "C:\Users\fabio-fidone\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\fabio-fidone\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot_bruteforce_tests.py", line 104, in _multi_key_stress
+    async def _multi_key_stress():
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot_bruteforce_tests.py", line 97, in _single_key_stress
+    if blocked_counts == 0:
+  File "C:\Users\fabio-fidone\AppData\Local\Programs\Python\Python313\Lib\asyncio\tasks.py", line 718, in sleep
+    return await future
+           ^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot_bruteforce_tests.py", line 420, in <module>
+    print(">>> TEST COMPLESSIVO NON SUPERATO (< 99/100).")
+    ^^
+  File "d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot_bruteforce_tests.py", line 401, in main
+    success_runs = 0
+            ^^^^^^^^
+  File "d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot_bruteforce_tests.py", line 380, in run_single_iteration
+    # ============================================
+  File "d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot_bruteforce_tests.py", line 106, in brutal_rate_limiter_test
+    for i in range(5):
+  File "C:\Users\fabio-fidone\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\fabio-fidone\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+^C

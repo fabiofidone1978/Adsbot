@@ -387,6 +387,49 @@ async def show_channel_stats(update: Update, context: CallbackContext) -> None:
 
 
 
+async def _get_user_admin_channels(bot_app: Application, user_id: int) -> list[dict]:
+    """
+    Recupera lista di canali dove l'utente è amministratore.
+    
+    Ritorna lista di dict: {"chat_id": ..., "title": "...", "username": "...", "type": "..."}
+    """
+    admin_channels = []
+    
+    try:
+        # Nota: python-telegram-bot non ha un metodo diretto per ottenere
+        # tutti i dialog dell'utente. Usiamo un approccio fallback:
+        # - Se salvate nel DB, le recuperiamo di là
+        # - Altrimenti, chiediamo all'utente di cercare manualmente
+        
+        logger.info(f"Attempting to discover admin channels for user {user_id}")
+        
+        # Fallback: dal DB
+        try:
+            with session_scope() as session:
+                from .models import Channel
+                
+                # Canali già salvati dall'utente
+                user_channels = session.query(Channel).filter_by(user_id=user_id).all()
+                for ch in user_channels:
+                    admin_channels.append({
+                        "chat_id": ch.chat_id,
+                        "title": ch.title or "Canale senza nome",
+                        "username": ch.handle or "",
+                        "type": "channel",
+                        "already_added": True
+                    })
+                
+                if admin_channels:
+                    logger.info(f"Found {len(admin_channels)} channels in DB for user {user_id}")
+        except Exception as e:
+            logger.warning(f"Could not query DB for channels: {e}")
+    
+    except Exception as e:
+        logger.error(f"Error discovering admin channels: {e}")
+    
+    return admin_channels
+
+
 async def add_channel_entry(update: Update, context: CallbackContext) -> int:
     """Fetch user's administered channels from Telegram and show them."""
 
@@ -402,30 +445,78 @@ async def add_channel_entry(update: Update, context: CallbackContext) -> int:
     try:
         logger.info(f"Fetching administered channels for user {user_data.id}...")
         
-        message_text = (
-            "🔍 Ricerca canali amministrati...\n\n"
-            "Nota: Inserisci lo @username o il link del canale che vuoi aggiungere.\n"
-            "Devo essere amministratore del canale per accedere ai dati."
-        )
+        # Prova a recuperare i canali dal DB
+        admin_channels = await _get_user_admin_channels(context.application, user_data.id)
         
-        # Handle both callback_query (button) and message updates
-        if update.callback_query and update.callback_query.message:
-            # Edit existing message (from button click)
-            await update.callback_query.edit_message_text(
-                text=message_text,
-                reply_markup=MENU_BUTTONS
-            )
-        elif update.message:
-            # New message reply (from command)
-            await update.message.reply_text(
-                message_text,
-                reply_markup=MENU_BUTTONS
-            )
+        if admin_channels and len(admin_channels) > 0:
+            # Mostra i canali trovati con pulsanti di selezione
+            message_text = "✅ Ho trovato i seguenti canali dove sei amministratore:\n\n"
+            
+            keyboard = []
+            for ch in admin_channels:
+                title = ch.get("title", "Canale")
+                username = ch.get("username", "")
+                chat_id = ch.get("chat_id", "")
+                
+                if username:
+                    btn_label = f"@{username} - {title[:20]}"
+                else:
+                    btn_label = title[:30]
+                
+                keyboard.append([
+                    InlineKeyboardButton(
+                        f"✓ {btn_label}",
+                        callback_data=f"channel:select:{chat_id}"
+                    )
+                ])
+            
+            keyboard.append([
+                InlineKeyboardButton("🔍 Aggiungi manualmente", callback_data="channel:manual"),
+                InlineKeyboardButton("❌ Annulla", callback_data="menu:back")
+            ])
+            
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            # Handle both callback_query (button) and message updates
+            if update.callback_query and update.callback_query.message:
+                await update.callback_query.edit_message_text(
+                    text=message_text,
+                    reply_markup=reply_markup
+                )
+            elif update.message:
+                await update.message.reply_text(
+                    message_text,
+                    reply_markup=reply_markup
+                )
+            
+            return ADD_CHANNEL
         else:
-            logger.error("No message or callback_query found in update")
-            return ConversationHandler.END
-        
-        return ADD_CHANNEL
+            # Nessun canale trovato, usa input manuale
+            message_text = (
+                "🔍 Nessun canale trovato nel mio database.\n\n"
+                "Inserisci lo @username o il link del canale che vuoi aggiungere:\n"
+                "• @mio_canale\n"
+                "• https://t.me/mio_canale\n\n"
+                "Devo essere amministratore del canale per accedere ai dati."
+            )
+            
+            keyboard = [
+                [InlineKeyboardButton("❌ Annulla", callback_data="menu:back")]
+            ]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            if update.callback_query and update.callback_query.message:
+                await update.callback_query.edit_message_text(
+                    text=message_text,
+                    reply_markup=reply_markup
+                )
+            elif update.message:
+                await update.message.reply_text(
+                    message_text,
+                    reply_markup=reply_markup
+                )
+            
+            return ADD_CHANNEL
 
     except Exception as e:
         logger.error(f"Error in add_channel_entry: {e}")
@@ -442,6 +533,86 @@ async def add_channel_entry(update: Update, context: CallbackContext) -> int:
                 )
         except Exception as e2:
             logger.error(f"Error sending error message: {e2}")
+        return ConversationHandler.END
+
+
+
+
+async def add_channel_selected(update: Update, context: CallbackContext) -> int:
+    """Handle channel selection from discovery list."""
+    query = update.callback_query
+    
+    if not query:
+        return ConversationHandler.END
+    
+    await safe_query_answer(query)
+    
+    try:
+        # Extract callback data
+        callback_data = query.data
+        
+        if callback_data.startswith("channel:select:"):
+            # User selected a channel from discovery list
+            chat_id_str = callback_data.replace("channel:select:", "")
+            
+            try:
+                chat_id = int(chat_id_str)
+                context.user_data["selected_channel_id"] = chat_id
+                logger.info(f"User selected channel ID: {chat_id}")
+                
+                # Load channel info from DB
+                with session_scope() as session:
+                    from .models import Channel
+                    channel = session.query(Channel).filter_by(chat_id=chat_id).first()
+                    
+                    if channel:
+                        context.user_data["selected_channel_handle"] = channel.handle
+                        context.user_data["selected_channel_title"] = channel.title
+                        
+                        msg = (
+                            f"✅ Ho selezionato: {channel.title}\n\n"
+                            f"Proceeding to verify admin permissions...\n"
+                            f"Per favore aspetta mentre verifico i permessi."
+                        )
+                        await query.edit_message_text(msg)
+                        
+                        # Now verify admin and save
+                        return await add_channel_save(update, context)
+                    else:
+                        await query.edit_message_text(
+                            "❌ Canale non trovato nel database.",
+                            reply_markup=MENU_BUTTONS
+                        )
+                        return ConversationHandler.END
+            except ValueError:
+                logger.error(f"Invalid chat_id in callback: {chat_id_str}")
+                await query.edit_message_text(
+                    "❌ Errore: ID canale non valido.",
+                    reply_markup=MENU_BUTTONS
+                )
+                return ConversationHandler.END
+        
+        elif callback_data == "channel:manual":
+            # User chose manual entry
+            msg = (
+                "🔍 Aggiungi manualmente\n\n"
+                "Inserisci lo @username o il link del canale:\n"
+                "• @mio_canale\n"
+                "• https://t.me/mio_canale"
+            )
+            await query.edit_message_text(msg)
+            return ADD_CHANNEL
+        
+        else:
+            await query.answer("Operazione non riconosciuta")
+            return ConversationHandler.END
+    
+    except Exception as e:
+        logger.error(f"Error in add_channel_selected: {e}")
+        await query.edit_message_text(
+            "❌ Errore durante la selezione del canale",
+            reply_markup=MENU_BUTTONS
+        )
         return ConversationHandler.END
 
 
@@ -5561,7 +5732,10 @@ def build_application(config: Config) -> Application:
                 CallbackQueryHandler(add_channel_entry, pattern=r"^menu:add_channel$"),
             ],
             states={
-                ADD_CHANNEL: [MessageHandler(filters.TEXT & ~filters.COMMAND, add_channel_save)],
+                ADD_CHANNEL: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, add_channel_save),
+                    CallbackQueryHandler(add_channel_selected, pattern=r"^channel:"),
+                ],
             },
             fallbacks=[CommandHandler("cancel", cancel)],
         )

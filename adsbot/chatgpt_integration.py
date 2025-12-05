@@ -162,9 +162,10 @@ Senza markdown, senza commenti, solo JSON."""
     def generate_campaign_for_platform(
         self,
         channel,
+        platform: str = "telegram",
         tone: str = "professional"
     ) -> Optional[CampaignContent]:
-        """Generate campaign for Telegram with specified tone."""
+        """Generate campaign for specified platform with specified tone."""
         
         if not self.enabled:
             logger.warning("ChatGPT API key not configured")

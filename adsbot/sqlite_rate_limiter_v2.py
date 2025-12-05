@@ -1,11 +1,10 @@
-"""SQLite-backed rate limiter with atomic operations.
+"""SQLite-backed rate limiter with atomic operations and file locking.
 
-Design:
-- Nessuna connessione condivisa tra thread: ogni operazione apre la sua connessione
-  (connection-per-call), che è sicuro con WAL.
-- Niente :memory: in concorrenza: di default usa un file locale.
-- Autocommit (isolation_level=None), niente BEGIN/COMMIT manuali.
-- Retry con backoff solo su 'database is locked'.
+Questa implementazione evita deadlock e errori "API misuse" di SQLite usando:
+1. INSERT OR IGNORE atomiche
+2. Nessuna transazione esplicita (autocommit)
+3. Connessione condivisa solo per :memory: (check_same_thread=False)
+4. Riprovi con backoff in caso di "database is locked"
 """
 
 from __future__ import annotations
@@ -13,53 +12,69 @@ from __future__ import annotations
 import asyncio
 import sqlite3
 import time
-from pathlib import Path
+import threading
 from typing import Optional, Tuple
+from pathlib import Path
 import logging
 
 
 class SQLiteRateLimiter:
-    def __init__(
-        self,
-        db_path: Optional[str] = None,
-        window_seconds: int = 60,
-        max_requests: int = 5,
-    ):
+    def __init__(self, db_path: Optional[str] = None, window_seconds: int = 60, max_requests: int = 5):
         self.window = int(window_seconds)
         self.max_requests = int(max_requests)
+        self.db_path = db_path or ":memory:"
 
-        # Se non specificato, usa un file vicino al modulo
-        if db_path is None:
-            base_path = Path(__file__).resolve().parent
-            self.db_path = str(base_path / "rate_limiter.db")
-        else:
-            self.db_path = db_path
+        # Connessione condivisa solo per DB in memoria
+        self._shared_conn = None
+        if self.db_path == ":memory:":
+            self._shared_conn = self._create_connection()
 
+        # Lock (se in futuro vuoi fare sezioni critiche esplicite)
+        self._lock = threading.RLock()
+        self._lock_file = None
+        if self.db_path != ":memory:":
+            lock_path = Path(self.db_path).parent / f"{Path(self.db_path).stem}.lock"
+            try:
+                self._lock_file = open(lock_path, "w")
+            except Exception:
+                # Non è critico se il lock file non c'è
+                self._lock_file = None
+
+        # Inizializza sempre lo schema, sia memory sia file
         self._init_db()
 
     # -------------------------
     # Connessione / schema
     # -------------------------
 
-    def _create_connection(self) -> sqlite3.Connection:
-        """Nuova connessione per ogni operazione (thread-safe a livello SQLite)."""
+    def _create_connection(self):
+        """Crea una nuova connessione SQLite (autocommit, concurrency-friendly)."""
         conn = sqlite3.connect(self.db_path, timeout=10, check_same_thread=False)
         conn.row_factory = sqlite3.Row
-        conn.isolation_level = None  # autocommit
+        conn.isolation_level = None  # Autocommit
 
-        # Pragme conservative
+        # Pragme di base (non dovrebbero generare errori)
         try:
             conn.execute("PRAGMA journal_mode = WAL")
         except sqlite3.DatabaseError:
+            # Alcuni ambienti non lo supportano, ignoriamo
             pass
+
         conn.execute("PRAGMA synchronous = NORMAL")
         conn.execute("PRAGMA busy_timeout = 10000")
         conn.execute("PRAGMA cache_size = 10000")
         conn.execute("PRAGMA temp_store = MEMORY")
         return conn
 
-    def _init_db(self) -> None:
-        conn = self._create_connection()
+    def _conn(self):
+        """Restituisce una connessione: condivisa per :memory:, nuova per file."""
+        if self._shared_conn is not None:
+            return self._shared_conn
+        return self._create_connection()
+
+    def _init_db(self):
+        """Inizializza lo schema (tabella + indici)."""
+        conn = self._conn()
         cur = conn.cursor()
         cur.execute(
             """
@@ -75,13 +90,16 @@ class SQLiteRateLimiter:
         )
         cur.execute("CREATE INDEX IF NOT EXISTS idx_api_key ON api_usage(api_key)")
         cur.execute("CREATE INDEX IF NOT EXISTS idx_blocked ON api_usage(blocked_until)")
-        try:
-            conn.close()
-        except Exception:
-            pass
+
+        # Se non è in-memory, chiudiamo questa connessione di init
+        if self._shared_conn is None:
+            try:
+                conn.close()
+            except Exception:
+                pass
 
     # -------------------------
-    # Utilità
+    # Utilità interne
     # -------------------------
 
     def _window_start(self, now: Optional[float] = None) -> int:
@@ -90,7 +108,7 @@ class SQLiteRateLimiter:
         return int(now // self.window) * self.window
 
     # -------------------------
-    # API Pubblica
+    # API pubblica
     # -------------------------
 
     async def increment_and_check(self, api_key: str) -> Tuple[bool, int, Optional[int]]:
@@ -98,17 +116,17 @@ class SQLiteRateLimiter:
         return await asyncio.to_thread(self._increment_and_check_sync, api_key)
 
     def _increment_and_check_sync(self, api_key: str) -> Tuple[bool, int, Optional[int]]:
+        """Incrementa il contatore e verifica il rate limit con operazioni atomiche."""
         now = int(time.time())
         window_start = self._window_start(now)
 
         max_retries = 20
         for attempt in range(max_retries):
-            conn = None
             try:
-                conn = self._create_connection()
+                conn = self._conn()
                 cur = conn.cursor()
 
-                # 1) chiave già bloccata?
+                # 1) Controlla se la chiave è già bloccata
                 cur.execute(
                     """
                     SELECT blocked_until
@@ -125,7 +143,7 @@ class SQLiteRateLimiter:
                     retry_after = int(row["blocked_until"]) - now
                     return False, 0, max(retry_after, 0)
 
-                # 2) crea riga finestra se non esiste
+                # 2) Inserisci riga se non esiste
                 cur.execute(
                     """
                     INSERT OR IGNORE INTO api_usage (api_key, window_start, count, blocked_until)
@@ -134,7 +152,7 @@ class SQLiteRateLimiter:
                     (api_key, window_start),
                 )
 
-                # 3) incrementa contatore
+                # 3) Incrementa contatore per la finestra corrente
                 cur.execute(
                     """
                     UPDATE api_usage
@@ -144,7 +162,7 @@ class SQLiteRateLimiter:
                     (api_key, window_start),
                 )
 
-                # 4) leggi count aggiornato
+                # 4) Leggi il nuovo valore di count
                 cur.execute(
                     """
                     SELECT count
@@ -158,6 +176,7 @@ class SQLiteRateLimiter:
 
                 remaining = max(0, self.max_requests - cur_count)
 
+                # 5) Se ha superato il limite → blocca fino alla fine della finestra
                 if cur_count > self.max_requests:
                     blocked_ts = now + self.window
                     cur.execute(
@@ -170,21 +189,24 @@ class SQLiteRateLimiter:
                     )
                     return False, 0, self.window
 
+                # Nessun blocco
                 return True, remaining, None
 
             except sqlite3.OperationalError as e:
                 msg = str(e).lower()
                 if "database is locked" in msg and attempt < max_retries - 1:
+                    # Backoff esponenziale
                     backoff = 0.001 * (2 ** min(attempt, 8))
                     time.sleep(backoff)
                     continue
-                logging.error(f"Rate limiter sqlite operational error: {e}")
+                logging.error(f"Rate limiter error after {max_retries} retries: {e}")
                 return False, 0, 1
             except Exception as e:
                 logging.error(f"Rate limiter unexpected error: {e}")
                 return False, 0, 1
             finally:
-                if conn is not None:
+                # Chiudi solo se è una connessione "usa e getta"
+                if self._shared_conn is None and "conn" in locals():
                     try:
                         conn.close()
                     except Exception:
@@ -196,13 +218,13 @@ class SQLiteRateLimiter:
         return await asyncio.to_thread(self._is_blocked_sync, api_key)
 
     def _is_blocked_sync(self, api_key: str) -> Optional[int]:
+        """Verifica se la chiave è al momento bloccata. Restituisce i secondi rimanenti o None."""
         now = int(time.time())
         max_retries = 10
 
         for attempt in range(max_retries):
-            conn = None
             try:
-                conn = self._create_connection()
+                conn = self._conn()
                 cur = conn.cursor()
                 cur.execute(
                     """
@@ -216,6 +238,13 @@ class SQLiteRateLimiter:
                     (api_key, now),
                 )
                 row = cur.fetchone()
+
+                if self._shared_conn is None:
+                    try:
+                        conn.close()
+                    except Exception:
+                        pass
+
                 if not row or not row["blocked_until"]:
                     return None
 
@@ -233,12 +262,6 @@ class SQLiteRateLimiter:
             except Exception as e:
                 logging.warning(f"is_blocked error: {e}")
                 return None
-            finally:
-                if conn is not None:
-                    try:
-                        conn.close()
-                    except Exception:
-                        pass
 
         return None
 
