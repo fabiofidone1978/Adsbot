@@ -3,9 +3,6 @@
 import logging
 from datetime import datetime, timedelta
 from typing import Optional, Dict
-from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.triggers.cron import CronTrigger
-from apscheduler.triggers.interval import IntervalTrigger
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 
@@ -18,7 +15,7 @@ from adsbot.db import get_session
 logger = logging.getLogger(__name__)
 
 # Global scheduler instance
-scheduler: Optional[BackgroundScheduler] = None
+scheduler: Optional[object] = None  # Will be BackgroundScheduler when initialized
 
 
 class SchedulerConfig:
@@ -69,7 +66,7 @@ class SchedulerConfig:
 # Task 20: APScheduler Setup & Initialization
 # ============================================================================
 
-def init_scheduler() -> BackgroundScheduler:
+def init_scheduler():
     """Initialize and configure APScheduler.
     
     Returns:
@@ -78,6 +75,11 @@ def init_scheduler() -> BackgroundScheduler:
     global scheduler
     
     try:
+        # Lazy import apscheduler to avoid import errors when not installed
+        from apscheduler.schedulers.background import BackgroundScheduler
+        from apscheduler.triggers.cron import CronTrigger
+        from apscheduler.triggers.interval import IntervalTrigger
+        
         scheduler = BackgroundScheduler(daemon=True)
         
         # Add all configured jobs
