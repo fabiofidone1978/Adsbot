@@ -68,10 +68,11 @@ Genera una campagna pubblicitaria completa ESCLUSIVAMENTE IN ITALIANO con il seg
     "cta_text": "Testo della Call-To-Action in italiano",
     "suggested_budget": 50.00,
     "keywords": ["keyword1_italiano", "keyword2_italiano", "keyword3_italiano"],
-    "target_audience": "Descrizione del target audience in italiano"
+    "target_audience": "Descrizione del target audience in italiano",
+    "image_prompt": "Brief in italiano per generare immagine ADV: descrizione visiva dell'asset pubblicità"
 }}
 
-IMPORTANTE: Rispondi SOLO con il JSON valido. Tutti i testi (title, description, cta_text, keywords, target_audience) devono essere ESCLUSIVAMENTE in italiano.
+IMPORTANTE: Rispondi SOLO con il JSON valido. Tutti i testi (title, description, cta_text, keywords, target_audience, image_prompt) devono essere ESCLUSIVAMENTE in italiano.
 Senza markdown, senza commenti, solo JSON."""
             
             response = self.client.chat.completions.create(
@@ -80,7 +81,7 @@ Senza markdown, senza commenti, solo JSON."""
                     {"role": "system", "content": "You are an expert social media campaign strategist."},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.7,
+                temperature=0.4,
                 max_tokens=500
             )
             
@@ -106,7 +107,8 @@ Senza markdown, senza commenti, solo JSON."""
                 cta_text=campaign_data.get("cta_text", "Scopri di più"),
                 suggested_budget=float(campaign_data.get("suggested_budget", 50.0)),
                 keywords=campaign_data.get("keywords", []),
-                target_audience=campaign_data.get("target_audience", "")
+                target_audience=campaign_data.get("target_audience", ""),
+                image_prompt=campaign_data.get("image_prompt", "Immagine pubblicitaria per campagna Telegram")
             )
         
         except Exception as e:
@@ -175,10 +177,11 @@ Genera una campagna pubblicitaria completa ESCLUSIVAMENTE IN ITALIANO con il seg
     "cta_text": "Testo della Call-To-Action in italiano appropriato per {platform} e tono {tone}",
     "suggested_budget": 50.00,
     "keywords": ["keyword1_italiano", "keyword2_italiano", "keyword3_italiano"],
-    "target_audience": "Descrizione del target audience italiano per {platform}"
+    "target_audience": "Descrizione del target audience italiano per {platform}",
+    "image_prompt": "Brief visivo in italiano per generare immagine ADV per {platform} con tono {tone}"
 }}
 
-IMPORTANTE: Rispondi SOLO con il JSON valido. Tutto il contenuto (title, description, cta_text, keywords, target_audience) deve essere ESCLUSIVAMENTE in italiano.
+IMPORTANTE: Rispondi SOLO con il JSON valido. Tutto il contenuto (title, description, cta_text, keywords, target_audience, image_prompt) deve essere ESCLUSIVAMENTE in italiano.
 Senza markdown, senza commenti, solo JSON.
 Assicurati che sia ottimizzato per {platform} e segua il tono {tone}."""
             
@@ -188,7 +191,7 @@ Assicurati che sia ottimizzato per {platform} e segua il tono {tone}."""
                     {"role": "system", "content": "You are an expert social media campaign strategist specializing in platform-specific content optimization."},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.7,
+                temperature=0.4,
                 max_tokens=500
             )
             
@@ -207,17 +210,18 @@ Assicurati che sia ottimizzato per {platform} e segua il tono {tone}."""
                     campaign_data = json.loads(json_str)
                 else:
                     raise
-            
             return CampaignContent(
                 title=campaign_data.get("title", "Campaign"),
                 description=campaign_data.get("description", ""),
                 cta_text=campaign_data.get("cta_text", "Scopri di più"),
                 suggested_budget=float(campaign_data.get("suggested_budget", 50.0)),
                 keywords=campaign_data.get("keywords", []),
-                target_audience=campaign_data.get("target_audience", "")
+                target_audience=campaign_data.get("target_audience", ""),
+                image_prompt=campaign_data.get("image_prompt", f"Immagine pubblicitaria per {platform} con tono {tone}")
             )
         
         except Exception as e:
             logger.error(f"Error generating campaign with ChatGPT for {platform}/{tone}: {e}")
+            return Noner(f"Error generating campaign with ChatGPT for {platform}/{tone}: {e}")
             return None
 
