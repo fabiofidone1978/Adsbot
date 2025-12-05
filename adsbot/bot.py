@@ -391,7 +391,7 @@ async def add_channel_entry(update: Update, context: CallbackContext) -> int:
     """Ask the user for a channel handle."""
 
     if update.callback_query:
-        await update.callback_query.answer()
+        await safe_query_answer(update.callback_query)
         await update.callback_query.edit_message_text(
             "Inserisci lo @username o il link del canale:"
         )
@@ -442,7 +442,7 @@ async def goal_entry(update: Update, context: CallbackContext) -> int:
 
     if not channels:
         if update.callback_query:
-            await update.callback_query.answer()
+            await safe_query_answer(update.callback_query)
             await update.callback_query.edit_message_text(
                 "❌ Non hai canali amministrati ancora.\n\n"
                 "Aggiungi un canale prima di creare obiettivi.",
@@ -472,7 +472,7 @@ async def goal_entry(update: Update, context: CallbackContext) -> int:
     keyboard.append([InlineKeyboardButton("❌ Annulla", callback_data="menu:home")])
     
     if update.callback_query:
-        await update.callback_query.answer()
+        await safe_query_answer(update.callback_query)
         await update.callback_query.edit_message_text(
             text,
             reply_markup=InlineKeyboardMarkup(keyboard)
@@ -765,7 +765,7 @@ async def offer_entry(update: Update, context: CallbackContext) -> int:
 
     if not channels:
         if update.callback_query:
-            await update.callback_query.answer()
+            await safe_query_answer(update.callback_query)
             await update.callback_query.edit_message_text(
                 "❌ Non hai canali amministrati ancora.\n\n"
                 "Aggiungi un canale prima di creare offerte.",
@@ -794,7 +794,7 @@ async def offer_entry(update: Update, context: CallbackContext) -> int:
     keyboard.append([InlineKeyboardButton("❌ Annulla", callback_data="menu:home")])
     
     if update.callback_query:
-        await update.callback_query.answer()
+        await safe_query_answer(update.callback_query)
         await update.callback_query.edit_message_text(
             text,
             reply_markup=InlineKeyboardMarkup(keyboard)
@@ -1496,7 +1496,7 @@ async def campaign_entry(update: Update, context: CallbackContext) -> int:
             ]
             
             if update.callback_query:
-                await update.callback_query.answer()
+                await safe_query_answer(update.callback_query)
                 await update.callback_query.edit_message_text(error_text, reply_markup=InlineKeyboardMarkup(keyboard))
             else:
                 await update.message.reply_text(error_text, reply_markup=InlineKeyboardMarkup(keyboard))
@@ -1508,7 +1508,7 @@ async def campaign_entry(update: Update, context: CallbackContext) -> int:
 
     if not channels:
         if update.callback_query:
-            await update.callback_query.answer()
+            await safe_query_answer(update.callback_query)
             await update.callback_query.edit_message_text(
                 "❌ Non hai canali amministrati ancora.\n\n"
                 "Aggiungi un canale prima di creare campagne.",
@@ -1537,7 +1537,7 @@ async def campaign_entry(update: Update, context: CallbackContext) -> int:
     keyboard.append([InlineKeyboardButton("❌ Annulla", callback_data="menu:home")])
     
     if update.callback_query:
-        await update.callback_query.answer()
+        await safe_query_answer(update.callback_query)
         await update.callback_query.edit_message_text(
             text,
             reply_markup=InlineKeyboardMarkup(keyboard)
@@ -1827,7 +1827,7 @@ async def template_entry(update: Update, context: CallbackContext) -> int:
     """Begin a broadcast template conversation."""
 
     if update.callback_query:
-        await update.callback_query.answer()
+        await safe_query_answer(update.callback_query)
         await update.callback_query.edit_message_text(
             "Scegli un nome per il template broadcast"
         )
