@@ -164,6 +164,10 @@ class Campaign(Base):
     name: Mapped[str] = mapped_column(String(255))
     budget: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     call_to_action: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    # Campi per media
+    image_file_id: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)  # Telegram file_id per immagine
+    image_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)  # URL immagine se esterna
+    content: Mapped[Optional[str]] = mapped_column(Text, nullable=True)  # Testo contenuto campagna
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     channel: Mapped[Channel] = relationship("Channel", back_populates="campaigns")

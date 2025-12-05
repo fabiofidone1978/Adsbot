@@ -23,7 +23,16 @@ try:
 except Exception:
     pass
 
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Update,
+    KeyboardButton,
+    ReplyKeyboardMarkup,
+    ReplyKeyboardRemove,
+    KeyboardButtonRequestChat,
+    ChatAdministratorRights,
+)
 from telegram.ext import (
     Application,
     CallbackContext,
@@ -134,6 +143,23 @@ async def safe_query_answer(query) -> bool:
         return False
 
 
+# Custom filter to accept TEXT or chat_shared messages
+class TextOrChatSharedFilter(filters.BaseFilter):
+    """Accept messages with TEXT or chat_shared attribute."""
+    
+    def filter(self, message):
+        # Accept if it's a text message (excluding commands)
+        if message.text and not message.text.startswith('/'):
+            return True
+        # Accept if it's a chat_shared message from the native picker
+        if message.chat_shared:
+            return True
+        return False
+
+
+TEXT_OR_CHAT_SHARED = TextOrChatSharedFilter()
+
+
 (
     ADD_CHANNEL,
     GOAL_CHANNEL,
@@ -145,6 +171,7 @@ async def safe_query_answer(query) -> bool:
     OFFER_NOTES,
     CAMPAIGN_CHANNEL,
     CAMPAIGN_NAME,
+    CAMPAIGN_IMAGE,
     CAMPAIGN_BUDGET,
     CAMPAIGN_LOAD_BALANCE,
     CAMPAIGN_PRICE,
@@ -173,7 +200,7 @@ async def safe_query_answer(query) -> bool:
     MARKETPLACE_ORDER_CONTENT,
     MARKETPLACE_ORDER_REVIEW,
     MARKETPLACE_ORDER_CONFIRM,
-) = range(34)
+) = range(35)
 
 
 # Old menu (kept for backward compatibility)
@@ -387,465 +414,405 @@ async def show_channel_stats(update: Update, context: CallbackContext) -> None:
 
 
 
-async def _get_user_admin_channels(bot_app: Application, user_id: int) -> list[dict]:
-    """
-    Recupera lista di canali dove l'utente è amministratore.
+async def show_channel_campaigns(update: Update, context: CallbackContext) -> None:
+    """Show campaigns for a specific channel."""
+    query = update.callback_query
+    await query.answer()
     
-    Ritorna lista di dict: {"chat_id": ..., "title": "...", "username": "...", "type": "..."}
-    """
-    admin_channels = []
+    # Estrai channel_id dal callback
+    channel_id = int(query.data.split(":")[-1])
     
-    try:
-        # Nota: python-telegram-bot non ha un metodo diretto per ottenere
-        # tutti i dialog dell'utente. Usiamo un approccio fallback:
-        # - Se salvate nel DB, le recuperiamo di là
-        # - Altrimenti, chiediamo all'utente di cercare manualmente
+    with with_session(context) as session:
+        from .models import Channel, Campaign
         
-        logger.info(f"Attempting to discover admin channels for user {user_id}")
+        channel = session.query(Channel).filter_by(id=channel_id).first()
+        if not channel:
+            await query.edit_message_text("❌ Canale non trovato")
+            return
         
-        # Fallback: dal DB
-        try:
-            with session_scope() as session:
-                from .models import Channel
-                
-                # Canali già salvati dall'utente
-                user_channels = session.query(Channel).filter_by(user_id=user_id).all()
-                for ch in user_channels:
-                    admin_channels.append({
-                        "chat_id": ch.chat_id,
-                        "title": ch.title or "Canale senza nome",
-                        "username": ch.handle or "",
-                        "type": "channel",
-                        "already_added": True
-                    })
-                
-                if admin_channels:
-                    logger.info(f"Found {len(admin_channels)} channels in DB for user {user_id}")
-        except Exception as e:
-            logger.warning(f"Could not query DB for channels: {e}")
+        # Carica campagne del canale
+        campaigns = session.query(Campaign).filter_by(channel_id=channel_id).all()
+        
+        if not campaigns:
+            campaigns_text = (
+                f"📭 **Nessuna campagna per {channel.handle}**\n\n"
+                f"Crea la tua prima campagna per iniziare a promuovere."
+            )
+        else:
+            campaigns_list = "\n".join(
+                f"• {c.title or 'Senza titolo'} (ID: {c.id})"
+                for c in campaigns[:10]  # Mostra max 10
+            )
+            campaigns_text = (
+                f"📋 **Campagne: {channel.handle}**\n\n"
+                f"Campagne pubblicate ({len(campaigns)}):\n"
+                f"{campaigns_list}"
+                f"\n\n💡 Clicca su una campagna per vedere i dettagli."
+            )
     
-    except Exception as e:
-        logger.error(f"Error discovering admin channels: {e}")
+    keyboard = [
+        [InlineKeyboardButton("◀️ Indietro", callback_data=f"stats:channel:{channel_id}")],
+        [InlineKeyboardButton("🏠 Menu", callback_data="menu:stats")],
+    ]
     
-    return admin_channels
+    await query.edit_message_text(campaigns_text, reply_markup=InlineKeyboardMarkup(keyboard))
 
 
 async def add_channel_entry(update: Update, context: CallbackContext) -> int:
-    """Fetch user's administered channels from Telegram and show them."""
-
-    user_data = update.effective_user
-    if not user_data:
-        if update.callback_query:
-            await update.callback_query.edit_message_text("❌ Errore: utente non trovato")
-        return ConversationHandler.END
-
-    if update.callback_query:
-        await safe_query_answer(update.callback_query)
-    
-    try:
-        logger.info(f"Fetching administered channels for user {user_data.id}...")
-        
-        # Prova a recuperare i canali dal DB
-        admin_channels = await _get_user_admin_channels(context.application, user_data.id)
-        
-        if admin_channels and len(admin_channels) > 0:
-            # Mostra i canali trovati con pulsanti di selezione
-            message_text = "✅ Ho trovato i seguenti canali dove sei amministratore:\n\n"
-            
-            keyboard = []
-            for ch in admin_channels:
-                title = ch.get("title", "Canale")
-                username = ch.get("username", "")
-                chat_id = ch.get("chat_id", "")
-                
-                if username:
-                    btn_label = f"@{username} - {title[:20]}"
-                else:
-                    btn_label = title[:30]
-                
-                keyboard.append([
-                    InlineKeyboardButton(
-                        f"✓ {btn_label}",
-                        callback_data=f"channel:select:{chat_id}"
-                    )
-                ])
-            
-            keyboard.append([
-                InlineKeyboardButton("🔍 Aggiungi manualmente", callback_data="channel:manual"),
-                InlineKeyboardButton("❌ Annulla", callback_data="menu:back")
-            ])
-            
-            reply_markup = InlineKeyboardMarkup(keyboard)
-            
-            # Handle both callback_query (button) and message updates
-            if update.callback_query and update.callback_query.message:
-                await update.callback_query.edit_message_text(
-                    text=message_text,
-                    reply_markup=reply_markup
-                )
-            elif update.message:
-                await update.message.reply_text(
-                    message_text,
-                    reply_markup=reply_markup
-                )
-            
-            return ADD_CHANNEL
-        else:
-            # Nessun canale trovato, usa input manuale
-            message_text = (
-                "🔍 Nessun canale trovato nel mio database.\n\n"
-                "Inserisci lo @username o il link del canale che vuoi aggiungere:\n"
-                "• @mio_canale\n"
-                "• https://t.me/mio_canale\n\n"
-                "Devo essere amministratore del canale per accedere ai dati."
-            )
-            
-            keyboard = [
-                [InlineKeyboardButton("❌ Annulla", callback_data="menu:back")]
-            ]
-            reply_markup = InlineKeyboardMarkup(keyboard)
-            
-            if update.callback_query and update.callback_query.message:
-                await update.callback_query.edit_message_text(
-                    text=message_text,
-                    reply_markup=reply_markup
-                )
-            elif update.message:
-                await update.message.reply_text(
-                    message_text,
-                    reply_markup=reply_markup
-                )
-            
-            return ADD_CHANNEL
-
-    except Exception as e:
-        logger.error(f"Error in add_channel_entry: {e}")
-        try:
-            if update.callback_query and update.callback_query.message:
-                await update.callback_query.edit_message_text(
-                    "❌ Errore nel recupero dei canali. Per favore, riprova.",
-                    reply_markup=MENU_BUTTONS
-                )
-            elif update.message:
-                await update.message.reply_text(
-                    "❌ Errore nel recupero dei canali. Per favore, riprova.",
-                    reply_markup=MENU_BUTTONS
-                )
-        except Exception as e2:
-            logger.error(f"Error sending error message: {e2}")
-        return ConversationHandler.END
-
-
-
-
-async def add_channel_selected(update: Update, context: CallbackContext) -> int:
-    """Handle channel selection from discovery list."""
+    """Entry point: l'utente ha cliccato su 'Aggiungi canale' nel menu."""
     query = update.callback_query
     
-    if not query:
-        return ConversationHandler.END
+    if query:
+        await safe_query_answer(query)
     
-    await safe_query_answer(query)
+    # Log inizio onboarding
+    user_id = update.effective_user.id
+    logger.info(f"channel_add_started: user={user_id}")
     
-    try:
-        # Extract callback data
-        callback_data = query.data
-        
-        if callback_data.startswith("channel:select:"):
-            # User selected a channel from discovery list
-            chat_id_str = callback_data.replace("channel:select:", "")
-            
-            try:
-                chat_id = int(chat_id_str)
-                context.user_data["selected_channel_id"] = chat_id
-                logger.info(f"User selected channel ID: {chat_id}")
-                
-                # Load channel info from DB
-                with session_scope() as session:
-                    from .models import Channel
-                    channel = session.query(Channel).filter_by(chat_id=chat_id).first()
-                    
-                    if channel:
-                        context.user_data["selected_channel_handle"] = channel.handle
-                        context.user_data["selected_channel_title"] = channel.title
-                        
-                        msg = (
-                            f"✅ Ho selezionato: {channel.title}\n\n"
-                            f"Proceeding to verify admin permissions...\n"
-                            f"Per favore aspetta mentre verifico i permessi."
-                        )
-                        await query.edit_message_text(msg)
-                        
-                        # Now verify admin and save
-                        return await add_channel_save(update, context)
-                    else:
-                        await query.edit_message_text(
-                            "❌ Canale non trovato nel database.",
-                            reply_markup=MENU_BUTTONS
-                        )
-                        return ConversationHandler.END
-            except ValueError:
-                logger.error(f"Invalid chat_id in callback: {chat_id_str}")
-                await query.edit_message_text(
-                    "❌ Errore: ID canale non valido.",
-                    reply_markup=MENU_BUTTONS
-                )
-                return ConversationHandler.END
-        
-        elif callback_data == "channel:manual":
-            # User chose manual entry
-            msg = (
-                "🔍 Aggiungi manualmente\n\n"
-                "Inserisci lo @username o il link del canale:\n"
-                "• @mio_canale\n"
-                "• https://t.me/mio_canale"
-            )
-            await query.edit_message_text(msg)
-            return ADD_CHANNEL
-        
-        else:
-            await query.answer("Operazione non riconosciuta")
-            return ConversationHandler.END
-    
-    except Exception as e:
-        logger.error(f"Error in add_channel_selected: {e}")
-        await query.edit_message_text(
-            "❌ Errore durante la selezione del canale",
-            reply_markup=MENU_BUTTONS
-        )
-        return ConversationHandler.END
+    context.user_data['channel_add_started'] = True
+
+    message_text = (
+        "🔎 Ricerca canali amministrati\n\n"
+        "Seleziona uno dei canali che amministri.\n\n"
+        "Telegram ti mostrerà i canali dove puoi aggiungere il bot.\n\n"
+        "Se non vedi il canale:\n"
+        "1) apri il canale su Telegram\n"
+        "2) aggiungi questo bot come amministratore\n"
+        "3) torna qui e ripeti la selezione\n\n"
+        "In alternativa puoi inserire manualmente:\n"
+        "• @username (pubblico): @mychannel\n"
+        "• Link pubblico: https://t.me/mychannel\n"
+        "• NON: link privati (t.me/+...)"
+    )
+
+    # Bottone nativo semplificato - Telegram gestisce il filtraggio
+    request_button = KeyboardButton(
+        text="📡 Seleziona un canale che amministri",
+        request_chat=KeyboardButtonRequestChat(
+            request_id=1,
+            chat_is_channel=True,
+            bot_is_member=True,  # Mostra solo canali dove il bot è già membro
+        ),
+    )
+
+    reply_kb = ReplyKeyboardMarkup(
+        [[request_button]],
+        resize_keyboard=True,
+        one_time_keyboard=True,
+    )
+
+    if query and query.message:
+        await query.edit_message_text(text=message_text)
+        await query.message.reply_text(message_text, reply_markup=reply_kb)
+    elif update.message:
+        await update.message.reply_text(message_text, reply_markup=reply_kb)
+
+    return ADD_CHANNEL
 
 
 async def add_channel_save(update: Update, context: CallbackContext) -> int:
-    """Verify user is admin of the channel, check bot permissions, and save it."""
+    """
+    Salva il canale selezionato:
+    - Preferenza: chat_shared (bottone nativo Telegram)
+    - Fallback: testo manuale @handle o link t.me/...
+    """
+    msg = update.effective_message
     user_data = update.effective_user
-    if not user_data:
-        await update.message.reply_text("❌ Errore: utente non trovato", reply_markup=MENU_BUTTONS)
+
+    if not user_data or not msg:
+        await msg.reply_text("❌ Errore: utente non trovato", reply_markup=MENU_BUTTONS)
         return ConversationHandler.END
 
-    handle = update.message.text
-    
-    # Check if text is None
+    # Rimuovo la tastiera con il bottone di selezione
+    await msg.reply_text("⏳ Verifico il canale selezionato...", reply_markup=ReplyKeyboardRemove())
+
+    # CASO IDEALE: l'utente ha usato il bottone nativo 'Seleziona un canale'
+    if msg.chat_shared:
+        chat_id = msg.chat_shared.chat_id
+        logger.info(f"Processing chat_shared for chat_id: {chat_id}")
+
+        try:
+            chat = await context.bot.get_chat(chat_id)
+
+            # Verifico che l'utente sia admin del canale
+            member = await context.bot.get_chat_member(chat.id, user_data.id)
+            if member.status not in ("administrator", "creator"):
+                await msg.reply_text(
+                    "❌ Non risulti amministratore di questo canale.\n"
+                    "Seleziona un canale dove sei admin oppure aggiungi il bot come amministratore.",
+                    reply_markup=MENU_BUTTONS,
+                )
+                return ConversationHandler.END
+
+            # Verifico anche i permessi del bot
+            bot_member = await context.bot.get_chat_member(chat.id, context.bot.id)
+            if bot_member.status not in ("administrator", "creator"):
+                await msg.reply_text(
+                    "⚠️ Il bot non è amministratore del canale selezionato.\n\n"
+                    "➜ Aggiungi questo bot come admin del canale e ripeti l'operazione.",
+                    reply_markup=MENU_BUTTONS,
+                )
+                logger.warning(f"channel_add_failed: user={user_data.id}, reason=bot_not_admin, chat_id={chat_id}")
+                return ConversationHandler.END
+
+            # Salvo le informazioni del canale nel context per la conferma
+            context.user_data['pending_channel'] = {
+                'chat_id': chat.id,
+                'title': chat.title,
+                'username': chat.username,
+                'description': chat.description or "",
+                'source': 'picker',  # Log source
+            }
+
+            # Mostra conferma inline
+            keyboard = InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            "✅ Conferma aggiunta canale",
+                            callback_data=f"confirm_add_channel:{chat.id}",
+                        )
+                    ],
+                    [InlineKeyboardButton("❌ Annulla", callback_data="cancel_add_channel")],
+                ]
+            )
+            
+            confirmation_text = (
+                f"Hai selezionato il canale:\n\n"
+                f"<b>{chat.title}</b>\n"
+                f"@{chat.username or 'privato'}\n\n"
+                f"Confermi l'aggiunta a Adsbot?"
+            )
+            
+            await msg.reply_text(confirmation_text, reply_markup=keyboard, parse_mode="HTML")
+            return ConversationHandler.END
+
+        except Exception as e:
+            logger.error(f"Errore durante salvataggio canale da chat_shared: {e}")
+            logger.warning(f"channel_add_failed: user={user_data.id}, reason=exception, error={str(e)}")
+            await msg.reply_text(
+                "❌ Errore nella lettura del canale selezionato.\n"
+                "Controlla che il bot sia stato aggiunto come amministratore e riprova.",
+                reply_markup=MENU_BUTTONS,
+            )
+            return ConversationHandler.END
+
+    # FALLBACK: testo manuale @canale o link t.me/...
+    handle = (msg.text or "").strip()
     if not handle:
-        await update.message.reply_text(
-            "❌ Per favore, inserisci il nome del canale",
-            reply_markup=MENU_BUTTONS
+        await msg.reply_text(
+            "❌ Nessun canale selezionato.\n"
+            "Seleziona un canale dalla lista oppure invia @username o link t.me/...",
+            reply_markup=MENU_BUTTONS,
         )
         return ConversationHandler.END
+
+    try:
+        # Parse della stringa - supporta @username, t.me/username, e t.me/+invitelink
+        channel_handle = None
+        chat_identifier = None
+        
+        if handle.startswith("@"):
+            # Caso: @username
+            channel_handle = handle[1:]
+            chat_identifier = f"@{channel_handle}"
+        elif "t.me/" in handle:
+            # Estrai la parte dopo t.me/
+            link_part = handle.split("t.me/")[-1].rstrip("/")
+            
+            if link_part.startswith("+"):
+                # Caso: link privato t.me/+... (invite link)
+                # Non possiamo usare @, usiamo il numero chat direttamente
+                # I link privati sono nella forma t.me/+ABC123...
+                # Telegram richiede il numero chat negativo con conversione base64
+                logger.warning(f"Link privato rilevato: {link_part[:10]}... - tentativo di conversione")
+                # Per i link privati non pubblici, non possiamo ottenere la chat direttamente
+                # Dico all'utente di usare il username pubblico
+                await msg.reply_text(
+                    f"❌ Sembra che hai fornito un link di invito privato.\n\n"
+                    f"Per aggiungere il canale, usa invece:\n"
+                    f"• L'username pubblico del canale (es. @mychannel)\n"
+                    f"• Oppure seleziona il canale dal picker con il bottone 📡\n\n"
+                    f"I link privati (t.me/+...) non possono essere cercati automaticamente.",
+                    reply_markup=MENU_BUTTONS,
+                )
+                logger.warning(f"channel_add_failed: user={user_data.id}, reason=private_link, handle={link_part[:20]}")
+                return ConversationHandler.END
+            else:
+                # Caso: username pubblico t.me/username
+                channel_handle = link_part
+                chat_identifier = f"@{channel_handle}"
+        else:
+            # Assumi sia un username senza @
+            channel_handle = handle
+            chat_identifier = f"@{channel_handle}"
+
+        logger.info(f"channel_add_source: user={user_data.id}, source=manual, handle={channel_handle}")
+
+        chat = await context.bot.get_chat(chat_identifier)
+        chat_member = await context.bot.get_chat_member(chat.id, user_data.id)
+
+        if not chat_member.is_member:
+            logger.warning(f"channel_add_failed: user={user_data.id}, reason=user_not_member, handle={channel_handle}")
+            await msg.reply_text(
+                f"❌ Non sei membro del canale @{channel_handle}",
+                reply_markup=MENU_BUTTONS,
+            )
+            return ConversationHandler.END
+
+        if chat_member.status not in ("administrator", "creator"):
+            logger.warning(f"channel_add_failed: user={user_data.id}, reason=user_not_admin, handle={channel_handle}, status={chat_member.status}")
+            await msg.reply_text(
+                f"❌ Non sei amministratore del canale @{channel_handle}\n\n"
+                f"Stato attuale: {chat_member.status}",
+                reply_markup=MENU_BUTTONS,
+            )
+            return ConversationHandler.END
+
+        # Verifico i permessi del bot
+        bot_member = await context.bot.get_chat_member(chat.id, context.bot.id)
+        if bot_member.status not in ("administrator", "creator"):
+            logger.warning(f"channel_add_failed: user={user_data.id}, reason=bot_not_admin, handle={channel_handle}")
+            await msg.reply_text(
+                f"⚠️ Il bot non è amministratore di @{channel_handle}.\n\n"
+                f"➜ Aggiungi questo bot come admin e riprova.",
+                reply_markup=MENU_BUTTONS,
+            )
+            return ConversationHandler.END
+
+        # Salvo le informazioni del canale nel context per la conferma
+        context.user_data['pending_channel'] = {
+            'chat_id': chat.id,
+            'title': chat.title,
+            'username': chat.username,
+            'description': chat.description or "",
+            'source': 'manual',  # Log source
+        }
+
+        # Mostra conferma inline
+        keyboard = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "✅ Conferma aggiunta canale",
+                        callback_data=f"confirm_add_channel:{chat.id}",
+                    )
+                ],
+                [InlineKeyboardButton("❌ Annulla", callback_data="cancel_add_channel")],
+            ]
+        )
+        
+        confirmation_text = (
+            f"Hai selezionato il canale:\n\n"
+            f"<b>{chat.title}</b>\n"
+            f"@{chat.username}\n\n"
+            f"Confermi l'aggiunta a Adsbot?"
+        )
+        
+        await msg.reply_text(confirmation_text, reply_markup=keyboard, parse_mode="HTML")
+        return ConversationHandler.END
+
+    except Exception as e:
+        logger.error(f"Error fetching channel info: {e}")
+        logger.warning(f"channel_add_failed: user={user_data.id}, reason=not_found, input={handle}, error={str(e)}")
+        await msg.reply_text(
+            f"❌ Canale non trovato o non accessibile: {handle}\n\n"
+            f"Assicurati che:\n"
+            f"• Il canale esista\n"
+            f"• Sia un canale pubblico o privato dove sei admin\n"
+            f"• Abbia il formato @username o link t.me/...",
+            reply_markup=MENU_BUTTONS,
+        )
+        return ConversationHandler.END
+
+
+async def confirm_add_channel(update: Update, context: CallbackContext) -> None:
+    """Conferma e salva il canale nel DB."""
+    query = update.callback_query
+    await query.answer()
     
-    handle = handle.strip()
+    pending_channel = context.user_data.get('pending_channel')
+    if not pending_channel:
+        await query.edit_message_text("❌ Sessione scaduta. Ripeti l'operazione.")
+        return
+    
+    user_data = update.effective_user
+    chat_id = pending_channel['chat_id']
+    source = pending_channel['source']
     
     try:
-        # Parse the channel handle (remove @ if present, handle links)
-        if handle.startswith("@"):
-            channel_handle = handle[1:]
-        elif "t.me/" in handle:
-            channel_handle = handle.split("t.me/")[-1].rstrip("/")
-        else:
-            channel_handle = handle
+        # Salva nel DB
+        with with_session(context) as session:
+            user = ensure_user(
+                session,
+                telegram_id=user_data.id,
+                username=user_data.username,
+                first_name=user_data.first_name,
+                language_code=user_data.language_code,
+            )
+            channel = add_channel(
+                session,
+                owner=user,
+                telegram_id=pending_channel['chat_id'],
+                handle=pending_channel['username'],
+                title=pending_channel['title'],
+                description=pending_channel['description'],
+            )
+            
+        # Log success
+        logger.info(f"channel_add_success: user={user_data.id}, channel_id={channel.id}, source={source}, title={pending_channel['title']}")
         
-        logger.info(f"User {user_data.id} attempting to add channel: @{channel_handle}")
+        # Cleanup
+        context.user_data.pop('pending_channel', None)
         
-        # Get bot info to check if adding bot itself
-        try:
-            bot_info = await context.bot.get_me()
-            bot_username = bot_info.username or ""
-            logger.info(f"Bot username: {bot_username}, requested: {channel_handle}")
-            
-            # If user is trying to add the bot itself, allow it (special case)
-            if channel_handle.lower() == bot_username.lower():
-                logger.info(f"User {user_data.id} adding the bot itself as channel")
-                with with_session(context) as session:
-                    user = ensure_user(
-                        session,
-                        telegram_id=user_data.id,
-                        username=user_data.username,
-                        first_name=user_data.first_name,
-                        language_code=user_data.language_code,
-                    )
-                    channel = add_channel(
-                        session, 
-                        user, 
-                        f"@{channel_handle}",
-                        title=bot_info.first_name or "Bot Channel",
-                        topic=bot_info.description or "Bot advertising channel"
-                    )
-                
-                await update.message.reply_text(
-                    f"✅ Canale {channel.handle} salvato con successo!\n\n"
-                    f"📋 Titolo: {channel.title}\n"
-                    f"🤖 Il bot è automaticamente amministratore.",
-                    reply_markup=MENU_BUTTONS
-                )
-                logger.info(f"✓ Bot channel saved for user {user_data.id}")
-                return ConversationHandler.END
-        except Exception as e:
-            logger.warning(f"Could not get bot info: {e}")
-        
-        # Try to get the channel and verify user is admin
-        logger.info(f"Verifying user {user_data.id} is admin of @{channel_handle}...")
-        
-        try:
-            # Get chat info
-            chat = await context.bot.get_chat(f"@{channel_handle}")
-            logger.info(f"Chat found: {chat.title}")
-            
-            # Check if user is admin
-            chat_member = await context.bot.get_chat_member(chat.id, user_data.id)
-            
-            if not chat_member.is_member:
-                await update.message.reply_text(
-                    f"❌ Non sei membro del canale @{channel_handle}",
-                    reply_markup=MENU_BUTTONS
-                )
-                return ConversationHandler.END
-            
-            if not (chat_member.status in ["administrator", "creator"]):
-                await update.message.reply_text(
-                    f"❌ Non sei amministratore del canale @{channel_handle}\n\n"
-                    f"Stato attuale: {chat_member.status}",
-                    reply_markup=MENU_BUTTONS
-                )
-                return ConversationHandler.END
-            
-            # User is admin! Now check if bot has admin permissions
-            logger.info(f"Checking bot permissions in @{channel_handle}...")
-            try:
-                bot_member = await context.bot.get_chat_member(chat.id, context.bot.id)
-                
-                # Check if bot is admin
-                if bot_member.status not in ["administrator", "creator"]:
-                    # Bot is not admin - show instructions to promote it
-                    bot_info = await context.bot.get_me()
-                    bot_username = bot_info.username or "bot"
-                    
-                    instructions = (
-                        f"⚠️ Il bot non è ancora amministratore del canale!\n\n"
-                        f"Per completare la configurazione, segui questi passaggi:\n\n"
-                        f"1️⃣ Apri il canale @{channel_handle}\n"
-                        f"2️⃣ Vai su: Impostazioni → Amministratori\n"
-                        f"3️⃣ Aggiungi il bot @{bot_username} come amministratore\n"
-                        f"4️⃣ Torna qui e scrivi di nuovo il nome del canale\n\n"
-                        f"📌 Il bot avrà bisogno di questi permessi:\n"
-                        f"• Postare messaggi\n"
-                        f"• Eliminare messaggi\n"
-                        f"• Gestire i pinned messages\n"
-                        f"• Visualizzare statistiche canale"
-                    )
-                    
-                    await update.message.reply_text(instructions, reply_markup=MENU_BUTTONS)
-                    logger.warning(f"Bot is not admin in @{channel_handle}. Waiting for promotion...")
-                    return ConversationHandler.END
-                
-                # Bot has admin permissions! Save the channel
-                logger.info(f"✓ Bot has admin permissions in @{channel_handle}. Saving channel...")
-                
-                with with_session(context) as session:
-                    user = ensure_user(
-                        session,
-                        telegram_id=user_data.id,
-                        username=user_data.username,
-                        first_name=user_data.first_name,
-                        language_code=user_data.language_code,
-                    )
-                    channel = add_channel(
-                        session, 
-                        user, 
-                        f"@{channel_handle}",
-                        title=chat.title,
-                        topic=chat.description
-                    )
-                
-                await update.message.reply_text(
-                    f"✅ Canale {channel.handle} salvato con successo!\n\n"
-                    f"📋 Titolo: {chat.title}\n"
-                    f"📝 Descrizione: {chat.description or 'N/A'}\n\n"
-                    f"🤖 Il bot è ora amministratore e pronto a pubblicare campagne.",
-                    reply_markup=MENU_BUTTONS
-                )
-                return ConversationHandler.END
-                
-            except Exception as e:
-                logger.error(f"Error checking bot permissions: {e}")
-                # Fallback: still try to save if we can't verify bot status
-                logger.info(f"Fallback: saving channel even though bot status couldn't be verified")
-                bot_info = await context.bot.get_me()
-                bot_username = bot_info.username or "bot"
-                
-                with with_session(context) as session:
-                    user = ensure_user(
-                        session,
-                        telegram_id=user_data.id,
-                        username=user_data.username,
-                        first_name=user_data.first_name,
-                        language_code=user_data.language_code,
-                    )
-                    channel = add_channel(
-                        session, 
-                        user, 
-                        f"@{channel_handle}",
-                        title=chat.title,
-                        topic=chat.description
-                    )
-                
-                await update.message.reply_text(
-                    f"✅ Canale {channel.handle} salvato!\n\n"
-                    f"⚠️ Verifica manualmente che il bot @{bot_username} sia amministratore:\n"
-                    f"Impostazioni canale → Amministratori",
-                    reply_markup=MENU_BUTTONS
-                )
-                return ConversationHandler.END
-            
-        except Exception as e:
-            logger.error(f"Error fetching channel info: {e}")
-            # FALLBACK: Save anyway (like Inside Ads does)
-            logger.info(f"Fallback: saving channel without verification (get_chat failed)")
-            try:
-                with with_session(context) as session:
-                    user = ensure_user(
-                        session,
-                        telegram_id=user_data.id,
-                        username=user_data.username,
-                        first_name=user_data.first_name,
-                        language_code=user_data.language_code,
-                    )
-                    channel = add_channel(
-                        session, 
-                        user, 
-                        f"@{channel_handle}",
-                        title=f"Canale {channel_handle}",
-                        topic="Canale aggiunto tramite bot"
-                    )
-                
-                await update.message.reply_text(
-                    f"✅ Canale @{channel_handle} salvato!\n\n"
-                    f"📌 Verifica che:\n"
-                    f"• Il canale esista e sia accessibile\n"
-                    f"• Tu sia amministratore\n"
-                    f"• Il bot sia amministratore del canale",
-                    reply_markup=MENU_BUTTONS
-                )
-                logger.info(f"✓ Channel @{channel_handle} saved in fallback mode")
-                return ConversationHandler.END
-            except Exception as e2:
-                logger.error(f"Error in fallback save: {e2}")
-                await update.message.reply_text(
-                    f"❌ Errore nel salvataggio del canale: {e2}\n\n"
-                    f"Assicurati che:\n"
-                    f"• Il canale esista\n"
-                    f"• Sia un canale pubblico o privato dove sei admin\n"
-                    f"• Abbia il formato @username o link t.me/...",
-                    reply_markup=MENU_BUTTONS
-                )
-                return ConversationHandler.END
-    
-    except Exception as e:
-        logger.error(f"Error in add_channel_save: {e}")
-        await update.message.reply_text(
-            "❌ Errore nel salvataggio del canale. Per favore, riprova.",
-            reply_markup=MENU_BUTTONS
+        # Mostra successo con opzioni per aggiungere più canali
+        keyboard = InlineKeyboardMarkup(
+            [
+                [InlineKeyboardButton("➕ Aggiungi un altro canale", callback_data="menu:add_channel")],
+                [InlineKeyboardButton("🏠 Torna al menu", callback_data="menu:open")],
+            ]
         )
-        return ConversationHandler.END
+        
+        await query.edit_message_text(
+            f"✅ Canale <b>{pending_channel['title']}</b> aggiunto correttamente a Adsbot!",
+            reply_markup=keyboard,
+            parse_mode="HTML"
+        )
+        
+    except Exception as e:
+        logger.error(f"Error saving channel: {e}")
+        logger.warning(f"channel_add_failed: user={user_data.id}, reason=save_error, error={str(e)}")
+        await query.edit_message_text(
+            "❌ Errore nel salvataggio del canale.\nRiprova tra qualche istante.",
+            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("◀️ Indietro", callback_data="menu:add_channel")]])
+        )
+
+
+async def cancel_add_channel(update: Update, context: CallbackContext) -> None:
+    """Annulla l'aggiunta del canale."""
+    query = update.callback_query
+    await query.answer()
+    
+    user_data = update.effective_user
+    pending_channel = context.user_data.get('pending_channel', {})
+    
+    # Log cancellation
+    logger.info(f"channel_add_cancelled: user={user_data.id}, title={pending_channel.get('title', 'unknown')}")
+    
+    # Cleanup
+    context.user_data.pop('pending_channel', None)
+    
+    keyboard = InlineKeyboardMarkup(
+        [
+            [InlineKeyboardButton("➕ Prova di nuovo", callback_data="menu:add_channel")],
+            [InlineKeyboardButton("🏠 Menu", callback_data="menu:open")],
+        ]
+    )
+    
+    await query.edit_message_text(
+        "Aggiunta canale annullata.",
+        reply_markup=keyboard
+    )
 
 
 async def goal_entry(update: Update, context: CallbackContext) -> int:
@@ -2063,6 +2030,53 @@ async def campaign_channel(update: Update, context: CallbackContext) -> int:
 async def campaign_name(update: Update, context: CallbackContext) -> int:
     context.user_data["campaign_name"] = update.message.text.strip()
     await update.message.reply_text(
+        "📸 **Aggiungi un'immagine alla campagna**\n\n"
+        "Carica una foto/immagine o premi 'Salta' per continuare senza immagine",
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("⏭️ Salta", callback_data="campaign:skip_image")],
+        ])
+    )
+    return CAMPAIGN_IMAGE
+
+
+async def campaign_image(update: Update, context: CallbackContext) -> int:
+    """Ricevi l'immagine della campagna."""
+    msg = update.effective_message
+    
+    # Controlla se è stata inviata un'immagine
+    if msg.photo:
+        # Prendi il file_id della foto (la versione più grande)
+        photo = msg.photo[-1]
+        context.user_data["campaign_image_file_id"] = photo.file_id
+        logger.info(f"campaign_image_saved: user={update.effective_user.id}, file_id={photo.file_id}")
+        
+        await msg.reply_text(
+            "✅ Immagine salvata!\n\n"
+            "Budget previsto? (numero, opzionale, altrimenti lascia vuoto)"
+        )
+    else:
+        # Non è un'immagine, ripeti
+        await msg.reply_text(
+            "❌ Per favore, invia un'immagine o premi 'Salta'",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("⏭️ Salta", callback_data="campaign:skip_image")],
+            ])
+        )
+        return CAMPAIGN_IMAGE
+    
+    return CAMPAIGN_BUDGET
+
+
+async def campaign_skip_image(update: Update, context: CallbackContext) -> int:
+    """Salta l'immagine e continua con il budget."""
+    query = update.callback_query
+    await query.answer()
+    
+    context.user_data["campaign_image_file_id"] = None
+    logger.info(f"campaign_image_skipped: user={update.effective_user.id}")
+    
+    # Chiedi il budget
+    await query.edit_message_text(
         "Budget previsto? (numero, opzionale, altrimenti lascia vuoto)"
     )
     return CAMPAIGN_BUDGET
@@ -5733,8 +5747,7 @@ def build_application(config: Config) -> Application:
             ],
             states={
                 ADD_CHANNEL: [
-                    MessageHandler(filters.TEXT & ~filters.COMMAND, add_channel_save),
-                    CallbackQueryHandler(add_channel_selected, pattern=r"^channel:"),
+                    MessageHandler(TEXT_OR_CHAT_SHARED, add_channel_save),
                 ],
             },
             fallbacks=[CommandHandler("cancel", cancel)],
@@ -5805,6 +5818,10 @@ def build_application(config: Config) -> Application:
                     CallbackQueryHandler(campaign_channel_selected, pattern=r"^campaign:select_channel:\d+$"),
                 ],
                 CAMPAIGN_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, campaign_name)],
+                CAMPAIGN_IMAGE: [
+                    MessageHandler(filters.PHOTO, campaign_image),
+                    CallbackQueryHandler(campaign_skip_image, pattern=r"^campaign:skip_image$"),
+                ],
                 CAMPAIGN_BUDGET: [MessageHandler(filters.TEXT & ~filters.COMMAND, campaign_budget)],
                 CAMPAIGN_LOAD_BALANCE: [
                     CallbackQueryHandler(campaign_load_balance, pattern=r"^campaign:load:"),
@@ -5839,6 +5856,9 @@ def build_application(config: Config) -> Application:
 
     application.add_handler(CallbackQueryHandler(stats, pattern=r"^menu:stats$"))
     application.add_handler(CallbackQueryHandler(show_channel_stats, pattern=r"^stats:channel:\d+$"))
+    application.add_handler(CallbackQueryHandler(show_channel_campaigns, pattern=r"^stats:campaigns:\d+$"))
+    application.add_handler(CallbackQueryHandler(confirm_add_channel, pattern=r"^confirm_add_channel:\d+$"))
+    application.add_handler(CallbackQueryHandler(cancel_add_channel, pattern=r"^cancel_add_channel$"))
     application.add_handler(CallbackQueryHandler(open_menu, pattern=r"^menu:home$"))
 
     # Inside Ads handlers

@@ -1,0 +1,12 @@
+C:\Users\fabio-fidone\AppData\Local\Programs\Python\Python313\Lib\site-packages\apscheduler\__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import get_distribution, DistributionNotFound
+Traceback (most recent call last):
+  File "d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\main.py", line 1, in <module>
+    from adsbot.bot import run
+  File "d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot\bot.py", line 163, in <module>
+    (
+    ^
+    ...<39 lines>...
+    ) = range(34)
+    ^
+ValueError: not enough values to unpack (expected 35, got 34)
