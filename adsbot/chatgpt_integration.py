@@ -222,6 +222,5 @@ Assicurati che sia ottimizzato per {platform} e segua il tono {tone}."""
         
         except Exception as e:
             logger.error(f"Error generating campaign with ChatGPT for {platform}/{tone}: {e}")
-            return Noner(f"Error generating campaign with ChatGPT for {platform}/{tone}: {e}")
             return None
 

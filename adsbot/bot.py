@@ -121,6 +121,19 @@ from .verification import (
 
 logger = logging.getLogger(__name__)
 
+
+async def safe_query_answer(query) -> bool:
+    """Safely answer callback query, ignoring old/invalid query errors."""
+    if not query:
+        return False
+    try:
+        await query.answer()
+        return True
+    except Exception:
+        # Callback query too old, invalid, or already answered - ignore silently
+        return False
+
+
 (
     ADD_CHANNEL,
     GOAL_CHANNEL,
@@ -280,8 +293,7 @@ async def stats(update: Update, context: CallbackContext) -> None:
         return
     
     query = update.callback_query
-    if query:
-        await query.answer()
+    await safe_query_answer(query)
     
     with with_session(context) as session:
         user = ensure_user(
