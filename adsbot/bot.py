@@ -167,20 +167,15 @@ logger = logging.getLogger(__name__)
 MENU_BUTTONS = InlineKeyboardMarkup(
     [
         [
-            InlineKeyboardButton("➕ Aggiungi canale", callback_data="menu:add_channel"),
-            InlineKeyboardButton("🎯 Obiettivi", callback_data="menu:goals"),
+            InlineKeyboardButton("Aggiungi canale", callback_data="menu:add_channel"),
+            InlineKeyboardButton("Statistiche", callback_data="menu:stats"),
         ],
         [
-            InlineKeyboardButton("💸 Offerte ADV", callback_data="menu:offers"),
-            InlineKeyboardButton("📣 Campagna", callback_data="menu:campaign"),
+            InlineKeyboardButton("Offerte ADV", callback_data="menu:offers"),
+            InlineKeyboardButton("Campagna", callback_data="menu:campaign"),
         ],
         [
-            InlineKeyboardButton("🧭 Template broadcast", callback_data="menu:template"),
-            InlineKeyboardButton("📊 Statistiche", callback_data="menu:stats"),
-        ],
-        [
-            InlineKeyboardButton("🤖 Genera Contenuti AI", callback_data="ai:menu"),
-            InlineKeyboardButton("✨ Genera Campagna con AI", callback_data="aigen:start"),
+            InlineKeyboardButton("Creazione Campagna AI", callback_data="aigen:start"),
         ],
     ]
 )
@@ -188,22 +183,22 @@ MENU_BUTTONS = InlineKeyboardMarkup(
 # Inside Ads main menu
 MAIN_MENU_BUTTONS = InlineKeyboardMarkup(
     [
-        [InlineKeyboardButton("💰 Guadagna", callback_data="insideads:earn")],
-        [InlineKeyboardButton("🛒 Acquista", callback_data="insideads:buy")],
-        [InlineKeyboardButton("🔄 Scambio", callback_data="insideads:exchange")],
-        [InlineKeyboardButton("📊 Statistiche", callback_data="insideads:stats")],
-        [InlineKeyboardButton("👤 Account", callback_data="insideads:account")],
+        [InlineKeyboardButton("Guadagna", callback_data="insideads:earn")],
+        [InlineKeyboardButton("Acquista", callback_data="insideads:buy")],
+        [InlineKeyboardButton("Scambio", callback_data="insideads:exchange")],
+        [InlineKeyboardButton("Statistiche", callback_data="insideads:stats")],
+        [InlineKeyboardButton("Account", callback_data="insideads:account")],
     ]
 )
 
 # Earn submenu (Guadagna)
 EARN_MENU_BUTTONS = InlineKeyboardMarkup(
     [
-        [InlineKeyboardButton("📝 Editore", callback_data="insideads:earn:editor")],
-        [InlineKeyboardButton("🎯 Inserizionista", callback_data="insideads:earn:advertiser")],
-        [InlineKeyboardButton("🆓 Iscritti gratis", callback_data="insideads:earn:free")],
-        [InlineKeyboardButton("📈 Analisi canale", callback_data="insideads:earn:analysis")],
-        [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:main")],
+        [InlineKeyboardButton("Editore", callback_data="insideads:earn:editor")],
+        [InlineKeyboardButton("Inserizionista", callback_data="insideads:earn:advertiser")],
+        [InlineKeyboardButton("Iscritti gratis", callback_data="insideads:earn:free")],
+        [InlineKeyboardButton("Analisi canale", callback_data="insideads:earn:analysis")],
+        [InlineKeyboardButton("Indietro", callback_data="insideads:main")],
     ]
 )
 
@@ -243,8 +238,8 @@ async def start(update: Update, context: CallbackContext) -> None:
         summary = summarize_user(session, user)
 
     text = (
-        "Benvenuto nel Growth & Monetization Bot!\n"
-        "Puoi organizzare i tuoi canali, fissare obiettivi e creare offerte pubblicitarie."
+        "Benvenuto su AdsBot - Marketplace ADV Telegram\n"
+        "Crea campagne, monetizza il tuo canale, vendi spazi pubblicitari."
     )
     await update.message.reply_text(
         f"{text}\n\n{format_summary(summary)}",
@@ -701,28 +696,28 @@ async def offer_gratis_disclaimer(update: Update, context: CallbackContext) -> i
         await query.answer()
     
     text = (
-        "📢 **Servizio Pubblicitario - Campagne ADV**\n\n"
+        "Servizio Pubblicitario - Campagne ADV\n\n"
         "Creiamo e pubblichiamo le tue campagne pubblicitarie su gruppi Telegram da 1000 a 20000 utenti.\n\n"
-        "✨ **Cosa Include il Servizio:**\n"
+        "Cosa Include il Servizio:\n"
         "  • Creazione della campagna personalizzata\n"
         "  • Generazione AI di creatività (titoli, descrizioni, immagini)\n"
         "  • Pubblicazione automatica su gruppi Telegram (1K-20K utenti)\n"
         "  • Reportistica dettagliata delle performance\n\n"
-        "💳 **Modelli di Pagamento:**\n"
+        "Modelli di Pagamento:\n"
         "  • CPC - Paghi per click ricevuti\n"
         "  • CPA - Paghi per conversioni/iscrizioni\n"
         "  • Budget Massimo - Paghi un importo fisso\n\n"
-        "📊 **Tracciamento in Tempo Reale:**\n"
+        "Tracciamento in Tempo Reale:\n"
         "  • Visualizza performance della campagna\n"
         "  • Controlla il budget utilizzato\n"
         "  • Metriche dettagliate per ottimizzare\n\n"
-        "❌ **Questa funzione richiede PREMIUM**\n\n"
+        "Questa funzione richiede PREMIUM\n\n"
         "Fai upgrade a Premium per lanciare la tua campagna pubblicitaria!"
     )
     
     keyboard = [
-        [InlineKeyboardButton("💎 Upgrade a Premium", callback_data="menu:upgrade")],
-        [InlineKeyboardButton("🔙 Torna al menu", callback_data="menu:home")],
+        [InlineKeyboardButton("Upgrade a Premium", callback_data="menu:upgrade")],
+        [InlineKeyboardButton("Torna al menu", callback_data="menu:home")],
     ]
     
     if query:
@@ -1404,7 +1399,7 @@ async def upgrade_confirmed(update: Update, context: CallbackContext) -> None:
     plan_name = context.user_data.get("upgrade_plan_name", "Premium")
     
     text = (
-        f"🎉 **Upgrade Completato!**\n\n"
+        f"✅ Upgrade Completato!\n\n"
         f"Benvenuto al Piano {plan_name}!\n\n"
         f"✅ Accesso illimitato alle funzioni premium\n"
         f"✅ Supporto prioritario attivo\n\n"
@@ -1866,9 +1861,9 @@ async def insideads_main_menu(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     if query:
         await query.answer()
-        await query.edit_message_text("🎯 Inside Ads - Menu principale", reply_markup=MAIN_MENU_BUTTONS)
+        await query.edit_message_text("Menu Principale - AdsBot Marketplace", reply_markup=MAIN_MENU_BUTTONS)
     else:
-        await update.message.reply_text("🎯 Inside Ads - Menu principale", reply_markup=MAIN_MENU_BUTTONS)
+        await update.message.reply_text("Menu Principale - AdsBot Marketplace", reply_markup=MAIN_MENU_BUTTONS)
 
 
 async def insideads_earn_menu(update: Update, context: CallbackContext) -> None:
@@ -1967,7 +1962,7 @@ async def marketplace_editor_register_channel(update: Update, context: CallbackC
 
 
 async def marketplace_editor_set_price(update: Update, context: CallbackContext) -> None:
-    """Editor sets price for channel - bot suggests price based on reach."""
+    """Editor sets price for channel - bot suggests price based on subscriber count."""
     query = update.callback_query
     user_data = update.effective_user
     if not query or not user_data:
@@ -1998,13 +1993,13 @@ async def marketplace_editor_set_price(update: Update, context: CallbackContext)
         try:
             chat = await context.bot.get_chat(chat_id=channel.telegram_id)
             subscribers = chat.get_member_count() if hasattr(chat, 'get_member_count') else 0
-            reach_24h = max(subscribers // 5, 100)  # Stima: 20% del totale
+            reach_24h = max(subscribers // 5, 100)  # Stima: 20% degli iscritti in 24h
         except:
             subscribers = 0
             reach_24h = 100
         
         # Calculate suggested price (based on reach)
-        # Formula: €0.05 per reach punto
+        # Formula: €0.0005 per reach punto
         suggested_price = max(reach_24h * 0.0005, 0.50)  # Minimo €0.50
         
         channel_name = channel.title or f"@{channel.handle}"
@@ -2606,8 +2601,8 @@ async def insideads_stats_menu(update: Update, context: CallbackContext) -> None
         f"💰 Saldo: ${stats['balance']:.2f}\n"
         f"📺 Canali: {stats['channels']}\n"
         f"📢 Campagne: {stats['campaigns']}\n"
-        f"👥 Follower (7d): {stats['followers']}\n"
-        f"🖱️ Click (7d): {stats['clicks']}\n"
+        f"👥 Iscritti: {stats['followers']}\n"
+        f"🖱️ Clic (7d): {stats['clicks']}\n"
         f"👁️ Visualizzazioni (7d): {stats['impressions']}"
     )
     
@@ -2739,7 +2734,7 @@ async def insideads_stats_ads(update: Update, context: CallbackContext) -> None:
     text = (
         "📈 Pubblicità\n\n"
         f"Campagne attive: {stats['campaigns']}\n"
-        f"👥 Follower (7d): {stats['followers']}\n"
+        f"👥 Iscritti: {stats['followers']}\n"
         f"🖱️ Click (7d): {stats['clicks']}\n"
         f"👁️ Visualizzazioni (7d): {stats['impressions']}\n\n"
         f"Crea nuovo →"
@@ -3447,9 +3442,9 @@ async def generate_post_menu(update: Update, context: CallbackContext) -> int:
         "Genera post e annunci con AI:\n"
         "• Ad copy accattivante\n"
         "• Headline professionali\n"
-        "• Social media posts\n"
+        "• Post ADV personalizzati\n"
         "• Campagne complete\n"
-        "• A/B test variations"
+        "• Varianti per test A/B"
     )
 
     keyboard = [
@@ -3520,13 +3515,10 @@ async def ai_tone_selected(update: Update, context: CallbackContext) -> int:
 
     context.user_data["ai_tone"] = tone_map.get(query.data, ToneType.FRIENDLY)
 
-    text = "📱 Dove pubblicherai questo contenuto?\n\n• Instagram - Con hashtags\n• Facebook - Con emoji\n• Telegram - Conciso\n• Twitter - Max 280 caratteri"
+    text = "Seleziona stile comunicativo della creatività ADV (necessario per Telegram):"
 
     keyboard = [
-        [InlineKeyboardButton("📷 Instagram", callback_data="ai:platform_instagram")],
-        [InlineKeyboardButton("👍 Facebook", callback_data="ai:platform_facebook")],
-        [InlineKeyboardButton("✈️ Telegram", callback_data="ai:platform_telegram")],
-        [InlineKeyboardButton("🐦 Twitter", callback_data="ai:platform_twitter")],
+        [InlineKeyboardButton("Telegram", callback_data="ai:platform_telegram")],
     ]
 
     await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
@@ -3540,13 +3532,10 @@ async def ai_generate_content(update: Update, context: CallbackContext) -> int:
 
     # Extract platform
     platform_map = {
-        "ai:platform_instagram": "instagram",
-        "ai:platform_facebook": "facebook",
         "ai:platform_telegram": "telegram",
-        "ai:platform_twitter": "twitter",
     }
 
-    platform = platform_map.get(query.data, "instagram")
+    platform = platform_map.get(query.data, "telegram")
     topic = context.user_data.get("ai_topic", "il tuo prodotto")
     tone = context.user_data.get("ai_tone", ToneType.FRIENDLY)
 
@@ -3701,19 +3690,10 @@ async def aigen_channel_selected(update: Update, context: CallbackContext) -> in
             context.user_data["aigen_channel_topic"] = channel.topic
     
     # Scegli piattaforma (valido per PREMIUM e PRO)
-    text = (
-        "📱 **Scegli la piattaforma** su cui vuoi pubblicare:\n\n"
-        "• Telegram - Conciso e diretto\n"
-        "• Instagram - Con hashtag e emoji\n"
-        "• Facebook - Descrittivo e social\n"
-        "• Twitter/X - Max 280 caratteri"
-    )
+    text = "Piattaforma: Telegram ADV"
     
     keyboard = [
-        [InlineKeyboardButton("📱 Telegram", callback_data="aigen:platform:telegram")],
-        [InlineKeyboardButton("📷 Instagram", callback_data="aigen:platform:instagram")],
-        [InlineKeyboardButton("👍 Facebook", callback_data="aigen:platform:facebook")],
-        [InlineKeyboardButton("🐦 Twitter/X", callback_data="aigen:platform:twitter")],
+        [InlineKeyboardButton("Telegram", callback_data="aigen:platform:telegram")],
     ]
     
     await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
@@ -3729,19 +3709,13 @@ async def aigen_platform_selected(update: Update, context: CallbackContext) -> i
     platform = query.data.split(":")[-1]
     context.user_data["aigen_platform"] = platform
     
-    text = (
-        "🎯 **Scegli il tono della campagna:**\n\n"
-        "• 💼 Professional - Formale e serio\n"
-        "• 😊 Friendly - Cordiale e accogliente\n"
-        "• ⚡ Aggressive - Urgente e stimolante\n"
-        "• 😄 Playful - Divertente e leggero"
-    )
+    text = "Seleziona stile comunicativo della creatività ADV (necessario per Telegram):"
     
     keyboard = [
-        [InlineKeyboardButton("💼 Professional", callback_data="aigen:tone:professional")],
-        [InlineKeyboardButton("😊 Friendly", callback_data="aigen:tone:friendly")],
-        [InlineKeyboardButton("⚡ Aggressive", callback_data="aigen:tone:aggressive")],
-        [InlineKeyboardButton("😄 Playful", callback_data="aigen:tone:playful")],
+        [InlineKeyboardButton("Professional", callback_data="aigen:tone:professional")],
+        [InlineKeyboardButton("Friendly", callback_data="aigen:tone:friendly")],
+        [InlineKeyboardButton("Aggressive", callback_data="aigen:tone:aggressive")],
+        [InlineKeyboardButton("Playful", callback_data="aigen:tone:playful")],
     ]
     
     await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
@@ -3758,7 +3732,7 @@ async def aigen_tone_selected(update: Update, context: CallbackContext) -> int:
     context.user_data["aigen_tone"] = tone
     
     # Mostra messaggio di generazione
-    text = "🔍 Analizzando il tuo canale...\n\n⏳ Sto provvedendo a creare la tua campagna personalizzata..."
+    text = "Generazione in corso..."
     await query.edit_message_text(text)
     
     try:
@@ -5541,7 +5515,7 @@ def build_application(config: Config) -> Application:
                     CallbackQueryHandler(aigen_channel_selected, pattern=r"^aigen:channel:\d+$"),
                 ],
                 AIGEN_SELECTING_PLATFORM: [
-                    CallbackQueryHandler(aigen_platform_selected, pattern=r"^aigen:platform:(telegram|instagram|facebook|twitter)$"),
+                    CallbackQueryHandler(aigen_platform_selected, pattern=r"^aigen:platform:telegram$"),
                 ],
                 AIGEN_SELECTING_TONE: [
                     CallbackQueryHandler(aigen_tone_selected, pattern=r"^aigen:tone:(professional|friendly|aggressive|playful)$"),
@@ -5573,7 +5547,7 @@ def build_application(config: Config) -> Application:
                     CallbackQueryHandler(ai_tone_selected, pattern=r"^ai:tone_(professional|friendly|urgent|playful)$"),
                 ],
                 SELECT_PLATFORM: [
-                    CallbackQueryHandler(ai_generate_content, pattern=r"^ai:platform_(instagram|facebook|telegram|twitter)$"),
+                    CallbackQueryHandler(ai_generate_content, pattern=r"^ai:platform_telegram$"),
                 ],
             },
             fallbacks=[

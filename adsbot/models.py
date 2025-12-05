@@ -206,7 +206,7 @@ class BroadcastTemplate(Base):
 
 
 class UserBalance(Base):
-    """Saldo e portafoglio dell'utente."""
+    """Wallet e Saldo - Gestione fondi dell'utente."""
     __tablename__ = "user_balances"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)

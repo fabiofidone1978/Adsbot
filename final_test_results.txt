@@ -1,0 +1,132 @@
+Traceback (most recent call last):
+  File "d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\test_massacre.py", line 263, in test_marketplace_functions
+    order = MarketplaceOrder(
+        advertiser_id=advertiser_id,
+    ...<5 lines>...
+        content_link="https://example.com/ad"
+    )
+  File "<string>", line 4, in __init__
+  File "C:\Users\fabio-fidone\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\state.py", line 571, in _initialize_instance
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\fabio-fidone\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\fabio-fidone\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\state.py", line 569, in _initialize_instance
+    manager.original_init(*mixed[1:], **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\fabio-fidone\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\decl_base.py", line 2179, in _declarative_constructor
+    raise TypeError(
+        "%r is an invalid keyword argument for %s" % (k, cls_.__name__)
+    )
+TypeError: 'advertiser_id' is an invalid keyword argument for MarketplaceOrder
+d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\test_massacre.py:356: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  user.suspended_until = datetime.utcnow() + timedelta(days=30)
+C:\Users\fabio-fidone\AppData\Local\Programs\Python\Python313\Lib\site-packages\apscheduler\__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import get_distribution, DistributionNotFound
+d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot\bot.py:5299: PTBUserWarning: If 'per_message=False', 'CallbackQueryHandler' will not be tracked for every message. Read this FAQ entry to learn more about the per_* settings: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Frequently-Asked-Questions#what-do-the-per_-settings-in-conversationhandler-do.
+  ConversationHandler(
+d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot\bot.py:5312: PTBUserWarning: If 'per_message=False', 'CallbackQueryHandler' will not be tracked for every message. Read this FAQ entry to learn more about the per_* settings: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Frequently-Asked-Questions#what-do-the-per_-settings-in-conversationhandler-do.
+  ConversationHandler(
+d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot\bot.py:5336: PTBUserWarning: If 'per_message=False', 'CallbackQueryHandler' will not be tracked for every message. Read this FAQ entry to learn more about the per_* settings: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Frequently-Asked-Questions#what-do-the-per_-settings-in-conversationhandler-do.
+  ConversationHandler(
+d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot\bot.py:5362: PTBUserWarning: If 'per_message=False', 'CallbackQueryHandler' will not be tracked for every message. Read this FAQ entry to learn more about the per_* settings: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Frequently-Asked-Questions#what-do-the-per_-settings-in-conversationhandler-do.
+  ConversationHandler(
+d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot\bot.py:5394: PTBUserWarning: If 'per_message=False', 'CallbackQueryHandler' will not be tracked for every message. Read this FAQ entry to learn more about the per_* settings: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Frequently-Asked-Questions#what-do-the-per_-settings-in-conversationhandler-do.
+  ConversationHandler(
+d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot\bot.py:5465: PTBUserWarning: If 'per_message=False', 'CallbackQueryHandler' will not be tracked for every message. Read this FAQ entry to learn more about the per_* settings: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Frequently-Asked-Questions#what-do-the-per_-settings-in-conversationhandler-do.
+  ConversationHandler(
+d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot\bot.py:5493: PTBUserWarning: If 'per_message=False', 'CallbackQueryHandler' will not be tracked for every message. Read this FAQ entry to learn more about the per_* settings: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Frequently-Asked-Questions#what-do-the-per_-settings-in-conversationhandler-do.
+  ConversationHandler(
+d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot\bot.py:5518: PTBUserWarning: If 'per_message=False', 'CallbackQueryHandler' will not be tracked for every message. Read this FAQ entry to learn more about the per_* settings: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Frequently-Asked-Questions#what-do-the-per_-settings-in-conversationhandler-do.
+  ConversationHandler(
+d:\Documents and Settings\fabio-fidone\My Documents\Adsbot\adsbot\bot.py:5549: PTBUserWarning: If 'per_message=False', 'CallbackQueryHandler' will not be tracked for every message. Read this FAQ entry to learn more about the per_* settings: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Frequently-Asked-Questions#what-do-the-per_-settings-in-conversationhandler-do.
+  ConversationHandler(
+
+[93m======================================================================
+ADSBOT COMPREHENSIVE TEST SUITE
+Stress testing all functionality...
+======================================================================[0m
+
+
+[94m======================================================================
+TEST: TEST 1: DATABASE MODELS
+======================================================================[0m
+[92m[PASS] All 20 models imported successfully[0m
+[92m[PASS] Database has 20 tables created[0m
+[92m[PASS]   Column 'role' exists in users table[0m
+[92m[PASS]   Column 'state' exists in users table[0m
+[92m[PASS]   Column 'reputation_score' exists in users table[0m
+[92m[PASS]   Column 'rating_count' exists in users table[0m
+[92m[PASS]   Column 'is_suspended' exists in users table[0m
+
+[94m======================================================================
+TEST: TEST 2: DATABASE OPERATIONS (CRUD)
+======================================================================[0m
+[92m[PASS] Created user: ID=18, role=UserRole.editor, state=UserState.editor_active[0m
+[92m[PASS] Read user: username=test_user, created_at=2025-12-05 08:23:36.630383[0m
+[92m[PASS] Updated user: role=UserRole.editor, state=UserState.editor_active, reputation=4.5[0m
+[92m[PASS] Created channel: ID=5, handle=test_channel[0m
+[92m[PASS] Created offer: ID=2, type=OfferType.shoutout, price=5000.0[0m
+[92m[PASS] Deleted offer: ID=2[0m
+[92m[PASS] All CRUD operations completed successfully[0m
+
+[94m======================================================================
+TEST: TEST 3: MARKETPLACE FUNCTIONS (FASE 2)
+======================================================================[0m
+[92m[PASS] Marketplace - Created channel for editor[0m
+[92m[PASS] Marketplace - Created offer in catalog[0m
+[91m[FAIL] Marketplace functions test failed[0m
+[91m   Error: 'advertiser_id' is an invalid keyword argument for MarketplaceOrder[0m
+
+[94m======================================================================
+TEST: TEST 4: ADMIN PANEL FUNCTIONS (FASE 3)
+======================================================================[0m
+[92m[PASS] Admin - Created audit log: action=suspend_user[0m
+[92m[PASS] Admin - Created 4 audit log entries[0m
+[92m[PASS] Admin - Retrieved 20 audit logs from database[0m
+[92m[PASS] Admin - Created suspended user with reason and duration[0m
+
+[94m======================================================================
+TEST: TEST 5: BOT HANDLERS & COMMAND FLOWS
+======================================================================[0m
+[92m[PASS] Built application successfully[0m
+[92m[PASS] Registered 1 handler groups[0m
+[92m[PASS] Session factory stored in bot_data[0m
+[92m[PASS] Bot handlers loaded and ready[0m
+
+[94m======================================================================
+TEST: TEST 6: ERROR HANDLING & EDGE CASES
+======================================================================[0m
+[92m[PASS] Duplicate user handling: Returns same user[0m
+[92m[PASS] NULL username handling: Accepted None value[0m
+[92m[PASS] Long string handling: Accepted 200 char username[0m
+[92m[PASS] Transaction handling works[0m
+[92m[PASS] Transaction rollback on error: Caught exception as expected[0m
+
+[94m======================================================================
+TEST: TEST 7: ENUMS & STATE MACHINES
+======================================================================[0m
+[92m[PASS] UserRole: 4/4 expected values present[0m
+[92m[PASS] UserState: 3/3 expected values present[0m
+[92m[PASS] ChannelState: 3/3 expected values present[0m
+[92m[PASS] OrderState: 3/3 expected values present[0m
+[92m[PASS] DisputeStatus: 3/3 expected values present[0m
+[92m[PASS] PaymentStatus: 3/3 expected values present[0m
+[92m[PASS] OfferType: 3/3 expected values present[0m
+
+[94m======================================================================
+TEST: TEST 8: PERFORMANCE STRESS TEST
+======================================================================[0m
+[92m[PASS] Bulk create 10 users: 0.008s (1194 users/sec)[0m
+[92m[PASS] Bulk query 10 users: 0.004s (2667 queries/sec)[0m
+
+[93m======================================================================
+TEST SUMMARY
+======================================================================[0m
+[92m[PASS] Total: 38[0m
+[91m[FAIL] Total: 1[0m
+
+[91mErrors encountered:[0m
+  - Marketplace functions test failed
+
+Success Rate: 97.4%
