@@ -36,6 +36,11 @@ def create_session_factory(config: Config) -> sessionmaker:
     return sessionmaker(bind=engine, expire_on_commit=False, class_=Session)
 
 
+def get_session(session_factory: sessionmaker) -> Session:
+    """Get a new database session."""
+    return session_factory()
+
+
 @contextmanager
 def session_scope(session_factory: sessionmaker):
     """Provide a transactional scope around a series of operations."""
