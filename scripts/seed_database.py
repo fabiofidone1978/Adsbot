@@ -3,9 +3,10 @@
 import logging
 from datetime import datetime, timedelta
 import random
-from typing import List
+from typing import List, Dict
 
 from sqlalchemy.orm import Session
+
 
 from adsbot.models import (
     User, Channel, Campaign, MarketplaceOrder, BroadcastTemplate, DisputeTicket,
@@ -146,8 +147,8 @@ class DatabaseSeeder:
                 phone_number=f"+39{random.randint(100, 999)}{random.randint(100, 999)}{random.randint(1000, 9999)}",
                 first_name=f"Editor{i+1}",
                 last_name=f"Channel{i+1}",
-                role=UserRole.EDITOR,
-                state=UserState.ACTIVE if i % 3 != 0 else UserState.UNDER_REVIEW,
+                role=UserRole.editor,
+                state=UserState.editor_active if i % 3 != 0 else UserState.editor_registering,
                 password_hash="hashed_password_placeholder",
                 rating=round(random.uniform(3.5, 5.0), 2),
                 rating_count=random.randint(10, 200),
@@ -203,8 +204,8 @@ class DatabaseSeeder:
                 phone_number=f"+39{random.randint(100, 999)}{random.randint(100, 999)}{random.randint(1000, 9999)}",
                 first_name=DatabaseSeeder.ADVERTISER_COMPANIES[i % len(DatabaseSeeder.ADVERTISER_COMPANIES)],
                 last_name="Company",
-                role=UserRole.ADVERTISER,
-                state=UserState.ACTIVE,
+                role=UserRole.advertiser,
+                state=UserState.advertiser_active,
                 password_hash="hashed_password_placeholder",
                 wallet_balance=random.uniform(100, 5000),
                 admin_verified_at=datetime.now() - timedelta(days=random.randint(30, 200)) if i % 2 == 0 else None,

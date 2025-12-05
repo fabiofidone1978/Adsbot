@@ -18,6 +18,7 @@ from adsbot.verification import (
     IdentityVerification, RiskScorer, DisputeResolver, AccountSecurity
 )
 from adsbot.scheduler import SchedulerConfig
+from adsbot.config import Config
 from scripts.seed_database import DatabaseSeeder
 
 
@@ -27,7 +28,8 @@ logger = logging.getLogger(__name__)
 @pytest.fixture
 def session():
     """Create test database session."""
-    session_factory = create_session_factory()
+    config = Config(bot_token="test_token", database_url="sqlite:///:memory:")
+    session_factory = create_session_factory(config)
     session = session_factory()
     yield session
     session.close()
@@ -42,7 +44,7 @@ def test_data(session):
         email="editor@test.it",
         first_name="Test",
         last_name="Editor",
-        role=UserRole.EDITOR,
+        role=UserRole.editor,
         state=UserState.editor_active,
         password_hash="hash",
         rating=4.5,
@@ -55,7 +57,7 @@ def test_data(session):
         email="advertiser@test.it",
         first_name="Test",
         last_name="Advertiser",
-        role=UserRole.ADVERTISER,
+        role=UserRole.advertiser,
         state=UserState.advertiser_active,
         password_hash="hash",
         wallet_balance=1000.0,
@@ -292,7 +294,7 @@ class TestIdentityVerification:
         admin = User(
             username="admin",
             email="admin@test.it",
-            role=UserRole.ADMIN,
+            role=UserRole.admin,
             password_hash="hash",
         )
         session.add(admin)

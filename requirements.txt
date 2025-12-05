@@ -3,3 +3,5 @@ SQLAlchemy==2.0.29
 python-dotenv==1.0.1
 # Use a compatible redis client version available on PyPI
 redis>=4.6.0,<6.0
+APScheduler>=3.10.4
+openai>=1.3.0

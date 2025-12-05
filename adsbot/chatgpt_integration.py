@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class CampaignContent:
-    """Contenuto della campagna generata da ChatGPT con brief immagine ADV."""
+    """Contenuto della campagna generata da ChatGPT con immagine ADV DALL-E."""
     title: str
     description: str
     cta_text: str
@@ -19,6 +19,7 @@ class CampaignContent:
     keywords: list[str]
     target_audience: str
     image_prompt: str  # Brief in italiano per l'immagine ADV di accompagnamento
+    image_url: Optional[str] = None  # URL dell'immagine generata da DALL-E
 
 
 class ChatGPTCampaignGenerator:
@@ -36,6 +37,34 @@ class ChatGPTCampaignGenerator:
             except ImportError:
                 logger.warning("openai package not installed. ChatGPT integration disabled.")
                 self.enabled = False
+    
+    def generate_image(self, image_prompt: str) -> Optional[str]:
+        """Generate an image using DALL-E 3 based on prompt."""
+        if not self.enabled:
+            logger.warning("ChatGPT API key not configured")
+            return None
+        
+        try:
+            # Translate and enhance prompt for DALL-E
+            enhanced_prompt = f"""Professional advertising image for Telegram. 
+{image_prompt}
+High quality, modern design, suitable for social media promotion."""
+            
+            response = self.client.images.generate(
+                model="dall-e-3",
+                prompt=enhanced_prompt,
+                size="1024x1024",
+                quality="standard",
+                n=1
+            )
+            
+            image_url = response.data[0].url
+            logger.info(f"✓ Image generated successfully: {image_url[:50]}...")
+            return image_url
+            
+        except Exception as e:
+            logger.error(f"Error generating image with DALL-E: {e}")
+            return None
     
     def generate_campaign(
         self,
@@ -101,6 +130,9 @@ Senza markdown, senza commenti, solo JSON."""
                 else:
                     raise
             
+            image_prompt = campaign_data.get("image_prompt", "Immagine pubblicitaria per campagna Telegram")
+            image_url = self.generate_image(image_prompt)
+            
             return CampaignContent(
                 title=campaign_data.get("title", "Campaign"),
                 description=campaign_data.get("description", ""),
@@ -108,7 +140,8 @@ Senza markdown, senza commenti, solo JSON."""
                 suggested_budget=float(campaign_data.get("suggested_budget", 50.0)),
                 keywords=campaign_data.get("keywords", []),
                 target_audience=campaign_data.get("target_audience", ""),
-                image_prompt=campaign_data.get("image_prompt", "Immagine pubblicitaria per campagna Telegram")
+                image_prompt=image_prompt,
+                image_url=image_url
             )
         
         except Exception as e:
@@ -129,10 +162,9 @@ Senza markdown, senza commenti, solo JSON."""
     def generate_campaign_for_platform(
         self,
         channel,
-        platform: str = "telegram",
         tone: str = "professional"
     ) -> Optional[CampaignContent]:
-        """Generate campaign for a specific platform and tone."""
+        """Generate campaign for Telegram with specified tone."""
         
         if not self.enabled:
             logger.warning("ChatGPT API key not configured")
@@ -140,11 +172,6 @@ Senza markdown, senza commenti, solo JSON."""
         
         try:
             import json
-            
-            # Platform-specific guidelines
-            platform_guidelines = {
-                "telegram": "Conciso, con emoji, supporta markdown. Max 4000 caratteri."
-            }
             
             # Tone guidelines
             tone_guidelines = {
@@ -154,41 +181,40 @@ Senza markdown, senza commenti, solo JSON."""
                 "playful": "Divertente, leggero, con humor. Emojis e linguaggio casual."
             }
             
-            platform_guide = platform_guidelines.get(platform, platform_guidelines["telegram"])
             tone_guide = tone_guidelines.get(tone, tone_guidelines["professional"])
             
-            prompt = f"""Analizza il seguente canale Telegram e crea una campagna pubblicitaria personalizzata PER {platform.upper()} IN ITALIANO:
+            prompt = f"""Analizza il seguente canale Telegram e crea una campagna pubblicitaria personalizzata IN ITALIANO:
 
 **Informazioni Canale:**
 - Nome: {channel.handle or "Channel"}
 - Argomento: {channel.topic or "Contenuto generale"}
 - Titolo: {channel.title or "Un canale Telegram"}
 
-**Specifiche Piattaforma ({platform.upper()}):**
-{platform_guide}
+**Specifiche Telegram:**
+Conciso, con emoji, supporta markdown. Max 4000 caratteri.
 
 **Tono Richiesto ({tone.upper()}):**
 {tone_guide}
 
 Genera una campagna pubblicitaria completa ESCLUSIVAMENTE IN ITALIANO con il seguente formato JSON:
 {{
-    "title": "Titolo accattivante della campagna in italiano per {platform}",
-    "description": "Descrizione della campagna in italiano, ottimizzata per {platform} con tono {tone} (2-3 frasi)",
-    "cta_text": "Testo della Call-To-Action in italiano appropriato per {platform} e tono {tone}",
+    "title": "Titolo accattivante della campagna in italiano per Telegram",
+    "description": "Descrizione della campagna in italiano, ottimizzata per Telegram con tono {tone} (2-3 frasi)",
+    "cta_text": "Testo della Call-To-Action in italiano appropriato con tono {tone}",
     "suggested_budget": 50.00,
     "keywords": ["keyword1_italiano", "keyword2_italiano", "keyword3_italiano"],
-    "target_audience": "Descrizione del target audience italiano per {platform}",
-    "image_prompt": "Brief visivo in italiano per generare immagine ADV per {platform} con tono {tone}"
+    "target_audience": "Descrizione del target audience italiano per Telegram",
+    "image_prompt": "Brief visivo in italiano per generare immagine ADV per Telegram con tono {tone}"
 }}
 
 IMPORTANTE: Rispondi SOLO con il JSON valido. Tutto il contenuto (title, description, cta_text, keywords, target_audience, image_prompt) deve essere ESCLUSIVAMENTE in italiano.
 Senza markdown, senza commenti, solo JSON.
-Assicurati che sia ottimizzato per {platform} e segua il tono {tone}."""
+Assicurati che sia ottimizzato per Telegram e segua il tono {tone}."""
             
             response = self.client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are an expert social media campaign strategist specializing in platform-specific content optimization."},
+                    {"role": "system", "content": "You are an expert Telegram advertising campaign strategist specializing in Italian content optimization."},
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.4,
@@ -210,6 +236,10 @@ Assicurati che sia ottimizzato per {platform} e segua il tono {tone}."""
                     campaign_data = json.loads(json_str)
                 else:
                     raise
+            
+            image_prompt = campaign_data.get("image_prompt", "Immagine pubblicitaria per Telegram")
+            image_url = self.generate_image(image_prompt)
+            
             return CampaignContent(
                 title=campaign_data.get("title", "Campaign"),
                 description=campaign_data.get("description", ""),
@@ -217,10 +247,11 @@ Assicurati che sia ottimizzato per {platform} e segua il tono {tone}."""
                 suggested_budget=float(campaign_data.get("suggested_budget", 50.0)),
                 keywords=campaign_data.get("keywords", []),
                 target_audience=campaign_data.get("target_audience", ""),
-                image_prompt=campaign_data.get("image_prompt", f"Immagine pubblicitaria per {platform} con tono {tone}")
+                image_prompt=image_prompt,
+                image_url=image_url
             )
         
         except Exception as e:
-            logger.error(f"Error generating campaign with ChatGPT for {platform}/{tone}: {e}")
+            logger.error(f"Error generating campaign with ChatGPT for Telegram/{tone}: {e}")
             return None
 
