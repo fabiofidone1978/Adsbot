@@ -11,13 +11,14 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class CampaignContent:
-    """Contenuto della campagna generata da ChatGPT."""
+    """Contenuto della campagna generata da ChatGPT con brief immagine ADV."""
     title: str
     description: str
     cta_text: str
     suggested_budget: float
     keywords: list[str]
     target_audience: str
+    image_prompt: str  # Brief in italiano per l'immagine ADV di accompagnamento
 
 
 class ChatGPTCampaignGenerator:
@@ -140,10 +141,7 @@ Senza markdown, senza commenti, solo JSON."""
             
             # Platform-specific guidelines
             platform_guidelines = {
-                "telegram": "Conciso, con emoji, supporta markdown. Max 4000 caratteri.",
-                "instagram": "Con hashtag rilevanti, emoji, linee max 30 caratteri. Focus su engagement.",
-                "facebook": "Descrittivo e warm, incoraggia interazione. Supporta link.",
-                "twitter": "Massimo 280 caratteri totali (incluso gli spazi)."
+                "telegram": "Conciso, con emoji, supporta markdown. Max 4000 caratteri."
             }
             
             # Tone guidelines
