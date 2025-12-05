@@ -138,7 +138,12 @@ logger = logging.getLogger(__name__)
     AIGEN_REVIEWING_CHANNEL,
     AIGEN_SELECTING_PLATFORM,
     AIGEN_SELECTING_TONE,
-) = range(30)
+    # Marketplace Advertiser states
+    MARKETPLACE_ORDER_DURATION,
+    MARKETPLACE_ORDER_CONTENT,
+    MARKETPLACE_ORDER_REVIEW,
+    MARKETPLACE_ORDER_CONFIRM,
+) = range(34)
 
 
 # Old menu (kept for backward compatibility)
@@ -661,8 +666,58 @@ async def goal_deadline(update: Update, context: CallbackContext) -> int:
     return ConversationHandler.END
 
 
+def _format_payment_type(payment_type: str) -> str:
+    """Convert payment type to human-readable format."""
+    payment_types = {
+        "per_clic": "Per Clic (CPC)",
+        "per_iscritto": "Per Iscritto (CPA)",
+        "massimo": "Budget Massimo"
+    }
+    return payment_types.get(payment_type, payment_type)
+
+
+async def offer_gratis_disclaimer(update: Update, context: CallbackContext) -> int:
+    """Show disclaimer about Offerte ADV for gratis users - explain services without granting access."""
+    
+    query = update.callback_query
+    if query:
+        await query.answer()
+    
+    text = (
+        "📢 **Servizio Pubblicitario - Campagne ADV**\n\n"
+        "Creiamo e pubblichiamo le tue campagne pubblicitarie su gruppi Telegram da 1000 a 20000 utenti.\n\n"
+        "✨ **Cosa Include il Servizio:**\n"
+        "  • Creazione della campagna personalizzata\n"
+        "  • Generazione AI di creatività (titoli, descrizioni, immagini)\n"
+        "  • Pubblicazione automatica su gruppi Telegram (1K-20K utenti)\n"
+        "  • Reportistica dettagliata delle performance\n\n"
+        "💳 **Modelli di Pagamento:**\n"
+        "  • CPC - Paghi per click ricevuti\n"
+        "  • CPA - Paghi per conversioni/iscrizioni\n"
+        "  • Budget Massimo - Paghi un importo fisso\n\n"
+        "📊 **Tracciamento in Tempo Reale:**\n"
+        "  • Visualizza performance della campagna\n"
+        "  • Controlla il budget utilizzato\n"
+        "  • Metriche dettagliate per ottimizzare\n\n"
+        "❌ **Questa funzione richiede PREMIUM**\n\n"
+        "Fai upgrade a Premium per lanciare la tua campagna pubblicitaria!"
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("💎 Upgrade a Premium", callback_data="menu:upgrade")],
+        [InlineKeyboardButton("🔙 Torna al menu", callback_data="menu:home")],
+    ]
+    
+    if query:
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode="Markdown")
+    else:
+        await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode="Markdown")
+    
+    return ConversationHandler.END
+
+
 async def offer_entry(update: Update, context: CallbackContext) -> int:
-    """Begin an offer conversation - show bot selection menu."""
+    """Begin an offer conversation - show subscription check or channel selection menu."""
 
     user_data = update.effective_user
     if not user_data:
@@ -676,8 +731,13 @@ async def offer_entry(update: Update, context: CallbackContext) -> int:
             first_name=user_data.first_name,
             language_code=user_data.language_code,
         )
+        subscription_type = user.subscription_type
         from .models import Channel
         channels = session.query(Channel).filter_by(user_id=user.id).all()
+
+    # Check if user is gratis - show disclaimer instead
+    if subscription_type == "gratis":
+        return await offer_gratis_disclaimer(update, context)
 
     if not channels:
         if update.callback_query:
@@ -741,11 +801,9 @@ async def offer_channel_selected(update: Update, context: CallbackContext) -> in
         context.user_data["offer_channel"] = channel.handle
         context.user_data["offer_channel_id"] = channel_id
     
-    await query.edit_message_text(
-        f"💰 Offerta per: {context.user_data['offer_channel']}\n\n"
-        "Che tipo di offerta? (shoutout, post, pinned, takeover)"
-    )
-    return OFFER_TYPE
+    # Avvia il nuovo flusso con tipo di pagamento
+    await offer_payment_type(update, context)
+    return "OFFER_PAYMENT_TYPE"
 
 
 async def offer_search_channel(update: Update, context: CallbackContext) -> int:
@@ -806,99 +864,387 @@ async def offer_channel(update: Update, context: CallbackContext) -> int:
     return OFFER_CHANNEL
 
 
-async def offer_type(update: Update, context: CallbackContext) -> int:
-    offer_type_value = update.message.text.strip().lower()
-    try:
-        offer_type_enum = OfferType(offer_type_value)
-    except ValueError:
-        guide = (
-            "❓ **Tipi di offerta disponibili:**\n\n"
-            "🔊 **Shoutout** - Menzione vocale del tuo prodotto\n"
-            "📸 **Post** - Un post dedicato sul canale\n"
-            "📌 **Pinned** - Post fisso in alto per più giorni\n"
-            "🎯 **Takeover** - Controllo totale del canale per X ore\n\n"
-            "Scrivi il tipo che preferisci: shoutout, post, pinned o takeover"
-        )
-        await update.message.reply_text(guide)
-        return OFFER_TYPE
-
-    context.user_data["offer_type"] = offer_type_enum
-    await update.message.reply_text("Qual è il prezzo per l'inserzione? (es. 25.50)")
-    return OFFER_PRICE
-
-
-async def offer_price(update: Update, context: CallbackContext) -> int:
-    try:
-        price = float(update.message.text.strip())
-    except ValueError:
-        await update.message.reply_text("Inserisci un numero valido")
-        return OFFER_PRICE
-
-    context.user_data["offer_price"] = price
-    await update.message.reply_text(
-        "Note opzionali? Puoi descrivere il formato o lasciare vuoto",
-        reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("⏭️ Salta note", callback_data="offer:skip_notes")],
-        ])
-    )
-    return OFFER_NOTES
-
-
-async def offer_skip_notes(update: Update, context: CallbackContext) -> int:
-    """Salta le note opzionali dell'offerta."""
+async def offer_payment_type(update: Update, context: CallbackContext) -> int:
+    """Select payment type for the advertising campaign."""
     query = update.callback_query
+    if query:
+        await query.answer()
+    
+    text = (
+        "💳 **Modello per la Campagna**\n\n"
+        "cosa desideri dalla tua campagna:\n\n"
+        "1️⃣  **Per Clic (CPC)**\n"
+        "   Aumenta il numero di click\n\n"
+        "2️⃣  **Per Iscritto (CPA)**\n"
+        "   aumenta il numero dei tuoi iscritti\n\n"
+        "Scrivi: 1 oppure 2"
+    )
+    
+    if query:
+        await query.edit_message_text(text)
+    else:
+        await update.message.reply_text(text)
+    
+    return "OFFER_PAYMENT_TYPE"
+
+
+async def offer_payment_type_selected(update: Update, context: CallbackContext) -> int:
+    """Handle payment type selection."""
+    choice = update.message.text.strip()
+    
+    # Mapping da numero a tipo di pagamento
+    payment_types = {
+        "1": "per_clic",
+        "2": "per_iscritto"
+    }
+    
+    if choice not in payment_types:
+        await update.message.reply_text(
+            "❌ Scelta non valida. Scrivi: 1 oppure 2"
+        )
+        return "OFFER_PAYMENT_TYPE"
+    
+    payment_type = payment_types[choice]
+    context.user_data["offer_payment_type"] = payment_type
+    
+    # Mostra form di pagamento
+    keyboard = [
+        [InlineKeyboardButton("💳 Paga ora", callback_data="offer:payment:proceed")],
+        [InlineKeyboardButton("❌ Annulla", callback_data="menu:home")],
+    ]
+    
+    await update.message.reply_text(
+        "💳 **Pagamento Richiesto**\n\n"
+        "Procedi al pagamento per creare e pubblicare la tua campagna.\n"
+        "(In produzione: integrazione PayPal/Stripe)\n\n"
+        "Nota: Applichiamo una commissione del 10% sui servizi di creazione e pubblicazione."
+    )
+    if update.message:
+        await update.message.reply_text(
+            "Seleziona un'opzione:",
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
+    return "OFFER_PAYMENT"
+
+
+async def offer_payment(update: Update, context: CallbackContext) -> int:
+    """Handle payment processing."""
+    query = update.callback_query
+    if not query:
+        return "OFFER_PAYMENT"
+    
     await query.answer()
     
-    user_data = update.effective_user
-    if not user_data:
-        return ConversationHandler.END
-
-    with with_session(context) as session:
-        user = ensure_user(
-            session,
-            telegram_id=user_data.id,
-            username=user_data.username,
-            first_name=user_data.first_name,
-            language_code=user_data.language_code,
+    if query.data == "offer:payment:proceed":
+        # Simula il pagamento (in produzione: PayPal/Stripe)
+        # Per ora, mostriamo un form per inserire l'importo
+        await query.edit_message_text(
+            "💰 **Investimento nella Campagna**\n\n"
+            "Quanto vuoi investire nella tua campagna? (es: 100.00)\n\n"
+            "Nota: Applichiamo una commissione del 10% sui servizi di creazione e pubblicazione."
         )
-        channel = add_channel(session, user, context.user_data["offer_channel"])
-        add_offer(
-            session,
-            channel,
-            context.user_data["offer_type"],
-            context.user_data["offer_price"],
-            None,  # nessuna nota
+        return "OFFER_DEPOSIT"
+    
+    return "OFFER_PAYMENT"
+
+
+async def offer_deposit(update: Update, context: CallbackContext) -> int:
+    """Handle deposit amount input - manages MINIMUM PRICE with arrows, calculates total deposit.
+    
+    The user sees and manipulates the MINIMUM PRICE (prezzo_minimo).
+    The total deposit is calculated as: deposit = prezzo_minimo / 0.8
+    """
+    
+    # Initialize minimum price (starting point €0.10)
+    if "offer_minimum_price" not in context.user_data:
+        context.user_data["offer_minimum_price"] = 0.10
+    
+    query = update.callback_query
+    
+    # Handle callback from arrow buttons
+    if query:
+        await query.answer()
+        current_min_price = context.user_data["offer_minimum_price"]
+        
+        if query.data == "offer:deposit:increase":
+            # Increase minimum price by €0.10
+            context.user_data["offer_minimum_price"] = round(current_min_price + 0.10, 2)
+        elif query.data == "offer:deposit:decrease":
+            # Decrease minimum price by €0.10 (minimum €0.10)
+            if current_min_price > 0.10:
+                context.user_data["offer_minimum_price"] = round(current_min_price - 0.10, 2)
+        elif query.data == "offer:deposit:confirm":
+            # Confirm the minimum price and calculate total deposit
+            min_price = context.user_data["offer_minimum_price"]
+            # Total deposit = min_price / 0.8 (since min_price = deposit * 0.8)
+            final_deposit = min_price / 0.8
+            context.user_data["offer_deposit"] = final_deposit
+            context.user_data["offer_minimum_price_chosen"] = min_price
+            
+            commission = final_deposit * 0.10
+            budget_after_commission = final_deposit - commission
+            
+            context.user_data["offer_budget_available"] = budget_after_commission
+            
+            await query.edit_message_text(
+                f"✅ **Investimento Confermato**\n\n"
+                f"Prezzo Minimo Scelto: €{min_price:.2f}\n"
+                f"Investimento totale: €{final_deposit:.2f}\n"
+                f"Commissione (10%): €{commission:.2f}\n"
+                f"Budget per la campagna: €{budget_after_commission:.2f}\n\n"
+                f"Procederemo con la pubblicazione della tua campagna."
+            )
+            
+            # Auto-proceed to interaction price after 2 seconds
+            import asyncio
+            await asyncio.sleep(2)
+            
+            context.user_data["offer_weekly_budget"] = budget_after_commission
+            
+            # Initialize interaction price
+            if "offer_interaction_price_current" not in context.user_data:
+                context.user_data["offer_interaction_price_current"] = 0.10
+            
+            # Show interactive form with arrows
+            budget_available = budget_after_commission
+            current_price = context.user_data["offer_interaction_price_current"]
+            
+            # Calculate offers based on current price
+            min_offer = current_price * 0.8
+            avg_offer = current_price * 1.0
+            max_offer = budget_available
+            
+            keyboard = [
+                [InlineKeyboardButton("⬆️", callback_data="offer:interaction:increase")],
+                [InlineKeyboardButton(f"€{min_offer:.2f}", 
+                                     callback_data="offer:interaction:dummy")],
+                [InlineKeyboardButton("⬇️", callback_data="offer:interaction:decrease")],
+                [InlineKeyboardButton("✅ Conferma", callback_data="offer:interaction:confirm")],
+            ]
+            
+            text = (
+                "🤖 **Prezzo di Interazione**\n\n"
+                f"Prezzo attuale: €{current_price:.2f}\n"
+                f"Budget disponibile: €{budget_available:.2f}\n\n"
+                "Usa le frecce per regolare il prezzo o scrivi direttamente il valore\n"
+                f"(Minimo: €0.10, Massimo: €{budget_available:.2f})\n\n"
+                "📊 **Offerte Calcolate:**\n"
+                f"• Offerta minima: €{min_offer:.2f}\n"
+                f"• Prezzo medio ora: €{avg_offer:.2f}\n"
+                f"• Offerta massima: €{max_offer:.2f}\n"
+                f"  ⚠️ Scegliendo questa opzione il tuo budget verrà terminato\n\n"
+                "Quando sei soddisfatto, clicca ✅ Conferma"
+            )
+            
+            await update.effective_message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+            return "OFFER_INTERACTION_PRICE"
+        
+        # Show updated form with current minimum price
+        current_min_price = context.user_data["offer_minimum_price"]
+        
+        keyboard = [
+            [InlineKeyboardButton("⬆️", callback_data="offer:deposit:increase")],
+            [InlineKeyboardButton(f"€{current_min_price:.2f}", 
+                                 callback_data="offer:deposit:dummy")],
+            [InlineKeyboardButton("⬇️", callback_data="offer:deposit:decrease")],
+            [InlineKeyboardButton("✅ Conferma", callback_data="offer:deposit:confirm")],
+        ]
+        
+        # Calculate total deposit from minimum price
+        total_deposit = current_min_price / 0.8
+        commission = total_deposit * 0.10
+        budget_available = total_deposit - commission
+        
+        text = (
+            "💰 **Investimento nella Campagna**\n\n"
+            f"Prezzo Minimo: €{current_min_price:.2f}\n"
+            f"Investimento totale: €{total_deposit:.2f}\n"
+            f"Commissione (10%): €{commission:.2f}\n"
+            f"Budget per la campagna: €{budget_available:.2f}\n\n"
+            "Usa le frecce per regolare il prezzo minimo\n"
+            "(Minimo: €0.10)\n\n"
+            "Quando sei soddisfatto, clicca ✅ Conferma"
         )
+        
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+        return "OFFER_DEPOSIT"
+    
+    # Handle text input (user types amount manually)
+    try:
+        min_price = float(update.message.text.strip())
+        if min_price < 0.10:
+            raise ValueError("Prezzo minimo deve essere 0.10")
+    except ValueError:
+        await update.message.reply_text("❌ Inserisci un numero valido (es: 5.00, minimo €0.10)")
+        return "OFFER_DEPOSIT"
+    
+    # Set the minimum price
+    context.user_data["offer_minimum_price"] = min_price
+    
+    # Calculate total deposit from minimum price
+    total_deposit = min_price / 0.8
+    commission = total_deposit * 0.10
+    budget_available = total_deposit - commission
+    
+    # Show form with arrows to adjust minimum price
+    keyboard = [
+        [InlineKeyboardButton("⬆️", callback_data="offer:deposit:increase")],
+        [InlineKeyboardButton(f"€{min_price:.2f}", 
+                             callback_data="offer:deposit:dummy")],
+        [InlineKeyboardButton("⬇️", callback_data="offer:deposit:decrease")],
+        [InlineKeyboardButton("✅ Conferma", callback_data="offer:deposit:confirm")],
+    ]
+    
+    text = (
+        "💰 **Investimento nella Campagna**\n\n"
+        f"Prezzo Minimo: €{min_price:.2f}\n"
+        f"Investimento totale: €{total_deposit:.2f}\n"
+        f"Commissione (10%): €{commission:.2f}\n"
+        f"Budget per la campagna: €{budget_available:.2f}\n\n"
+        "Usa le frecce per regolare il prezzo minimo o scrivi direttamente il valore\n"
+        "(Minimo: €0.10)\n\n"
+        "Quando sei soddisfatto, clicca ✅ Conferma"
+    )
+    
+    await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    return "OFFER_DEPOSIT"
 
-    await query.edit_message_text("✅ Offerta registrata!", reply_markup=MENU_BUTTONS)
-    return ConversationHandler.END
 
+async def offer_interaction_price(update: Update, context: CallbackContext) -> int:
+    """Handle interaction price input - direct text input with validation."""
+    # Inizializza il prezzo se non esiste
+    if "offer_interaction_price_current" not in context.user_data:
+        context.user_data["offer_interaction_price_current"] = 0.10
+    
+    query = update.callback_query
+    budget_available = context.user_data.get("offer_budget_available", 0)
+    
+    # Gestisci input di testo (numero scritto manualmente)
+    if update.message and not query:
+        try:
+            price = float(update.message.text.strip())
+            
+            if price < 0.10:
+                await update.message.reply_text("❌ Prezzo minimo: €0.10")
+                return "OFFER_INTERACTION_PRICE"
+            if price > budget_available:
+                await update.message.reply_text(f"❌ Prezzo massimo: €{budget_available:.2f}")
+                return "OFFER_INTERACTION_PRICE"
+        except ValueError:
+            await update.message.reply_text("❌ Inserisci un numero valido (es: 0.50)")
+            return "OFFER_INTERACTION_PRICE"
+        
+        # Imposta il nuovo prezzo e mostra il form aggiornato
+        context.user_data["offer_interaction_price_current"] = price
+        query = None  # Continua per mostrare il form aggiornato
+    
+    if query:
+        await query.answer()
+        
+        if query.data == "offer:interaction:confirm":
+            # Conferma il prezzo
+            final_price = context.user_data["offer_interaction_price_current"]
+            context.user_data["offer_interaction_price"] = final_price
+            
+            # Calcola offerta minima, media, massima
+            budget = context.user_data.get("offer_budget_available", 0)
+            min_offer = final_price * 0.8
+            avg_offer = final_price * 1.0
+            max_offer = budget
+            
+            context.user_data["offer_min"] = min_offer
+            context.user_data["offer_avg"] = avg_offer
+            context.user_data["offer_max"] = max_offer
+            context.user_data["offer_languages"] = "it"  # Solo italiano
+            
+            # Salva l'offerta nel database
+            user_data = update.effective_user
+            if not user_data:
+                return ConversationHandler.END
 
-async def offer_notes(update: Update, context: CallbackContext) -> int:
-    notes = update.message.text.strip() if update.message.text else None
-    user_data = update.effective_user
-    if not user_data:
-        return ConversationHandler.END
+            with with_session(context) as session:
+                user = ensure_user(
+                    session,
+                    telegram_id=user_data.id,
+                    username=user_data.username,
+                    first_name=user_data.first_name,
+                    language_code=user_data.language_code,
+                )
+                channel = add_channel(session, user, context.user_data["offer_channel"])
+                
+                # Crea l'offerta con tutti i nuovi campi
+                offer = add_offer(
+                    session,
+                    channel,
+                    context.user_data.get("offer_type", OfferType.post),  # default type
+                    context.user_data.get("offer_price", context.user_data.get("offer_deposit", 0)),
+                    notes=None,
+                )
+                
+                # Aggiorna i campi aggiuntivi
+                offer.payment_type = context.user_data["offer_payment_type"]
+                offer.weekly_budget = context.user_data.get("offer_deposit", 0)
+                offer.interaction_price = final_price
+                offer.target_languages = "it"  # Solo italiano
+                offer.min_offer = min_offer
+                offer.max_offer = max_offer
+                offer.minimum_price_chosen = min_offer  # Salva il prezzo minimo scelto
+                offer.remaining_budget = budget  # Inizializza il budget rimanente
+                
+                session.commit()
 
-    with with_session(context) as session:
-        user = ensure_user(
-            session,
-            telegram_id=user_data.id,
-            username=user_data.username,
-            first_name=user_data.first_name,
-            language_code=user_data.language_code,
-        )
-        channel = add_channel(session, user, context.user_data["offer_channel"])
-        add_offer(
-            session,
-            channel,
-            context.user_data["offer_type"],
-            context.user_data["offer_price"],
-            notes,
-        )
-
-    await update.message.reply_text("💸 Offerta salvata!", reply_markup=MENU_BUTTONS)
-    return ConversationHandler.END
+            success_text = (
+                "✅ **Campagna Pubblicata!**\n\n"
+                f"📱 Canale Target: {context.user_data['offer_channel']}\n"
+                f"💳 Modello Pagamento: {_format_payment_type(context.user_data['offer_payment_type'])}\n"
+                f"💰 Investimento Totale: €{context.user_data.get('offer_deposit', 0):.2f}\n"
+                f"🔖 Prezzo per Interazione: €{final_price:.2f}\n"
+                f"💸 Costo per Post: €{min_offer:.2f}\n"
+                f"🌍 Mercato: Italia 🇮🇹\n\n"
+                "📊 **Stima Offerte:**\n"
+                f"• Minima: €{min_offer:.2f}\n"
+                f"• Media: €{avg_offer:.2f}\n"
+                f"• Massima: €{max_offer:.2f}\n\n"
+                "🤖 La tua campagna sarà generata automaticamente con creatività AI!\n"
+                "👀 Monitora performance nelle statistiche."
+            )
+            
+            await query.edit_message_text(success_text, reply_markup=MENU_BUTTONS)
+            return ConversationHandler.END
+    
+    # Mostra il form semplice con input diretto
+    current_price = context.user_data["offer_interaction_price_current"]
+    budget_available = context.user_data.get("offer_budget_available", 0)
+    
+    # Calcola le offerte in base al prezzo attuale
+    min_offer = current_price * 0.8
+    avg_offer = current_price * 1.0
+    max_offer = budget_available
+    
+    keyboard = [
+        [InlineKeyboardButton("✅ Conferma", callback_data="offer:interaction:confirm")],
+    ]
+    
+    text = (
+        "🤖 **Prezzo di Interazione**\n\n"
+        f"Prezzo attuale: €{current_price:.2f}\n"
+        f"Budget disponibile: €{budget_available:.2f}\n\n"
+        "Scrivi il nuovo prezzo (es: 0.50)\n"
+        f"Intervallo: €0.10 - €{budget_available:.2f}\n\n"
+        "📊 **Offerte Calcolate:**\n"
+        f"• Offerta minima: €{min_offer:.2f}\n"
+        f"• Prezzo medio ora: €{avg_offer:.2f}\n"
+        f"• Offerta massima: €{max_offer:.2f}\n"
+        f"  ⚠️ Scegliendo questa opzione il tuo budget verrà terminato\n\n"
+        "Quando sei soddisfatto, clicca ✅ Conferma"
+    )
+    
+    if query:
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    else:
+        await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    
+    return "OFFER_INTERACTION_PRICE"
 
 
 async def campaign_disclaimer(update: Update, context: CallbackContext) -> int:
@@ -938,45 +1284,30 @@ async def upgrade_plan_selected(update: Update, context: CallbackContext) -> Non
     query = update.callback_query
     await query.answer()
     
-    # Estrai il piano dal callback
-    plan = query.data.split(":")[-1]  # "premium" o "pro"
-    
-    if plan == "premium":
-        plan_name = "Premium"
-        price = 9.99
-        description = (
-            "📦 **Piano Premium**\n\n"
-            "✅ Crea campagne illimitate\n"
-            "✅ Supporto prioritario\n"
-            "✅ Analytics avanzate\n\n"
-            "Prezzo: €9.99/mese"
-        )
-    else:  # pro
-        plan_name = "Pro"
-        price = 29.99
-        description = (
-            "👑 **Piano Pro**\n\n"
-            "✅ Tutto di Premium +\n"
-            "✅ Supporto 24/7\n"
-            "✅ Funzioni AI avanzate\n\n"
-            "Prezzo: €29.99/mese"
-        )
+    plan = "premium"  # Unico piano disponibile
+    plan_name = "Premium"
     
     context.user_data["upgrade_plan"] = plan
-    context.user_data["upgrade_price"] = price
     context.user_data["upgrade_plan_name"] = plan_name
     
     # Mostra il form di pagamento
     payment_text = (
-        f"{description}\n\n"
-        "💳 **Procedi al pagamento:**\n\n"
-        "Per testare, puoi usare €0.00 per testare il flusso PayPal"
+        "👑 **Piano Premium - Accesso Completo**\n\n"
+        "✅ Genera Campagne Personalizzate con AI\n"
+        "✅ Generatore Contenuti AI\n"
+        "✅ Gestione Offerte Pubblicitarie\n"
+        "✅ Statistiche Avanzate\n"
+        "✅ Supporto Prioritario\n\n"
+        "💰 **Importo: A tua scelta (minimo €10)\n"
+        "📊 Commissione: 10% trattenuta per i nostri servizi**\n\n"
+        "Es: Versi €100 → Tu ricevi €90 (10% = €10 ai nostri servizi)\n\n"
+        "💳 **Procedi al pagamento:**"
     )
     
     keyboard = [
-        [InlineKeyboardButton("💳 Paga con PayPal", callback_data=f"upgrade:paypal:{plan}")],
-        [InlineKeyboardButton("🧪 Test (€0.00)", callback_data=f"upgrade:test:{plan}")],
-        [InlineKeyboardButton("◀️ Indietro", callback_data="campaign:payment")],
+        [InlineKeyboardButton("💳 Inserisci Importo", callback_data="upgrade:enter_amount")],
+        [InlineKeyboardButton("🧪 Test (€0.00)", callback_data="upgrade:test:premium")],
+        [InlineKeyboardButton("◀️ Indietro", callback_data="menu:campaign")],
     ]
     
     await query.edit_message_text(payment_text, reply_markup=InlineKeyboardMarkup(keyboard))
@@ -1078,22 +1409,21 @@ async def campaign_payment_request(update: Update, context: CallbackContext) -> 
         await query.answer()
     
     text = (
-        "💳 **Upgrade Richiesto**\n\n"
-        "La creazione di campagne personalizzate richiede un upgrade premium.\n\n"
-        "**Piano Premium** - €9.99/mese\n"
-        "✅ Crea campagne illimitate\n"
-        "✅ Supporto prioritario\n"
-        "✅ Analytics avanzate\n\n"
-        "**Piano Pro** - €29.99/mese\n"
-        "✅ Tutto di Premium +\n"
-        "✅ Supporto 24/7\n"
-        "✅ Funzioni AI avanzate\n\n"
-        "Scegli un piano per procedere:"
+        "👑 **Accesso Premium Richiesto**\n\n"
+        "La creazione di campagne personalizzate con AI richiede l'accesso Premium.\n\n"
+        "**Piano Premium - Accesso Completo**\n"
+        "✅ Genera Campagne Personalizzate con AI\n"
+        "✅ Generatore Contenuti AI\n"
+        "✅ Gestione Offerte Pubblicitarie\n"
+        "✅ Statistiche Avanzate\n\n"
+        "💰 **Versamento Una Tantum**\n"
+        "📊 Commissione: 10% trattenuta per i nostri servizi\n\n"
+        "Scegli l'importo per procedere:"
     )
     
     keyboard = [
-        [InlineKeyboardButton("💳 Upgrade a Premium", callback_data="upgrade:premium")],
-        [InlineKeyboardButton("👑 Scopri Piano Pro", callback_data="upgrade:pro")],
+        [InlineKeyboardButton("💳 Versare Importo", callback_data="upgrade:premium")],
+        [InlineKeyboardButton("🧪 Test (€0.00)", callback_data="upgrade:test:premium")],
         [InlineKeyboardButton("◀️ Indietro", callback_data="menu:campaign")],
     ]
     
@@ -1120,6 +1450,35 @@ async def campaign_entry(update: Update, context: CallbackContext) -> int:
             first_name=user_data.first_name,
             language_code=user_data.language_code,
         )
+        
+        # Check subscription
+        subscription = user.subscription_type or "gratis"
+        if subscription == "gratis":
+            error_text = (
+                "🔒 **Creazione Campagne è esclusivo per Premium**\n\n"
+                "Questo servizio ti permette di creare e gestire campagne pubblicitarie.\n\n"
+                "👑 **Piano Premium - Accesso Completo**\n"
+                "✅ Crea Campagne Personalizzate\n"
+                "✅ Genera Campagne con AI\n"
+                "✅ Generatore Contenuti AI\n"
+                "✅ Gestione Offerte Pubblicitarie\n\n"
+                "💰 **Versamento Una Tantum (A tua scelta)**\n"
+                "📊 Commissione: 10% per i nostri servizi"
+            )
+            
+            keyboard = [
+                [InlineKeyboardButton("💳 Versare Importo per Premium", callback_data="upgrade:premium")],
+                [InlineKeyboardButton("◀️ Indietro", callback_data="menu:main")],
+            ]
+            
+            if update.callback_query:
+                await update.callback_query.answer()
+                await update.callback_query.edit_message_text(error_text, reply_markup=InlineKeyboardMarkup(keyboard))
+            else:
+                await update.message.reply_text(error_text, reply_markup=InlineKeyboardMarkup(keyboard))
+            
+            return ConversationHandler.END
+        
         from .models import Channel
         channels = session.query(Channel).filter_by(user_id=user.id).all()
 
@@ -1506,22 +1865,644 @@ async def insideads_earn_menu(update: Update, context: CallbackContext) -> None:
         )
 
 
-async def insideads_earn_editor(update: Update, context: CallbackContext) -> None:
-    """Editore - Monetizza il contenuto."""
+async def marketplace_editor_menu(update: Update, context: CallbackContext) -> None:
+    """Editor marketplace menu - choose to add channel or view marketplace."""
     query = update.callback_query
+    user_data = update.effective_user
+    if not user_data:
+        return
+    
     if query:
         await query.answer()
-        text = (
-            "📝 Editore\n\n"
-            "Monetizza il tuo contenuto e guadagna mostrando annunci sul tuo canale.\n\n"
-            "🟢 GUADAGNA DENARO\n\n"
-            "Descrizione: Mostra annunci al tuo pubblico e guadagna da ogni impressione e click."
+    
+    text = (
+        "🏪 **Marketplace Editore**\n\n"
+        "Monetizza il tuo canale Telegram!\n\n"
+        "Registra il tuo canale nel marketplace e guadagna quando gli inserzionisti comprano spazi pubblicitari nel tuo canale."
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("➕ Registra Canale", callback_data="marketplace:editor:register_channel")],
+        [InlineKeyboardButton("📊 I Miei Canali", callback_data="marketplace:editor:my_channels")],
+        [InlineKeyboardButton("📬 Ordini in Sospeso", callback_data="marketplace:editor:incoming_orders")],
+        [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:earn")],
+    ]
+    
+    if query:
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    else:
+        await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def marketplace_editor_register_channel(update: Update, context: CallbackContext) -> None:
+    """Editor selects channel to register in marketplace."""
+    query = update.callback_query
+    user_data = update.effective_user
+    if not query or not user_data:
+        return
+    
+    await query.answer()
+    
+    with with_session(context) as session:
+        from .models import Channel, ChannelListing
+        
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
         )
-        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:earn")],
-        ]))
+        
+        # Get channels not yet in marketplace
+        admin_channels = session.query(Channel).filter_by(user_id=user.id).all()
+        registered_channel_ids = session.query(ChannelListing.channel_id).all()
+        registered_ids = {r[0] for r in registered_channel_ids}
+        
+        unregistered = [c for c in admin_channels if c.id not in registered_ids]
+        
+        if not unregistered:
+            text = (
+                "📝 Registra Canale\n\n"
+                "❌ Tutti i tuoi canali sono già nel marketplace, oppure non hai canali.\n\n"
+                "Aggiungi un nuovo canale per metterlo in vendita."
+            )
+            keyboard = [
+                [InlineKeyboardButton("➕ Aggiungi Canale", callback_data="menu:add_channel")],
+                [InlineKeyboardButton("◀️ Indietro", callback_data="marketplace:editor:menu")],
+            ]
+            await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+            return
+        
+        # Show unregistered channels
+        text = "📝 **Seleziona Canale da Registrare**\n\n"
+        keyboard = []
+        
+        for channel in unregistered[:10]:
+            text += f"• {channel.title or f'@{channel.handle}'}\n"
+            keyboard.append([InlineKeyboardButton(
+                f"Registra {channel.title or f'@{channel.handle}'}",
+                callback_data=f"marketplace:editor:set_price:{channel.id}"
+            )])
+        
+        keyboard.append([InlineKeyboardButton("◀️ Indietro", callback_data="marketplace:editor:menu")])
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
 
 
+async def marketplace_editor_set_price(update: Update, context: CallbackContext) -> None:
+    """Editor sets price for channel - bot suggests price based on reach."""
+    query = update.callback_query
+    user_data = update.effective_user
+    if not query or not user_data:
+        return
+    
+    await query.answer()
+    
+    # Extract channel_id
+    try:
+        channel_id = int(query.data.split(":")[3])
+    except (IndexError, ValueError):
+        await query.answer("❌ Errore", show_alert=True)
+        return
+    
+    with with_session(context) as session:
+        from .models import Channel, ChannelListing
+        
+        channel = session.query(Channel).filter_by(
+            id=channel_id,
+            user_id=user_data.id
+        ).first()
+        
+        if not channel:
+            await query.edit_message_text("❌ Canale non trovato")
+            return
+        
+        # Try to get reach from Telegram API
+        try:
+            chat = await context.bot.get_chat(chat_id=channel.telegram_id)
+            subscribers = chat.get_member_count() if hasattr(chat, 'get_member_count') else 0
+            reach_24h = max(subscribers // 5, 100)  # Stima: 20% del totale
+        except:
+            subscribers = 0
+            reach_24h = 100
+        
+        # Calculate suggested price (based on reach)
+        # Formula: €0.05 per reach punto
+        suggested_price = max(reach_24h * 0.0005, 0.50)  # Minimo €0.50
+        
+        channel_name = channel.title or f"@{channel.handle}"
+        
+        text = (
+            f"💰 **Imposta Prezzo - {channel_name}**\n\n"
+            f"📊 **Dati Canale:**\n"
+            f"• Iscritti: {subscribers}\n"
+            f"• Reach 24h (stimata): {reach_24h}\n\n"
+            f"💡 **Prezzo Suggerito:** €{suggested_price:.2f} per post\n\n"
+            f"Scrivi il prezzo che vuoi (es: 2.50, minimo €0.50):"
+        )
+        
+        # Save channel_id for next step
+        context.user_data["marketplace_channel_id"] = channel_id
+        context.user_data["marketplace_suggested_price"] = suggested_price
+        
+        keyboard = [
+            [InlineKeyboardButton(f"✅ Accetta €{suggested_price:.2f}", callback_data=f"marketplace:editor:confirm_price:{channel_id}:{suggested_price:.2f}")],
+            [InlineKeyboardButton("✏️ Scrivi Prezzo Personalizzato", callback_data="marketplace:editor:custom_price")],
+            [InlineKeyboardButton("◀️ Indietro", callback_data="marketplace:editor:register_channel")],
+        ]
+        
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def marketplace_editor_confirm_price(update: Update, context: CallbackContext) -> None:
+    """Editor confirms price and channel goes live in marketplace."""
+    query = update.callback_query
+    user_data = update.effective_user
+    if not query or not user_data:
+        return
+    
+    await query.answer()
+    
+    # Extract channel_id and price
+    try:
+        parts = query.data.split(":")
+        channel_id = int(parts[3])
+        price = float(parts[4])
+    except (IndexError, ValueError):
+        await query.answer("❌ Errore", show_alert=True)
+        return
+    
+    with with_session(context) as session:
+        from .models import Channel, ChannelListing
+        from datetime import datetime
+        
+        channel = session.query(Channel).filter_by(
+            id=channel_id,
+            user_id=user_data.id
+        ).first()
+        
+        if not channel:
+            await query.edit_message_text("❌ Canale non trovato")
+            return
+        
+        # Get channel data
+        try:
+            chat = await context.bot.get_chat(chat_id=channel.telegram_id)
+            subscribers = chat.get_member_count() if hasattr(chat, 'get_member_count') else 0
+        except:
+            subscribers = 0
+        
+        # Create listing
+        listing = ChannelListing(
+            channel_id=channel_id,
+            user_id=user_data.id,
+            price=price,
+            subscribers=subscribers,
+            reach_24h=max(subscribers // 5, 100),
+            quality_score=0.7,  # Default quality
+            is_active=True,
+            is_available=True
+        )
+        
+        session.add(listing)
+        session.commit()
+        
+        channel_name = channel.title or f"@{channel.handle}"
+        
+        text = (
+            f"✅ **Canale Registrato nel Marketplace!**\n\n"
+            f"📱 **Canale:** {channel_name}\n"
+            f"💰 **Prezzo:** €{price:.2f} per post\n"
+            f"📊 **Iscritti:** {subscribers}\n\n"
+            f"🎯 Il tuo canale è ora visibile agli inserzionisti!\n\n"
+            f"Quando un inserzionista compra uno spazio nel tuo canale, riceverai una notifica e potrai pubblica il post."
+        )
+        
+        keyboard = [
+            [InlineKeyboardButton("📊 I Miei Canali", callback_data="marketplace:editor:my_channels")],
+            [InlineKeyboardButton("🏪 Torna Marketplace", callback_data="marketplace:editor:menu")],
+        ]
+        
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def marketplace_editor_my_channels(update: Update, context: CallbackContext) -> None:
+    """Show editor their registered channels with current status."""
+    query = update.callback_query
+    user_data = update.effective_user
+    if not query or not user_data:
+        return
+    
+    await query.answer()
+    
+    with with_session(context) as session:
+        from .models import ChannelListing
+        
+        listings = session.query(ChannelListing).filter_by(user_id=user_data.id).all()
+        
+        if not listings:
+            text = (
+                "📊 I Miei Canali\n\n"
+                "❌ Non hai canali registrati nel marketplace.\n\n"
+                "Registrane uno per iniziare a guadagnare!"
+            )
+            keyboard = [
+                [InlineKeyboardButton("➕ Registra Canale", callback_data="marketplace:editor:register_channel")],
+                [InlineKeyboardButton("◀️ Indietro", callback_data="marketplace:editor:menu")],
+            ]
+            await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+            return
+        
+        text = "📊 **I Miei Canali nel Marketplace**\n\n"
+        keyboard = []
+        
+        for listing in listings:
+            status = "🟢 Disponibile" if listing.is_available else "🔴 In transazione"
+            text += (
+                f"• {listing.channel.title or f'@{listing.channel.handle}'}\n"
+                f"  💰 Prezzo: €{listing.price:.2f}\n"
+                f"  👥 Iscritti: {listing.subscribers}\n"
+                f"  {status}\n\n"
+            )
+        
+        keyboard.append([InlineKeyboardButton("◀️ Indietro", callback_data="marketplace:editor:menu")])
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def marketplace_editor_pending_orders(update: Update, context: CallbackContext) -> None:
+    """Show editor orders waiting for confirmation."""
+    query = update.callback_query
+    user_data = update.effective_user
+    if not query or not user_data:
+        return
+    
+    await query.answer()
+    
+    with with_session(context) as session:
+        from .models import MarketplaceOrder, OrderStatus
+        
+        pending = session.query(MarketplaceOrder).filter(
+            MarketplaceOrder.seller_id == user_data.id,
+            MarketplaceOrder.status == OrderStatus.pending
+        ).all()
+        
+        if not pending:
+            text = (
+                "⏳ **Ordini in Attesa**\n\n"
+                "✅ Non hai ordini in attesa.\n\n"
+                "Quando un inserzionista compra uno spazio nel tuo canale, lo vedrai qui."
+            )
+            keyboard = [
+                [InlineKeyboardButton("◀️ Indietro", callback_data="marketplace:editor:menu")],
+            ]
+            await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+            return
+        
+        text = "⏳ **Ordini in Attesa di Conferma**\n\n"
+        keyboard = []
+        
+        for order in pending[:10]:
+            payment_model = "CPC" if order.channel_listing_id else "Fisso"
+            text += (
+                f"📋 Ordine #{order.id}\n"
+                f"💰 Prezzo: €{order.price:.2f}\n"
+                f"⏱️ Durata: {order.duration_hours}h\n"
+                f"📝 Tipo: {payment_model}\n\n"
+            )
+            keyboard.append([InlineKeyboardButton(
+                f"Dettagli Ordine #{order.id}",
+                callback_data=f"marketplace:editor:confirm_order:{order.id}"
+            )])
+        
+        keyboard.append([InlineKeyboardButton("◀️ Indietro", callback_data="marketplace:editor:menu")])
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def insideads_earn_editor(update: Update, context: CallbackContext) -> None:
+    """Editore - Monetizza il contenuto - MARKETPLACE."""
+    await marketplace_editor_menu(update, context)
+
+
+async def offer_editor_view(update: Update, context: CallbackContext) -> None:
+    """Show offer details to editor - NO investment amount shown."""
+    query = update.callback_query
+    if not query:
+        return
+    
+    await query.answer()
+    
+    # Extract offer ID from callback_data
+    try:
+        offer_id = int(query.data.split(":")[3])
+    except (IndexError, ValueError):
+        await query.answer("❌ Errore", show_alert=True)
+        return
+    
+    with with_session(context) as session:
+        from .models import PromoOffer
+        offer = session.query(PromoOffer).filter_by(id=offer_id).first()
+        
+        if not offer:
+            await query.edit_message_text("❌ Offerta non trovata")
+            return
+        
+        # Show offer details WITHOUT investment amount
+        payment_type = "Per Clic (CPC)" if offer.payment_type == "per_clic" else "Per Iscritto (CPA)"
+        
+        text = (
+            f"💼 **Dettagli Offerta #{offer.id}**\n\n"
+            f"📊 **Modello di Pagamento:** {payment_type}\n"
+            f"💰 **Costo per Interazione:** €{offer.interaction_price:.2f}\n"
+            f"🎯 **Lingue Target:** {offer.target_languages}\n"
+            f"📱 **Tipo:** Post/Story\n\n"
+            f"📈 **Stima Guadagni:**\n"
+            f"• Minimo: €{offer.min_offer:.2f}\n"
+            f"• Medio: €{offer.interaction_price:.2f}\n"
+            f"• Massimo: €{offer.max_offer:.2f}\n\n"
+            "✅ Clicca 'Accetta' per iniziare a pubblicare questa campagna"
+        )
+        
+        keyboard = [
+            [InlineKeyboardButton("✅ Accetta", callback_data=f"offer:editor:accept:{offer_id}")],
+            [InlineKeyboardButton("◀️ Torna alle offerte", callback_data="insideads:earn:editor")],
+        ]
+        
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def offer_editor_accept(update: Update, context: CallbackContext) -> None:
+    """Editor accepts an offer - shows available posts to publish."""
+    query = update.callback_query
+    user_data = update.effective_user
+    if not query or not user_data:
+        return
+    
+    await query.answer()
+    
+    # Extract offer ID
+    try:
+        offer_id = int(query.data.split(":")[3])
+    except (IndexError, ValueError):
+        await query.answer("❌ Errore", show_alert=True)
+        return
+    
+    with with_session(context) as session:
+        from .models import PromoOffer, Channel, OfferChannel
+        from sqlalchemy import and_
+        
+        # Get the offer
+        offer = session.query(PromoOffer).filter_by(id=offer_id).first()
+        if not offer:
+            await query.edit_message_text("❌ Offerta non trovata")
+            return
+        
+        # Get user's channels where they are admin
+        admin_channels = session.query(Channel).filter_by(user_id=user_data.id).all()
+        
+        if not admin_channels:
+            await query.edit_message_text(
+                "❌ Errore: Non hai canali amministrati.\n\n"
+                "Aggiungi un canale prima di accettare offerte."
+            )
+            return
+        
+        # Ask editor which channel to use
+        text = (
+            f"💼 **Accetta Offerta #{offer.id}**\n\n"
+            "📱 **Seleziona il canale dove pubblicare gli annunci:**\n\n"
+        )
+        
+        keyboard = []
+        for idx, channel in enumerate(admin_channels[:10], 1):
+            channel_name = channel.title or f"@{channel.handle}"
+            members = channel.members or "?"
+            text += f"{idx}. {channel_name} ({members} iscritti)\n"
+            keyboard.append([InlineKeyboardButton(
+                f"Usa {channel_name}",
+                callback_data=f"offer:editor:select_channel:{offer_id}:{channel.id}"
+            )])
+        
+        keyboard.append([InlineKeyboardButton("◀️ Indietro", callback_data="insideads:earn:editor")])
+        
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def offer_editor_select_channel(update: Update, context: CallbackContext) -> None:
+    """Editor selects channel for publishing - verify bot has privileges."""
+    query = update.callback_query
+    user_data = update.effective_user
+    if not query or not user_data:
+        return
+    
+    await query.answer()
+    
+    # Extract offer_id and channel_id
+    try:
+        parts = query.data.split(":")
+        offer_id = int(parts[3])
+        channel_id = int(parts[4])
+    except (IndexError, ValueError):
+        await query.answer("❌ Errore", show_alert=True)
+        return
+    
+    with with_session(context) as session:
+        from .models import PromoOffer, Channel
+        
+        # Verify offer exists
+        offer = session.query(PromoOffer).filter_by(id=offer_id).first()
+        if not offer:
+            await query.edit_message_text("❌ Offerta non trovata")
+            return
+        
+        # Verify channel belongs to user
+        channel = session.query(Channel).filter_by(
+            id=channel_id,
+            user_id=user_data.id
+        ).first()
+        
+        if not channel:
+            await query.edit_message_text("❌ Canale non trovato o non sei amministratore")
+            return
+        
+        channel_name = channel.title or f"@{channel.handle}"
+        
+        # Try to verify bot has privileges in the channel
+        try:
+            # Get bot info
+            bot_info = await context.bot.get_me()
+            
+            # Try to get channel admins - this will fail if bot is not member/admin
+            try:
+                # Check if bot is in the channel by trying to get bot's chat member info
+                bot_member = await context.bot.get_chat_member(chat_id=channel.telegram_id, user_id=bot_info.id)
+                
+                # Check if bot has required permissions
+                if bot_member.status not in ["administrator", "creator"]:
+                    # Bot is member but not admin
+                    text = (
+                        f"⚠️ **Privilegi Insufficienti**\n\n"
+                        f"📱 **Canale:** {channel_name}\n\n"
+                        f"❌ Il bot non è amministratore nel canale.\n\n"
+                        f"**Come risolvere:**\n"
+                        f"1. Apri il canale: {channel.handle or 'il tuo canale'}\n"
+                        f"2. Vai in Gestisci Canale → Amministratori\n"
+                        f"3. Aggiungi @{bot_info.username} come amministratore\n"
+                        f"4. Dai questi permessi:\n"
+                        f"   ✅ Pubblica messaggi\n"
+                        f"   ✅ Modifica messaggi\n"
+                        f"   ✅ Cancella messaggi\n\n"
+                        f"Poi riprova!"
+                    )
+                    
+                    keyboard = [
+                        [InlineKeyboardButton("✅ Ho dato i privilegi", callback_data=f"offer:editor:verify:{offer_id}:{channel_id}")],
+                        [InlineKeyboardButton("◀️ Scegli altro canale", callback_data="insideads:earn:editor")],
+                    ]
+                    
+                    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+                    return
+                
+                # Bot is admin - proceed
+                has_permissions = True
+                
+            except Exception as e:
+                # Bot is not in channel at all
+                logger.warning(f"Bot not in channel: {e}")
+                has_permissions = False
+        
+        except Exception as e:
+            logger.error(f"Error checking bot privileges: {e}")
+            has_permissions = False
+        
+        if not has_permissions:
+            # Bot is not in the channel
+            bot_info = await context.bot.get_me()
+            text = (
+                f"⚠️ **Bot Non Presente nel Canale**\n\n"
+                f"📱 **Canale:** {channel_name}\n\n"
+                f"❌ Il bot non è stato aggiunto al canale.\n\n"
+                f"**Come risolvere:**\n"
+                f"1. Apri il canale: {channel.handle or 'il tuo canale'}\n"
+                f"2. Aggiungi il bot @{bot_info.username}\n"
+                f"3. Vai in Gestisci Canale → Amministratori\n"
+                f"4. Promuovi @{bot_info.username} a amministratore\n"
+                f"5. Dai questi permessi:\n"
+                f"   ✅ Pubblica messaggi\n"
+                f"   ✅ Modifica messaggi\n"
+                f"   ✅ Cancella messaggi\n\n"
+                f"Poi riprova!"
+            )
+            
+            keyboard = [
+                [InlineKeyboardButton("✅ Ho aggiunto il bot", callback_data=f"offer:editor:verify:{offer_id}:{channel_id}")],
+                [InlineKeyboardButton("◀️ Scegli altro canale", callback_data="insideads:earn:editor")],
+            ]
+            
+            await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+            return
+        
+        # Bot has permissions - proceed to show posts
+        context.user_data["editor_accepted_offer"] = offer_id
+        context.user_data["editor_selected_channel"] = channel_id
+        context.user_data["editor_channel_name"] = channel_name
+        
+        payment_type = "CPC" if offer.payment_type == "per_clic" else "CPA"
+        
+        text = (
+            f"📝 **Post Disponibili per Pubblicazione**\n\n"
+            f"📱 **Canale:** {channel_name}\n"
+            f"💼 **Offerta:** #{offer_id}\n"
+            f"📊 **Modello:** {payment_type}\n"
+            f"💰 **Pagamento:** €{offer.interaction_price:.2f} per interazione\n\n"
+            "✅ **Bot verificato - Pronto per pubblicare!**\n\n"
+            "📋 **Post da pubblicare:**\n\n"
+            "⏳ Generazione post in corso...\n"
+            "(I post verranno generati dalla campagna dell'inserzionista)"
+        )
+        
+        keyboard = [
+            [InlineKeyboardButton("🤖 Genera con AI", callback_data=f"offer:editor:generate:{offer_id}:{channel_id}")],
+            [InlineKeyboardButton("⏰ Programmazione", callback_data=f"offer:editor:schedule:{offer_id}:{channel_id}")],
+            [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:earn:editor")],
+        ]
+        
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def offer_editor_verify(update: Update, context: CallbackContext) -> None:
+    """Editor confirms they added the bot - verify again."""
+    query = update.callback_query
+    user_data = update.effective_user
+    if not query or not user_data:
+        return
+    
+    await query.answer("🔍 Verificando privilegi del bot...")
+    
+    # Extract IDs
+    try:
+        parts = query.data.split(":")
+        offer_id = int(parts[3])
+        channel_id = int(parts[4])
+    except (IndexError, ValueError):
+        await query.answer("❌ Errore", show_alert=True)
+        return
+    
+    with with_session(context) as session:
+        from .models import PromoOffer, Channel
+        
+        offer = session.query(PromoOffer).filter_by(id=offer_id).first()
+        channel = session.query(Channel).filter_by(
+            id=channel_id,
+            user_id=user_data.id
+        ).first()
+        
+        if not offer or not channel:
+            await query.edit_message_text("❌ Offerta o canale non trovato")
+            return
+        
+        channel_name = channel.title or f"@{channel.handle}"
+        
+        try:
+            bot_info = await context.bot.get_me()
+            bot_member = await context.bot.get_chat_member(chat_id=channel.telegram_id, user_id=bot_info.id)
+            
+            if bot_member.status not in ["administrator", "creator"]:
+                await query.edit_message_text(
+                    f"❌ Il bot non è ancora amministratore nel canale {channel_name}.\n\n"
+                    "Assicurati di aver promosso il bot e datogli i permessi corretti."
+                )
+                return
+            
+            # Success - proceed
+            context.user_data["editor_accepted_offer"] = offer_id
+            context.user_data["editor_selected_channel"] = channel_id
+            context.user_data["editor_channel_name"] = channel_name
+            
+            payment_type = "CPC" if offer.payment_type == "per_clic" else "CPA"
+            
+            text = (
+                f"✅ **Bot Verificato Con Successo!**\n\n"
+                f"📱 **Canale:** {channel_name}\n"
+                f"💼 **Offerta:** #{offer_id}\n"
+                f"📊 **Modello:** {payment_type}\n"
+                f"💰 **Pagamento:** €{offer.interaction_price:.2f} per interazione\n\n"
+                "🚀 **Pronto per pubblicare i post!**"
+            )
+            
+            keyboard = [
+                [InlineKeyboardButton("🤖 Genera con AI", callback_data=f"offer:editor:generate:{offer_id}:{channel_id}")],
+                [InlineKeyboardButton("⏰ Programmazione", callback_data=f"offer:editor:schedule:{offer_id}:{channel_id}")],
+                [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:earn:editor")],
+            ]
+            
+            await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+        
+        except Exception as e:
+            logger.error(f"Error verifying bot: {e}")
+            await query.edit_message_text(
+                f"❌ Errore nella verifica.\n\n"
+                f"Dettagli: {str(e)[:100]}"
+            )
 async def insideads_buy_menu(update: Update, context: CallbackContext) -> None:
     """Show Buy (Acquista) menu - list available campaigns."""
     query = update.callback_query
@@ -1549,6 +2530,7 @@ async def insideads_buy_menu(update: Update, context: CallbackContext) -> None:
     )
     
     keyboard = [
+        [InlineKeyboardButton("📚 Catalogo Inserzionista", callback_data="marketplace:advertiser:catalog")],
         [InlineKeyboardButton("➕ Crea campagna", callback_data="insideads:buy:create")],
         [InlineKeyboardButton("📋 Le mie campagne", callback_data="insideads:buy:list")],
         [InlineKeyboardButton("🤖 Genera Contenuti AI", callback_data="ai:menu")],
@@ -2391,15 +3373,21 @@ async def generate_post_menu(update: Update, context: CallbackContext) -> int:
         subscription = user.subscription_type or "gratis"
         if subscription == "gratis":
             error_text = (
-                "🔒 Generatore di Contenuti AI è una feature premium\n\n"
-                "✨ Per sbloccare questa feature, passa a un piano premium:\n"
-                "💳 Piano Premium: €9.99/mese\n"
-                "👑 Piano Pro: €29.99/mese"
+                "🔒 **Generatore di Contenuti AI è esclusivo per Premium**\n\n"
+                "Questo strumento genera contenuti personalizzati per i tuoi canali "
+                "usando intelligenza artificiale.\n\n"
+                "👑 **Piano Premium - Accesso Completo**\n"
+                "✅ Genera Campagne Personalizzate con AI\n"
+                "✅ Generatore Contenuti AI\n"
+                "✅ Gestione Offerte Pubblicitarie\n"
+                "✅ Statistiche Avanzate\n\n"
+                "💰 **Versamento Una Tantum (A tua scelta)**\n"
+                "📊 Commissione: 10% trattenuta per i nostri servizi\n\n"
+                "Es: Versi €100 → Tu ricevi €90"
             )
             
             keyboard = [
-                [InlineKeyboardButton("💳 Upgrade a Premium", callback_data="upgrade:premium")],
-                [InlineKeyboardButton("👑 Scopri Piano Pro", callback_data="upgrade:pro")],
+                [InlineKeyboardButton("💳 Versare Importo per Premium", callback_data="upgrade:premium")],
                 [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:main")],
             ]
             
@@ -2611,18 +3599,22 @@ async def aigen_start(update: Update, context: CallbackContext) -> int:
         if subscription == "gratis":
             # Messaggio per utenti gratis
             text = (
-                "🔒 Genera Campagna con AI è una feature premium\n\n"
-                "Questo strumento analizza il tuo canale/bot e genera campagne personalizzate "
-                "usando intelligenza artificiale.\n\n"
-                "✨ Per sbloccare questa feature, passa a un piano premium:\n"
-                "💳 Piano Premium: €9.99/mese\n"
-                "👑 Piano Pro: €29.99/mese\n\n"
-                "Contatta @AdsbotSupport per saperne di più sui piani disponibili."
+                "🔒 **Genera Campagna con AI è esclusivo per Premium**\n\n"
+                "Questo strumento analizza il tuo canale e genera campagne personalizzate "
+                "usando intelligenza artificiale avanzata.\n\n"
+                "👑 **Piano Premium - Accesso Completo**\n"
+                "✅ Genera Campagne Personalizzate con AI\n"
+                "✅ Generatore Contenuti AI\n"
+                "✅ Gestione Offerte Pubblicitarie\n"
+                "✅ Statistiche Avanzate\n\n"
+                "💰 **Versamento Una Tantum (A tua scelta)**\n"
+                "📊 Commissione: 10% trattenuta per i nostri servizi\n"
+                "Es: Versi €100 → Tu ricevi €90 (10% ai nostri servizi)\n\n"
+                "🔓 Sblocca adesso per iniziare!"
             )
             
             keyboard = [
-                [InlineKeyboardButton("💳 Upgrade a Premium", callback_data="upgrade:premium")],
-                [InlineKeyboardButton("👑 Scopri Piano Pro", callback_data="upgrade:pro")],
+                [InlineKeyboardButton("💳 Versare Importo per Premium", callback_data="upgrade:premium")],
                 [InlineKeyboardButton("◀️ Indietro", callback_data="menu:main")],
             ]
             
@@ -3088,6 +4080,1209 @@ Cosa vuoi fare ora?
     return ConversationHandler.END
 
 
+# ============================================================================
+# FASE 2: EDITOR MARKETPLACE - Notifiche e Accettazione Ordini (Task 12)
+# ============================================================================
+
+async def marketplace_editor_notify_new_order(
+    context: CallbackContext,
+    editor_user_id: int,
+    order_id: int,
+    advertiser_username: str,
+    channel_name: str,
+    price: float,
+    duration: int,
+    content_preview: str,
+) -> None:
+    """Notifica l'editore di un nuovo ordine PENDING."""
+    
+    text = (
+        f"📬 **Nuovo Ordine in Sospeso!**\n\n"
+        f"👤 Inserizionista: @{advertiser_username}\n"
+        f"📺 Canale: {channel_name}\n"
+        f"💰 Prezzo: €{price:.2f}\n"
+        f"⏱️ Durata: {duration} ore\n\n"
+        f"**Contenuto da pubblicare:**\n"
+        f"```\n{content_preview}\n```\n\n"
+        f"Vuoi accettare questo ordine?"
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("✅ Accetta", callback_data=f"marketplace:editor:accept_order:{order_id}")],
+        [InlineKeyboardButton("❌ Rifiuta", callback_data=f"marketplace:editor:reject_order:{order_id}")],
+        [InlineKeyboardButton("👁️ Visualizza Dettagli", callback_data=f"marketplace:editor:view_order:{order_id}")],
+    ]
+    
+    try:
+        await context.bot.send_message(
+            chat_id=editor_user_id,
+            text=text,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode="Markdown",
+        )
+        logger.info(f"✅ Notifica inviata al editor {editor_user_id} per ordine #{order_id}")
+    except Exception as e:
+        logger.error(f"❌ Errore invio notifica editore {editor_user_id}: {e}")
+
+
+async def marketplace_editor_accept_order(update: Update, context: CallbackContext) -> None:
+    """Editore accetta ordine - Update OrderState PENDING → CONFIRMED."""
+    query = update.callback_query
+    await query.answer("Ordine accettato! ✅")
+    
+    order_id = int(query.data.split(":")[-1])
+    user_data = update.effective_user
+    if not user_data:
+        return
+    
+    with with_session(context) as session:
+        from .models import MarketplaceOrder, OrderState, Payment, PaymentStatus
+        from datetime import datetime
+        
+        order = session.query(MarketplaceOrder).filter_by(id=order_id).first()
+        if not order:
+            await query.edit_message_text("❌ Ordine non trovato")
+            return
+        
+        if order.status != OrderState.PENDING:
+            await query.edit_message_text(
+                f"⚠️ Ordine non è più in sospeso (Status: {order.status.value})"
+            )
+            return
+        
+        # Update ordine
+        order.status = OrderState.CONFIRMED
+        order.confirmed_at = datetime.now()
+        order.editor_user_id = user_data.id
+        
+        # Update pagamento
+        payment = session.query(Payment).filter_by(order_id=order_id).first()
+        if payment:
+            payment.status = PaymentStatus.CONFIRMED
+        
+        session.commit()
+        
+        order_id_final = order.id
+        advertiser_id = order.advertiser_id
+        channel_listing_id = order.channel_listing_id
+        content = order.content_text[:100]
+        price = payment.amount if payment else 0
+    
+    text = (
+        f"✅ **Ordine Accettato!**\n\n"
+        f"ID Ordine: #{order_id_final}\n"
+        f"Status: CONFIRMED\n\n"
+        f"Pubblicherai il post entro le prossime 24 ore.\n"
+        f"L'inserzionista è già stato pagato.\n\n"
+        f"Ricorda:\n"
+        f"• Pubblica il contenuto fornito\n"
+        f"• Mantieni la durata specificata\n"
+        f"• Dopo la fine → Ordine auto-completa"
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("📋 Visualizza Ordine", callback_data=f"marketplace:editor:view_order:{order_id_final}")],
+        [InlineKeyboardButton("📱 Miei Ordini", callback_data="marketplace:editor:incoming_orders")],
+        [InlineKeyboardButton("◀️ Menu Principale", callback_data="insideads:earn")],
+    ]
+    
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    
+    # Notifica inserzionista che ordine è stato confermato
+    try:
+        advertiser_text = (
+            f"✅ **Ordine Confermato!**\n\n"
+            f"ID: #{order_id_final}\n"
+            f"Editore ha accettato il tuo ordine.\n"
+            f"Il post sarà pubblicato entro le prossime 24 ore.\n\n"
+            f"💰 Importo: €{price:.2f}\n"
+            f"Puoi tracciare lo stato in 'Le mie Campagne'"
+        )
+        
+        await context.bot.send_message(
+            chat_id=advertiser_id,
+            text=advertiser_text,
+            parse_mode="Markdown",
+        )
+    except Exception as e:
+        logger.warning(f"Notifica inserzionista non inviata: {e}")
+
+
+async def marketplace_editor_reject_order(update: Update, context: CallbackContext) -> None:
+    """Editore rifiuta ordine - Update OrderState PENDING → CANCELLED, Refund."""
+    query = update.callback_query
+    await query.answer("Ordine rifiutato")
+    
+    order_id = int(query.data.split(":")[-1])
+    
+    with with_session(context) as session:
+        from .models import MarketplaceOrder, OrderState, Payment, PaymentStatus
+        from datetime import datetime
+        
+        order = session.query(MarketplaceOrder).filter_by(id=order_id).first()
+        if not order:
+            await query.edit_message_text("❌ Ordine non trovato")
+            return
+        
+        if order.status != OrderState.PENDING:
+            await query.edit_message_text(
+                f"⚠️ Ordine non è più in sospeso (Status: {order.status.value})"
+            )
+            return
+        
+        # Update ordine
+        order.status = OrderState.CANCELLED
+        order.cancelled_at = datetime.now()
+        order.cancellation_reason = "REJECTED_BY_EDITOR"
+        
+        # Update pagamento - Refund
+        payment = session.query(Payment).filter_by(order_id=order_id).first()
+        if payment:
+            payment.status = PaymentStatus.REFUNDED
+            payment.refund_date = datetime.now()
+        
+        # Registra transazione di rimborso
+        from .models import MoneyTransaction
+        refund_transaction = MoneyTransaction(
+            from_user_id=None,  # Platform refund
+            to_user_id=order.advertiser_id,
+            amount=payment.amount if payment else 0,
+            transaction_type="ORDER_REFUND",
+            order_id=order_id,
+            created_at=datetime.now(),
+            created_by_user_id=update.effective_user.id,
+        )
+        session.add(refund_transaction)
+        
+        # Ricarica saldo inserzionista
+        from .inside_ads_services import add_transaction
+        add_transaction(
+            session,
+            user_id=order.advertiser_id,
+            amount=payment.amount if payment else 0,
+            transaction_type="ORDER_REFUND",
+            description=f"Rimborso ordine #{order_id} rifiutato da editore",
+        )
+        
+        session.commit()
+        
+        order_id_final = order.id
+        advertiser_id = order.advertiser_id
+        refund_amount = payment.amount if payment else 0
+    
+    text = (
+        f"❌ **Ordine Rifiutato**\n\n"
+        f"ID Ordine: #{order_id_final}\n"
+        f"Status: CANCELLED\n\n"
+        f"✅ Rimborso completo (€{refund_amount:.2f}) all'inserzionista."
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("📱 Miei Ordini", callback_data="marketplace:editor:incoming_orders")],
+        [InlineKeyboardButton("◀️ Menu Principale", callback_data="insideads:earn")],
+    ]
+    
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    
+    # Notifica inserzionista del rifiuto
+    try:
+        advertiser_text = (
+            f"❌ **Ordine Rifiutato**\n\n"
+            f"ID: #{order_id_final}\n"
+            f"Purtroppo l'editore ha rifiutato il tuo ordine.\n\n"
+            f"💰 Rimborso: €{refund_amount:.2f}\n"
+            f"Il saldo è stato ricaricato automaticamente.\n\n"
+            f"Puoi provare con un altro canale dal catalogo."
+        )
+        
+        await context.bot.send_message(
+            chat_id=advertiser_id,
+            text=advertiser_text,
+            parse_mode="Markdown",
+        )
+    except Exception as e:
+        logger.warning(f"Notifica rifiuto non inviata a inserzionista: {e}")
+
+
+async def marketplace_editor_incoming_orders(update: Update, context: CallbackContext) -> None:
+    """Mostra ordini PENDING per editore."""
+    query = update.callback_query
+    user_data = update.effective_user
+    if not user_data:
+        return
+    
+    if query:
+        await query.answer()
+    
+    with with_session(context) as session:
+        from .models import MarketplaceOrder, OrderState, ChannelListing, User
+        
+        # Recupera utente editore
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
+        )
+        
+        # Query: Ordini PENDING per questo editore
+        incoming_orders = session.query(MarketplaceOrder).filter(
+            MarketplaceOrder.status == OrderState.PENDING,
+            ChannelListing.user_id == user.id,
+        ).join(
+            ChannelListing,
+            MarketplaceOrder.channel_listing_id == ChannelListing.id
+        ).all()
+    
+    if not incoming_orders:
+        text = (
+            f"📬 Ordini in Sospeso\n\n"
+            f"Non hai ordini in attesa di approvazione.\n"
+            f"Gli ordini appariranno qui quando gli inserzionisti\n"
+            f"creeranno campagne sui tuoi canali."
+        )
+        
+        keyboard = [
+            [InlineKeyboardButton("📝 Miei Canali", callback_data="marketplace:editor:my_channels")],
+            [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:earn")],
+        ]
+        
+        if query:
+            await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+        else:
+            await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+        return
+    
+    # Mostra lista ordini PENDING
+    text = (
+        f"📬 Ordini in Sospeso\n\n"
+        f"Hai {len(incoming_orders)} ordini in attesa di approvazione:\n\n"
+    )
+    
+    keyboard = []
+    for i, order in enumerate(incoming_orders[:5], 1):  # Max 5 per pagina
+        advertiser = session.query(User).filter_by(id=order.advertiser_id).first()
+        advertiser_name = f"@{advertiser.username}" if advertiser and advertiser.username else f"User_{advertiser.id}"
+        
+        text += (
+            f"{i}. **Ordine #{order.id}**\n"
+            f"   📤 Da: {advertiser_name}\n"
+            f"   💰 Prezzo: €{order.channel_listing.suggested_price if order.channel_listing else 'N/A':.2f}\n"
+            f"   ⏱️ Durata: {order.duration_hours}h\n"
+            f"   📝 Preview: {order.content_text[:30]}...\n\n"
+        )
+        
+        button_text = f"📋 Ordine #{order.id} da {advertiser_name[:12]}"
+        keyboard.append([
+            InlineKeyboardButton(button_text, callback_data=f"marketplace:editor:view_order:{order.id}")
+        ])
+    
+    keyboard.append([InlineKeyboardButton("◀️ Indietro", callback_data="insideads:earn")])
+    
+    if query:
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    else:
+        await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def marketplace_editor_view_order(update: Update, context: CallbackContext) -> None:
+    """Visualizza dettagli completi dell'ordine."""
+    query = update.callback_query
+    if not query:
+        return
+    
+    await query.answer()
+    
+    order_id = int(query.data.split(":")[-1])
+    
+    with with_session(context) as session:
+        from .models import MarketplaceOrder, OrderState, User
+        
+        order = session.query(MarketplaceOrder).filter_by(id=order_id).first()
+        if not order:
+            await query.edit_message_text("❌ Ordine non trovato")
+            return
+        
+        advertiser = session.query(User).filter_by(id=order.advertiser_id).first()
+        advertiser_name = f"@{advertiser.username}" if advertiser and advertiser.username else f"User_{advertiser.id}"
+    
+    text = (
+        f"📋 **Dettagli Ordine #{order_id}**\n\n"
+        f"**Status:** {order.status.value}\n"
+        f"**Data Creazione:** {order.created_at.strftime('%d/%m/%Y %H:%M') if order.created_at else 'N/A'}\n\n"
+        f"**Inserizionista:**\n"
+        f"👤 {advertiser_name}\n\n"
+        f"**Dettagli Campagna:**\n"
+        f"💰 Prezzo: €{order.channel_listing.suggested_price if order.channel_listing else 0:.2f}\n"
+        f"⏱️ Durata: {order.duration_hours} ore\n"
+        f"📺 Canale: {order.channel_listing.channel_handle if order.channel_listing else 'N/A'}\n\n"
+        f"**Contenuto da Pubblicare:**\n"
+        f"```\n{order.content_text}\n```"
+    )
+    
+    keyboard = []
+    if order.status == OrderState.PENDING:
+        keyboard = [
+            [InlineKeyboardButton("✅ Accetta Ordine", callback_data=f"marketplace:editor:accept_order:{order_id}")],
+            [InlineKeyboardButton("❌ Rifiuta Ordine", callback_data=f"marketplace:editor:reject_order:{order_id}")],
+        ]
+    else:
+        keyboard = [
+            [InlineKeyboardButton(f"⚠️ Status: {order.status.value}", callback_data="noop")],
+        ]
+    
+    keyboard.append([InlineKeyboardButton("◀️ Torna agli Ordini", callback_data="marketplace:editor:incoming_orders")])
+    
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+# ============================================================================
+# FASE 2: ADVERTISER MARKETPLACE - Catalogo Inserzionista
+# ============================================================================
+
+async def marketplace_advertiser_catalog(update: Update, context: CallbackContext) -> None:
+    """Show advertiser marketplace catalog with available channels."""
+    query = update.callback_query
+    user_data = update.effective_user
+    if not user_data:
+        return
+    
+    if query:
+        await query.answer()
+    
+    # Se viene da un filtro, recupera i filtri dal contesto
+    filters_text = context.user_data.get("marketplace_filters_text", "Nessun filtro attivo")
+    
+    with with_session(context) as session:
+        from .models import ChannelListing, Channel, ChannelState
+        from sqlalchemy import and_, or_
+        
+        # Costruisci query base per i canali disponibili
+        query_channels = session.query(ChannelListing).filter(
+            ChannelListing.is_available == True
+        )
+        
+        # Applica filtri se presenti nel contesto
+        if "category" in context.user_data:
+            query_channels = query_channels.filter(
+                ChannelListing.category == context.user_data["category"]
+            )
+        
+        if "min_price" in context.user_data:
+            query_channels = query_channels.filter(
+                ChannelListing.suggested_price >= context.user_data["min_price"]
+            )
+        
+        if "max_price" in context.user_data:
+            query_channels = query_channels.filter(
+                ChannelListing.suggested_price <= context.user_data["max_price"]
+            )
+        
+        if "min_reach" in context.user_data:
+            query_channels = query_channels.filter(
+                ChannelListing.reach_24h >= context.user_data["min_reach"]
+            )
+        
+        channels = query_channels.limit(10).all()
+    
+    text = (
+        f"🛍️ Catalogo Inserzionista\n\n"
+        f"Filtri attivi: {filters_text}\n\n"
+        f"Canali disponibili: {len(channels)}\n\n"
+    )
+    
+    if not channels:
+        text += "❌ Nessun canale disponibile con i filtri selezionati."
+        keyboard = [
+            [InlineKeyboardButton("🔍 Modifica Filtri", callback_data="marketplace:advertiser:filter")],
+            [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:buy")],
+        ]
+    else:
+        # Crea lista di canali
+        keyboard = []
+        for channel in channels[:5]:  # Mostra max 5 canali per pagina
+            channel_name = f"@{channel.channel_handle}" if channel.channel_handle else f"#{channel.id}"
+            price_str = f"€{channel.suggested_price:.2f}" if channel.suggested_price else "Offerta"
+            reach_str = f"{channel.reach_24h:,}" if channel.reach_24h else "N/A"
+            
+            button_text = f"📺 {channel_name[:15]} | €{channel.suggested_price:.1f} | 👁️ {reach_str}"
+            keyboard.append([
+                InlineKeyboardButton(
+                    button_text, 
+                    callback_data=f"marketplace:advertiser:view:{channel.id}"
+                )
+            ])
+        
+        keyboard.append([InlineKeyboardButton("🔍 Modifica Filtri", callback_data="marketplace:advertiser:filter")])
+        keyboard.append([InlineKeyboardButton("◀️ Indietro", callback_data="insideads:buy")])
+    
+    if query:
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    else:
+        await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def marketplace_advertiser_filter(update: Update, context: CallbackContext) -> None:
+    """Show filter menu for channel catalog."""
+    query = update.callback_query
+    if query:
+        await query.answer()
+    
+    text = (
+        "🔍 Seleziona Filtri\n\n"
+        "Scegli come filtrare i canali disponibili:"
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("📂 Per Categoria", callback_data="marketplace:advertiser:filter:category")],
+        [InlineKeyboardButton("💰 Per Prezzo", callback_data="marketplace:advertiser:filter:price")],
+        [InlineKeyboardButton("👁️ Per Reach Minimo", callback_data="marketplace:advertiser:filter:reach")],
+        [InlineKeyboardButton("⭐ Per Engagement", callback_data="marketplace:advertiser:filter:engagement")],
+        [InlineKeyboardButton("🔄 Reimposta Filtri", callback_data="marketplace:advertiser:filter:reset")],
+        [InlineKeyboardButton("✅ Applica Filtri", callback_data="marketplace:advertiser:catalog")],
+        [InlineKeyboardButton("◀️ Indietro", callback_data="marketplace:advertiser:catalog")],
+    ]
+    
+    if query:
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    else:
+        await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def marketplace_advertiser_view_channel_details(update: Update, context: CallbackContext) -> None:
+    """Show detailed information about a specific channel."""
+    query = update.callback_query
+    if not query:
+        return
+    
+    await query.answer()
+    
+    # Estrai channel_id dal callback
+    channel_id = int(query.data.split(":")[-1])
+    
+    with with_session(context) as session:
+        from .models import ChannelListing, Channel
+        
+        channel_listing = session.query(ChannelListing).filter_by(id=channel_id).first()
+        if not channel_listing:
+            await query.edit_message_text("❌ Canale non trovato")
+            return
+        
+        channel = session.query(Channel).filter_by(id=channel_listing.channel_id).first()
+    
+    # Calcola statistiche
+    quality_score = getattr(channel_listing, 'quality_score', 4.5)
+    engagement_rate = getattr(channel_listing, 'engagement_rate', 2.5)
+    
+    text = (
+        f"📺 Dettagli Canale\n\n"
+        f"**Informazioni:**\n"
+        f"• Nome: @{channel_listing.channel_handle}\n"
+        f"• Categoria: {channel_listing.category or 'N/A'}\n"
+        f"• Titolo: {channel_listing.title or 'N/A'}\n\n"
+        f"**Metriche:**\n"
+        f"• 👥 Iscritti: {channel_listing.subscribers:,}\n"
+        f"• 👁️ Visualizzazioni (24h): {channel_listing.reach_24h:,}\n"
+        f"• ⭐ Qualità: {quality_score}/5.0\n"
+        f"• 🔥 Engagement: {engagement_rate:.1f}%\n\n"
+        f"**Prezzo:**\n"
+        f"• 💰 Suggerito: €{channel_listing.suggested_price:.2f}\n"
+        f"• Min: €{getattr(channel_listing, 'min_price', channel_listing.suggested_price * 0.8):.2f}\n"
+        f"• Max: €{getattr(channel_listing, 'max_price', channel_listing.suggested_price * 1.2):.2f}\n"
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("📝 Crea Ordine", callback_data=f"marketplace:advertiser:order:start:{channel_id}")],
+        [InlineKeyboardButton("📊 Visualizza Storico", callback_data=f"marketplace:advertiser:history:{channel_id}")],
+        [InlineKeyboardButton("◀️ Torna al Catalogo", callback_data="marketplace:advertiser:catalog")],
+    ]
+    
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def marketplace_advertiser_create_order(update: Update, context: CallbackContext) -> int:
+    """Start order creation flow - Step 1: Select duration."""
+    query = update.callback_query
+    if not query:
+        return ConversationHandler.END
+    
+    await query.answer()
+    
+    # Estrai channel_id dal callback
+    channel_id = int(query.data.split(":")[-1])
+    context.user_data["order_channel_id"] = channel_id
+    
+    with with_session(context) as session:
+        from .models import ChannelListing
+        channel_listing = session.query(ChannelListing).filter_by(id=channel_id).first()
+        context.user_data["order_channel_name"] = channel_listing.channel_handle if channel_listing else "Sconosciuto"
+        context.user_data["order_channel_price"] = channel_listing.suggested_price if channel_listing else 0
+    
+    text = (
+        f"📝 Crea Ordine - Step 1/4\n\n"
+        f"Canale: @{context.user_data['order_channel_name']}\n"
+        f"Prezzo: €{context.user_data['order_channel_price']:.2f}\n\n"
+        f"Seleziona la durata della campagna:"
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("⏱️ 6 Ore", callback_data="marketplace:advertiser:order:duration:6")],
+        [InlineKeyboardButton("⏱️ 12 Ore", callback_data="marketplace:advertiser:order:duration:12")],
+        [InlineKeyboardButton("⏱️ 24 Ore", callback_data="marketplace:advertiser:order:duration:24")],
+        [InlineKeyboardButton("❌ Annulla", callback_data="marketplace:advertiser:catalog")],
+    ]
+    
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    
+    # Usa STATE per tracciare il flusso
+    return MARKETPLACE_ORDER_DURATION
+
+
+async def marketplace_advertiser_order_duration_selected(update: Update, context: CallbackContext) -> int:
+    """Step 2: Upload content."""
+    query = update.callback_query
+    if not query:
+        return ConversationHandler.END
+    
+    await query.answer()
+    
+    # Estrai durata dal callback
+    duration = int(query.data.split(":")[-1])
+    context.user_data["order_duration"] = duration
+    
+    text = (
+        f"📝 Crea Ordine - Step 2/4\n\n"
+        f"Canale: @{context.user_data['order_channel_name']}\n"
+        f"Durata: {duration} ore\n"
+        f"Prezzo: €{context.user_data['order_channel_price']:.2f}\n\n"
+        f"Invia il contenuto (testo + opzionale: foto/video)"
+    )
+    
+    await query.edit_message_text(text)
+    
+    return MARKETPLACE_ORDER_CONTENT
+
+
+async def marketplace_advertiser_order_content_received(update: Update, context: CallbackContext) -> int:
+    """Step 3: Review order."""
+    user_data = update.effective_user
+    if not user_data:
+        return ConversationHandler.END
+    
+    # Salva il contenuto
+    content_text = update.message.text or update.message.caption or "[Media only]"
+    
+    # Valida il contenuto usando ContentValidator
+    from .services import ContentValidator
+    is_valid, error_msg = ContentValidator.validate(content_text, strict=False)
+    
+    if not is_valid:
+        text = (
+            f"❌ Contenuto non valido\n\n"
+            f"Errore: {error_msg}\n\n"
+            f"Per favore, riprova con un contenuto diverso."
+        )
+        
+        keyboard = [
+            [InlineKeyboardButton("✏️ Invia di nuovo", callback_data="marketplace:advertiser:order:edit_content")],
+            [InlineKeyboardButton("❌ Annulla ordine", callback_data="marketplace:advertiser:catalog")],
+        ]
+        
+        await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+        return 51  # Rimani in MARKETPLACE_ORDER_CONTENT
+    
+    context.user_data["order_content"] = content_text[:200]  # Limita a 200 chars per preview
+    
+    total_price = context.user_data["order_channel_price"]
+    
+    text = (
+        f"📝 Crea Ordine - Step 3/4 (REVIEW)\n\n"
+        f"**Dettagli Ordine:**\n"
+        f"• Canale: @{context.user_data['order_channel_name']}\n"
+        f"• Durata: {context.user_data['order_duration']} ore\n"
+        f"• Prezzo: €{total_price:.2f}\n\n"
+        f"**Contenuto:**\n"
+        f"{context.user_data['order_content']}\n\n"
+        f"✅ Contenuto validato. Confermi l'ordine?"
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("✅ Conferma e Paga", callback_data="marketplace:advertiser:order:confirm")],
+        [InlineKeyboardButton("✏️ Modifica Contenuto", callback_data="marketplace:advertiser:order:edit_content")],
+        [InlineKeyboardButton("❌ Annulla", callback_data="marketplace:advertiser:catalog")],
+    ]
+    
+    await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    
+    return MARKETPLACE_ORDER_REVIEW
+
+
+async def marketplace_advertiser_order_confirm(update: Update, context: CallbackContext) -> int:
+    """Step 4: Process payment and create order."""
+    query = update.callback_query
+    if not query:
+        return ConversationHandler.END
+    
+    await query.answer()
+    
+    user_data = update.effective_user
+    if not user_data:
+        return ConversationHandler.END
+    
+    with with_session(context) as session:
+        from .models import (
+            User, MarketplaceOrder, OrderState, ChannelListing,
+            Payment, PaymentStatus, MoneyTransaction
+        )
+        from datetime import datetime, timedelta
+        
+        # Recupera utente
+        user = ensure_user(
+            session,
+            telegram_id=user_data.id,
+            username=user_data.username,
+            first_name=user_data.first_name,
+            language_code=user_data.language_code,
+        )
+        
+        # Recupera canale
+        channel_listing = session.query(ChannelListing).filter_by(
+            id=context.user_data["order_channel_id"]
+        ).first()
+        
+        if not channel_listing:
+            await query.edit_message_text("❌ Canale non trovato")
+            return ConversationHandler.END
+        
+        # Controlla saldo
+        from .inside_ads_services import get_user_balance
+        balance = get_user_balance(session, user)
+        total_price = context.user_data["order_channel_price"]
+        
+        if balance < total_price:
+            text = (
+                f"❌ Saldo insufficiente\n\n"
+                f"Saldo: €{balance:.2f}\n"
+                f"Necessari: €{total_price:.2f}\n"
+                f"Mancano: €{total_price - balance:.2f}"
+            )
+            keyboard = [
+                [InlineKeyboardButton("💰 Ricarica Saldo", callback_data="insideads:account:topup")],
+                [InlineKeyboardButton("◀️ Indietro", callback_data="marketplace:advertiser:catalog")],
+            ]
+            await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+            return ConversationHandler.END
+        
+        # Crea ordine
+        now = datetime.now()
+        order = MarketplaceOrder(
+            advertiser_id=user.id,
+            channel_listing_id=channel_listing.id,
+            status=OrderState.PENDING,
+            content_text=context.user_data.get("order_content", ""),
+            duration_hours=context.user_data.get("order_duration", 24),
+            created_at=now,
+            created_by_user_id=user.id,
+        )
+        session.add(order)
+        session.flush()  # Genera l'ID dell'ordine
+        
+        # Crea pagamento
+        payment = Payment(
+            order_id=order.id,
+            amount=total_price,
+            commission_rate=0.10,  # 10% commission
+            status=PaymentStatus.PAID,
+            payment_date=now,
+            created_by_user_id=user.id,
+        )
+        session.add(payment)
+        
+        # Registra transazione
+        transaction = MoneyTransaction(
+            from_user_id=user.id,
+            to_user_id=channel_listing.user_id,
+            amount=total_price * 0.9,  # 90% all'editore
+            transaction_type="ORDER_PAYMENT",
+            order_id=order.id,
+            created_at=now,
+            created_by_user_id=user.id,
+        )
+        session.add(transaction)
+        
+        # Deduci dal saldo dell'inserzionista
+        from .inside_ads_services import add_transaction as add_trans
+        add_trans(
+            session,
+            user_id=user.id,
+            amount=-total_price,
+            transaction_type="ORDER_PAYMENT",
+            description=f"Pagamento ordine per @{channel_listing.channel_handle}",
+        )
+        
+        session.commit()
+        
+        order_id = order.id
+        editor_user_id = channel_listing.user_id
+        content_preview = context.user_data.get("order_content", "")[:100]
+    
+    # Notifica l'editore del nuovo ordine (TASK 12)
+    try:
+        await marketplace_editor_notify_new_order(
+            context=context,
+            editor_user_id=editor_user_id,
+            order_id=order_id,
+            advertiser_username=user.username,
+            channel_name=channel_listing.channel_handle,
+            price=total_price,
+            duration=context.user_data.get("order_duration", 24),
+            content_preview=content_preview,
+        )
+    except Exception as e:
+        logger.error(f"Errore nell'invio della notifica editore: {e}")
+    
+    text = (
+        f"✅ Ordine Creato Con Successo!\n\n"
+        f"**ID Ordine:** #{order_id}\n"
+        f"**Canale:** @{context.user_data['order_channel_name']}\n"
+        f"**Durata:** {context.user_data['order_duration']} ore\n"
+        f"**Importo:** €{total_price:.2f}\n\n"
+        f"L'editore riceverà una notifica del tuo annuncio.\n"
+        f"Lo stato dell'ordine sarà disponibile in 'Le mie campagne'."
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("📋 Visualizza Ordine", callback_data=f"marketplace:advertiser:order:view:{order_id}")],
+        [InlineKeyboardButton("🛍️ Continua Shopping", callback_data="marketplace:advertiser:catalog")],
+        [InlineKeyboardButton("📊 Le mie Campagne", callback_data="insideads:buy:list")],
+        [InlineKeyboardButton("🏠 Menu Principale", callback_data="insideads:main")],
+    ]
+    
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    
+    # Pulisci context
+    context.user_data.clear()
+    
+    return ConversationHandler.END
+
+
+# ============================================================================
+# TASK 14 - VERIFICA ADMIN CANALE (FASE 6)
+# ============================================================================
+
+async def verify_channel_admin(user_id: int, channel_id: int, context: CallbackContext) -> dict:
+    """
+    Verifica che l'utente sia admin del canale Telegram prima della registrazione editore.
+    
+    Args:
+        user_id: Telegram user ID
+        channel_id: Telegram channel/group ID
+        context: CallbackContext
+    
+    Returns:
+        dict con chiavi:
+        - is_admin: bool
+        - username: str
+        - status: str ("VERIFIED", "NOT_ADMIN", "ERROR")
+        - verified_at: datetime
+        - error_message: str (se applicabile)
+    """
+    try:
+        # Get chat member to verify admin status
+        chat_member = await context.bot.get_chat_member(channel_id, user_id)
+        
+        # Check if user has admin privileges
+        is_admin = chat_member.status in ["creator", "administrator"]
+        
+        verification_log = {
+            "user_id": user_id,
+            "channel_id": channel_id,
+            "is_admin": is_admin,
+            "status": "VERIFIED" if is_admin else "NOT_ADMIN",
+            "verified_at": datetime.now(),
+            "error_message": None if is_admin else f"Utente non è admin del canale. Status: {chat_member.status}",
+        }
+        
+        # Log verification attempt
+        logger.info(f"Verifica admin - User: {user_id}, Channel: {channel_id}, Is Admin: {is_admin}")
+        
+        # Save to database for audit trail
+        try:
+            with with_session(context) as session:
+                from .models import AdminAuditLog
+                audit = AdminAuditLog(
+                    user_id=user_id,
+                    action="CHANNEL_ADMIN_VERIFICATION",
+                    details=str(verification_log),
+                    status="SUCCESS" if is_admin else "FAILED",
+                    created_at=datetime.now(),
+                )
+                session.add(audit)
+                session.commit()
+        except Exception as audit_error:
+            logger.error(f"Errore nel logging verifica admin: {audit_error}")
+        
+        return verification_log
+    
+    except Exception as e:
+        logger.error(f"Errore nella verifica admin del canale: {e}")
+        return {
+            "user_id": user_id,
+            "channel_id": channel_id,
+            "is_admin": False,
+            "status": "ERROR",
+            "verified_at": datetime.now(),
+            "error_message": str(e),
+        }
+
+
+async def editor_register_verify_admin(update: Update, context: CallbackContext) -> None:
+    """Handler che richiede verifica admin prima di registrare editore."""
+    query = update.callback_query
+    user_id = update.effective_user.id
+    
+    # Retrieve channel ID from context (should be set by previous handler)
+    channel_id = context.user_data.get("editor_channel_id")
+    if not channel_id:
+        await query.answer("❌ Errore: Channel ID non trovato", show_alert=True)
+        return
+    
+    with with_session(context) as session:
+        from .models import Channel
+        
+        # Verifica admin status
+        verification = await verify_channel_admin(user_id, channel_id, context)
+        
+        if not verification["is_admin"]:
+            text = (
+                f"❌ **Verifica Admin Non Riuscita**\n\n"
+                f"Non sei amministratore del canale {channel_id}.\n"
+                f"Per registrarti come editore devi essere admin del canale.\n\n"
+                f"**Errore:** {verification['error_message']}"
+            )
+            keyboard = [
+                [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:sell")],
+            ]
+            await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+            return
+        
+        # Admin verified - proceed with registration
+        text = (
+            f"✅ **Admin Verificato!**\n\n"
+            f"Sei stato confermato come amministratore del canale.\n"
+            f"Procedendo con la registrazione come editore..."
+        )
+        await query.edit_message_text(text)
+        
+        # Proceed with editor registration
+        context.user_data["editor_verified"] = True
+        # Call the actual registration function
+
+
+# ============================================================================
+# TASK 15 - STORICO ORDINI EDITORE (FASE 2)
+# ============================================================================
+
+async def marketplace_editor_order_history(update: Update, context: CallbackContext) -> None:
+    """
+    Mostra storico completo degli ordini (completati, cancellati) per editore con statistiche.
+    """
+    query = update.callback_query
+    user_id = update.effective_user.id
+    
+    await query.answer()
+    
+    with with_session(context) as session:
+        from .models import MarketplaceOrder, OrderState, ChannelListing, User
+        from sqlalchemy import func
+        
+        # Query storico ordini (escludendo PENDING e DRAFT)
+        history_orders = (
+            session.query(MarketplaceOrder)
+            .join(ChannelListing, MarketplaceOrder.channel_listing_id == ChannelListing.id)
+            .filter(
+                ChannelListing.user_id == user_id,
+                MarketplaceOrder.status.in_([OrderState.COMPLETED, OrderState.CANCELLED, OrderState.DISPUTED]),
+            )
+            .order_by(MarketplaceOrder.created_at.desc())
+            .limit(20)
+            .all()
+        )
+        
+        # Calcola statistiche
+        stats_query = session.query(
+            func.count(MarketplaceOrder.id).label("total_orders"),
+            func.sum(MarketplaceOrder.total_price).label("total_earned"),
+            func.avg(MarketplaceOrder.total_price).label("avg_price"),
+        ).join(ChannelListing, MarketplaceOrder.channel_listing_id == ChannelListing.id).filter(
+            ChannelListing.user_id == user_id,
+            MarketplaceOrder.status == OrderState.COMPLETED,
+        )
+        
+        stats = stats_query.first()
+        
+        total_orders = stats.total_orders or 0
+        total_earned = stats.total_earned or 0.0
+        avg_price = stats.avg_price or 0.0
+        
+        # Calcola completion rate
+        all_orders_count = (
+            session.query(func.count(MarketplaceOrder.id))
+            .join(ChannelListing, MarketplaceOrder.channel_listing_id == ChannelListing.id)
+            .filter(ChannelListing.user_id == user_id)
+            .scalar()
+        )
+        
+        completion_rate = (total_orders / all_orders_count * 100) if all_orders_count > 0 else 0.0
+    
+    text = (
+        f"📊 **Storico Ordini**\n\n"
+        f"**Statistiche Generali:**\n"
+        f"  📈 Ordini Completati: {total_orders}\n"
+        f"  💰 Totale Guadagnato: €{total_earned:.2f}\n"
+        f"  💵 Prezzo Medio: €{avg_price:.2f}\n"
+        f"  ✅ Tasso Completamento: {completion_rate:.1f}%\n\n"
+    )
+    
+    if history_orders:
+        text += "**Ultimi Ordini:**\n\n"
+        for i, order in enumerate(history_orders[:5], 1):
+            status_emoji = "✅" if order.status == OrderState.COMPLETED else "❌" if order.status == OrderState.CANCELLED else "⚠️"
+            text += (
+                f"{i}. {status_emoji} Order #{order.id}\n"
+                f"   💰 €{order.total_price:.2f} | "
+                f"   ⏱️ {order.duration}h | "
+                f"   📅 {order.created_at.strftime('%d/%m/%Y')}\n"
+            )
+    else:
+        text += "❌ Nessun ordine nello storico."
+    
+    keyboard = [
+        [InlineKeyboardButton("📬 Ordini in Sospeso", callback_data="marketplace:editor:incoming_orders")],
+        [InlineKeyboardButton("◀️ Menu Editore", callback_data="insideads:sell")],
+    ]
+    
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+# ============================================================================
+# FASE 3 - ADMIN PANEL
+# ============================================================================
+
+async def admin_main_menu(update: Update, context: CallbackContext) -> None:
+    """Main admin panel menu."""
+    query = update.callback_query
+    user_id = update.effective_user.id
+    
+    await query.answer()
+    
+    # Verify admin access
+    with with_session(context) as session:
+        from .models import User, UserRole
+        user = session.query(User).filter(User.telegram_user_id == user_id).first()
+        
+        if not user or user.role != UserRole.ADMIN:
+            text = "❌ Accesso Negato. Solo amministratori possono accedere al pannello admin."
+            keyboard = [[InlineKeyboardButton("◀️ Indietro", callback_data="insideads:main")]]
+            await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+            return
+    
+    text = (
+        f"🔧 **Pannello Amministrazione**\n\n"
+        f"Gestione della piattaforma InsideAds\n\n"
+        f"Seleziona un'opzione:"
+    )
+    
+    keyboard = [
+        [InlineKeyboardButton("✅ Approva Canali", callback_data="admin:approve_channels")],
+        [InlineKeyboardButton("🚫 Sospendi Utenti", callback_data="admin:suspend_users")],
+        [InlineKeyboardButton("💰 Override Prezzo", callback_data="admin:override_price")],
+        [InlineKeyboardButton("⚖️ Gestisci Dispute", callback_data="admin:manage_disputes")],
+        [InlineKeyboardButton("📋 Log Audit", callback_data="admin:audit_logs")],
+        [InlineKeyboardButton("📊 Report Statistiche", callback_data="admin:statistics")],
+        [InlineKeyboardButton("◀️ Indietro", callback_data="insideads:main")],
+    ]
+    
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def admin_approve_channels(update: Update, context: CallbackContext) -> None:
+    """Admin: Approve pending channels."""
+    query = update.callback_query
+    await query.answer()
+    
+    with with_session(context) as session:
+        from .models import Channel, ChannelState
+        
+        pending_channels = session.query(Channel).filter(
+            Channel.state == ChannelState.PENDING_APPROVAL
+        ).limit(10).all()
+    
+    if not pending_channels:
+        text = "✅ Nessun canale in attesa di approvazione."
+        keyboard = [[InlineKeyboardButton("◀️ Indietro", callback_data="admin:main")]]
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+        return
+    
+    text = "📋 **Canali in Attesa di Approvazione**\n\n"
+    keyboard = []
+    
+    for channel in pending_channels:
+        text += f"• @{channel.handle} (Subscribers: {channel.subscribers})\n"
+        keyboard.append([
+            InlineKeyboardButton(f"✅ Approva #{channel.id}", callback_data=f"admin:approve_channel:{channel.id}"),
+            InlineKeyboardButton(f"❌ Rifiuta #{channel.id}", callback_data=f"admin:reject_channel:{channel.id}"),
+        ])
+    
+    keyboard.append([InlineKeyboardButton("◀️ Indietro", callback_data="admin:main")])
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def admin_approve_channel_action(update: Update, context: CallbackContext) -> None:
+    """Admin: Approve single channel."""
+    query = update.callback_query
+    
+    # Extract channel_id from callback_data
+    parts = query.data.split(":")
+    channel_id = int(parts[2])
+    
+    with with_session(context) as session:
+        from .models import Channel, ChannelState, AdminAuditLog
+        
+        channel = session.query(Channel).filter(Channel.id == channel_id).first()
+        if not channel:
+            await query.answer("❌ Canale non trovato", show_alert=True)
+            return
+        
+        # Update channel state
+        channel.state = ChannelState.ACTIVE
+        
+        # Log admin action
+        audit = AdminAuditLog(
+            user_id=update.effective_user.id,
+            action="APPROVE_CHANNEL",
+            details=f"Channel ID: {channel_id}, Handle: @{channel.handle}",
+            status="SUCCESS",
+            created_at=datetime.now(),
+        )
+        session.add(audit)
+        session.commit()
+    
+    text = f"✅ Canale @{channel.handle} approvato con successo!"
+    keyboard = [[InlineKeyboardButton("📋 Prossimi Canali", callback_data="admin:approve_channels")]]
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def admin_suspend_user(update: Update, context: CallbackContext) -> None:
+    """Admin: Suspend users."""
+    query = update.callback_query
+    await query.answer()
+    
+    text = (
+        "🚫 **Sospendi Utente**\n\n"
+        "Inserisci l'ID Telegram dell'utente da sospendere:\n\n"
+        "_Messaggio: Rispondi con l'ID Telegram_"
+    )
+    
+    keyboard = [[InlineKeyboardButton("◀️ Indietro", callback_data="admin:main")]]
+    
+    context.user_data["admin_action"] = "suspend_user"
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def admin_manage_disputes(update: Update, context: CallbackContext) -> None:
+    """Admin: Manage open disputes."""
+    query = update.callback_query
+    await query.answer()
+    
+    with with_session(context) as session:
+        from .models import DisputeTicket, DisputeStatus
+        
+        open_disputes = session.query(DisputeTicket).filter(
+            DisputeTicket.status == DisputeStatus.OPEN
+        ).limit(5).all()
+    
+    if not open_disputes:
+        text = "✅ Nessuna disputa aperta."
+        keyboard = [[InlineKeyboardButton("◀️ Indietro", callback_data="admin:main")]]
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+        return
+    
+    text = "⚖️ **Dispute Aperte**\n\n"
+    keyboard = []
+    
+    for dispute in open_disputes:
+        text += f"• Disputa #{dispute.id} - Order: #{dispute.order_id}\n"
+        keyboard.append([InlineKeyboardButton(f"📋 Dettagli #{dispute.id}", callback_data=f"admin:dispute_detail:{dispute.id}")])
+    
+    keyboard.append([InlineKeyboardButton("◀️ Indietro", callback_data="admin:main")])
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def admin_view_audit_logs(update: Update, context: CallbackContext) -> None:
+    """Admin: View audit logs."""
+    query = update.callback_query
+    await query.answer()
+    
+    with with_session(context) as session:
+        from .models import AdminAuditLog
+        
+        recent_logs = session.query(AdminAuditLog).order_by(
+            AdminAuditLog.created_at.desc()
+        ).limit(10).all()
+    
+    text = "📋 **Log Audit Recenti**\n\n"
+    
+    for log in recent_logs:
+        text += (
+            f"• {log.action} - {log.status}\n"
+            f"  User: {log.user_id} | {log.created_at.strftime('%d/%m %H:%M')}\n\n"
+        )
+    
+    if not recent_logs:
+        text = "Nessun log disponibile."
+    
+    keyboard = [[InlineKeyboardButton("◀️ Indietro", callback_data="admin:main")]]
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+async def admin_platform_stats(update: Update, context: CallbackContext) -> None:
+    """Admin: View platform statistics."""
+    query = update.callback_query
+    await query.answer()
+    
+    with with_session(context) as session:
+        from .models import User, Channel, MarketplaceOrder, OrderState
+        from sqlalchemy import func
+        
+        total_users = session.query(func.count(User.id)).scalar()
+        total_channels = session.query(func.count(Channel.id)).scalar()
+        total_orders = session.query(func.count(MarketplaceOrder.id)).scalar()
+        completed_orders = session.query(func.count(MarketplaceOrder.id)).filter(
+            MarketplaceOrder.status == OrderState.COMPLETED
+        ).scalar()
+        total_revenue = session.query(func.sum(MarketplaceOrder.total_price)).filter(
+            MarketplaceOrder.status == OrderState.COMPLETED
+        ).scalar()
+    
+    completion_rate = (completed_orders / total_orders * 100) if total_orders > 0 else 0.0
+    platform_revenue_10pct = (total_revenue * 0.1) if total_revenue else 0.0
+    
+    text = (
+        f"📊 **Statistiche Piattaforma**\n\n"
+        f"👥 Utenti Totali: {total_users or 0}\n"
+        f"📢 Canali Registrati: {total_channels or 0}\n"
+        f"📦 Ordini Totali: {total_orders or 0}\n"
+        f"✅ Ordini Completati: {completed_orders or 0} ({completion_rate:.1f}%)\n\n"
+        f"💰 Revenue Totale: €{total_revenue:.2f}" if total_revenue else "€0.00" + "\n"
+        f"🏦 Commissione Platform (10%): €{platform_revenue_10pct:.2f}"
+    )
+    
+    keyboard = [[InlineKeyboardButton("◀️ Indietro", callback_data="admin:main")]]
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
 def build_application(config: Config) -> Application:
     """Configure the bot application and handlers."""
 
@@ -3149,11 +5344,14 @@ def build_application(config: Config) -> Application:
                     CallbackQueryHandler(offer_search_channel, pattern=r"^offer:search_channel$"),
                     CallbackQueryHandler(offer_channel_selected, pattern=r"^offer:select_channel:\d+$"),
                 ],
-                OFFER_TYPE: [MessageHandler(filters.TEXT & ~filters.COMMAND, offer_type)],
-                OFFER_PRICE: [MessageHandler(filters.TEXT & ~filters.COMMAND, offer_price)],
-                OFFER_NOTES: [
-                    CallbackQueryHandler(offer_skip_notes, pattern=r"^offer:skip_notes$"),
-                    MessageHandler(filters.TEXT & ~filters.COMMAND, offer_notes)
+                "OFFER_PAYMENT_TYPE": [MessageHandler(filters.TEXT & ~filters.COMMAND, offer_payment_type_selected)],
+                "OFFER_PAYMENT": [CallbackQueryHandler(offer_payment, pattern=r"^offer:payment:")],
+                "OFFER_DEPOSIT": [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, offer_deposit),
+                    CallbackQueryHandler(offer_deposit, pattern=r"^offer:deposit:(increase|decrease|confirm|dummy)$"),
+                ],
+                "OFFER_INTERACTION_PRICE": [
+                    CallbackQueryHandler(offer_interaction_price, pattern=r"^offer:interaction:(increase|decrease|confirm|dummy)$"),
                 ],
             },
             fallbacks=[CommandHandler("cancel", cancel)],
@@ -3214,6 +5412,21 @@ def build_application(config: Config) -> Application:
     application.add_handler(CallbackQueryHandler(insideads_main_menu, pattern=r"^insideads:main$"))
     application.add_handler(CallbackQueryHandler(insideads_earn_menu, pattern=r"^insideads:earn$"))
     application.add_handler(CallbackQueryHandler(insideads_earn_editor, pattern=r"^insideads:earn:editor$"))
+    
+    # Marketplace Editor handlers
+    application.add_handler(CallbackQueryHandler(marketplace_editor_menu, pattern=r"^marketplace:editor:menu$"))
+    application.add_handler(CallbackQueryHandler(marketplace_editor_register_channel, pattern=r"^marketplace:editor:register_channel$"))
+    application.add_handler(CallbackQueryHandler(marketplace_editor_set_price, pattern=r"^marketplace:editor:set_price:\d+$"))
+    application.add_handler(CallbackQueryHandler(marketplace_editor_confirm_price, pattern=r"^marketplace:editor:confirm_price:\d+:[\d.]+$"))
+    application.add_handler(CallbackQueryHandler(marketplace_editor_my_channels, pattern=r"^marketplace:editor:my_channels$"))
+    application.add_handler(CallbackQueryHandler(marketplace_editor_pending_orders, pattern=r"^marketplace:editor:pending_orders$"))
+    
+    # Old offer handlers (deprecated, but kept for compatibility)
+    application.add_handler(CallbackQueryHandler(offer_editor_view, pattern=r"^offer:editor:view:\d+$"))
+    application.add_handler(CallbackQueryHandler(offer_editor_accept, pattern=r"^offer:editor:accept:\d+$"))
+    application.add_handler(CallbackQueryHandler(offer_editor_select_channel, pattern=r"^offer:editor:select_channel:\d+:\d+$"))
+    application.add_handler(CallbackQueryHandler(offer_editor_verify, pattern=r"^offer:editor:verify:\d+:\d+$"))
+    
     application.add_handler(CallbackQueryHandler(insideads_buy_menu, pattern=r"^insideads:buy$"))
     application.add_handler(CallbackQueryHandler(insideads_buy_create, pattern=r"^insideads:buy:create$"))
     application.add_handler(CallbackQueryHandler(insideads_buy_list, pattern=r"^insideads:buy:list$"))
@@ -3233,6 +5446,19 @@ def build_application(config: Config) -> Application:
     application.add_handler(CallbackQueryHandler(campaign_forecast, pattern=r"^campaign:forecast$"))
     application.add_handler(CallbackQueryHandler(campaign_ai_optimize, pattern=r"^campaign:ai_optimize$"))
     application.add_handler(CallbackQueryHandler(campaign_suggestions, pattern=r"^campaign:suggestions$"))
+
+    # Marketplace Advertiser handlers (FASE 2)
+    application.add_handler(CallbackQueryHandler(marketplace_advertiser_catalog, pattern=r"^marketplace:advertiser:catalog$"))
+    application.add_handler(CallbackQueryHandler(marketplace_advertiser_filter, pattern=r"^marketplace:advertiser:filter$"))
+    application.add_handler(CallbackQueryHandler(marketplace_advertiser_view_channel_details, pattern=r"^marketplace:advertiser:view:\d+$"))
+
+    # Marketplace Editor handlers - Notifications (FASE 2 Task 12)
+    application.add_handler(CallbackQueryHandler(marketplace_editor_accept_order, pattern=r"^marketplace:editor:accept_order:\d+$"))
+    application.add_handler(CallbackQueryHandler(marketplace_editor_reject_order, pattern=r"^marketplace:editor:reject_order:\d+$"))
+    
+    # Marketplace Editor handlers - Order Management (FASE 2 Task 13)
+    application.add_handler(CallbackQueryHandler(marketplace_editor_incoming_orders, pattern=r"^marketplace:editor:incoming_orders$"))
+    application.add_handler(CallbackQueryHandler(marketplace_editor_view_order, pattern=r"^marketplace:editor:view_order:\d+$"))
 
     # Purchase campaign conversation handler
     application.add_handler(
@@ -3257,6 +5483,31 @@ def build_application(config: Config) -> Application:
             },
             fallbacks=[
                 CallbackQueryHandler(insideads_buy_menu, pattern=r"^insideads:buy$"),
+                CommandHandler("cancel", cancel),
+            ],
+        )
+    )
+
+    # Marketplace Advertiser Order Creation Handler (FASE 2)
+    application.add_handler(
+        ConversationHandler(
+            entry_points=[
+                CallbackQueryHandler(marketplace_advertiser_create_order, pattern=r"^marketplace:advertiser:order:start:\d+$"),
+            ],
+            states={
+                MARKETPLACE_ORDER_DURATION: [
+                    CallbackQueryHandler(marketplace_advertiser_order_duration_selected, pattern=r"^marketplace:advertiser:order:duration:(6|12|24)$"),
+                ],
+                MARKETPLACE_ORDER_CONTENT: [
+                    MessageHandler(filters.TEXT | filters.PHOTO | filters.VIDEO, marketplace_advertiser_order_content_received),
+                ],
+                MARKETPLACE_ORDER_REVIEW: [
+                    CallbackQueryHandler(marketplace_advertiser_order_confirm, pattern=r"^marketplace:advertiser:order:confirm$"),
+                    CallbackQueryHandler(marketplace_advertiser_create_order, pattern=r"^marketplace:advertiser:order:edit_content$"),
+                ],
+            },
+            fallbacks=[
+                CallbackQueryHandler(marketplace_advertiser_catalog, pattern=r"^marketplace:advertiser:catalog$"),
                 CommandHandler("cancel", cancel),
             ],
         )
@@ -3320,10 +5571,25 @@ def build_application(config: Config) -> Application:
     application.add_handler(CallbackQueryHandler(ai_generate_post_start, pattern=r"^ai:generate_(post|headline|ad|campaign)$"))
     
     # Upgrade/Payment Callbacks
-    application.add_handler(CallbackQueryHandler(upgrade_plan_selected, pattern=r"^upgrade:(premium|pro)$"))
-    application.add_handler(CallbackQueryHandler(upgrade_paypal, pattern=r"^upgrade:paypal:(premium|pro)$"))
-    application.add_handler(CallbackQueryHandler(upgrade_test, pattern=r"^upgrade:test:(premium|pro)$"))
-    application.add_handler(CallbackQueryHandler(upgrade_confirmed, pattern=r"^upgrade:confirmed:(premium|pro)$"))
+    application.add_handler(CallbackQueryHandler(upgrade_plan_selected, pattern=r"^upgrade:premium$"))
+    application.add_handler(CallbackQueryHandler(upgrade_paypal, pattern=r"^upgrade:paypal:premium$"))
+    application.add_handler(CallbackQueryHandler(upgrade_test, pattern=r"^upgrade:test:premium$"))
+    application.add_handler(CallbackQueryHandler(upgrade_confirmed, pattern=r"^upgrade:confirmed:premium$"))
+
+    # Task 14 - Channel Admin Verification Handlers
+    application.add_handler(CallbackQueryHandler(editor_register_verify_admin, pattern=r"^marketplace:editor:verify_admin$"))
+
+    # Task 15 - Editor Order History Handler
+    application.add_handler(CallbackQueryHandler(marketplace_editor_order_history, pattern=r"^marketplace:editor:order_history$"))
+
+    # FASE 3 - Admin Panel Handlers
+    application.add_handler(CallbackQueryHandler(admin_main_menu, pattern=r"^admin:main$"))
+    application.add_handler(CallbackQueryHandler(admin_approve_channels, pattern=r"^admin:approve_channels$"))
+    application.add_handler(CallbackQueryHandler(admin_approve_channel_action, pattern=r"^admin:approve_channel:\d+$"))
+    application.add_handler(CallbackQueryHandler(admin_suspend_user, pattern=r"^admin:suspend_users$"))
+    application.add_handler(CallbackQueryHandler(admin_manage_disputes, pattern=r"^admin:manage_disputes$"))
+    application.add_handler(CallbackQueryHandler(admin_view_audit_logs, pattern=r"^admin:audit_logs$"))
+    application.add_handler(CallbackQueryHandler(admin_platform_stats, pattern=r"^admin:statistics$"))
 
     return application
 

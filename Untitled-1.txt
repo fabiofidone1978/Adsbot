@@ -1,2 +1,0 @@
-python -m py_compile adsbot\\models.py
-python main.py
