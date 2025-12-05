@@ -392,13 +392,20 @@ async def add_channel_entry(update: Update, context: CallbackContext) -> int:
 
     user_data = update.effective_user
     if not user_data:
-        await update.callback_query.edit_message_text("❌ Errore: utente non trovato")
+        if update.callback_query:
+            await update.callback_query.edit_message_text("❌ Errore: utente non trovato")
         return ConversationHandler.END
 
     if update.callback_query:
         await safe_query_answer(update.callback_query)
     
     try:
+        # Get effective message for both callback_query and message updates
+        message = update.effective_message
+        if not message:
+            logger.error("No effective message found in update")
+            return ConversationHandler.END
+        
         # Get all channels where user is an administrator
         chat_member = await context.bot.get_me()
         administered_chats = []
@@ -412,7 +419,7 @@ async def add_channel_entry(update: Update, context: CallbackContext) -> int:
         # we'll show a message asking the user to confirm the channel
         # Or use the older approach with manual input + validation
         
-        await update.message.reply_text(
+        await message.reply_text(
             "🔍 Ricerca canali amministrati...\n\n"
             "Nota: Inserisci lo @username o il link del canale che vuoi aggiungere.\n"
             "Devo essere amministratore del canale per accedere ai dati.",
@@ -422,10 +429,12 @@ async def add_channel_entry(update: Update, context: CallbackContext) -> int:
 
     except Exception as e:
         logger.error(f"Error fetching administered channels: {e}")
-        await update.message.reply_text(
-            "❌ Errore nel recupero dei canali. Per favore, riprova.",
-            reply_markup=MENU_BUTTONS
-        )
+        message = update.effective_message
+        if message:
+            await message.reply_text(
+                "❌ Errore nel recupero dei canali. Per favore, riprova.",
+                reply_markup=MENU_BUTTONS
+            )
         return ConversationHandler.END
 
 
